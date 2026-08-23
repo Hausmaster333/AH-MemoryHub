@@ -5,8 +5,39 @@ Python 3.12+, FastAPI, Pydantic v2. The default mode is a deterministic in-memor
 ```powershell
 uv sync --extra test
 uv run pytest -q
-uv run uvicorn app.main:app --reload
+uv run python -m app.conformance
+uv run uvicorn app.main:app --reload --env-file .env
 ```
+
+`python -m app.conformance` is the Junior gate: it validates all seven `e`
+payload variants (including first-class `s*` and `m*`), the exact eight-fact
+manual fixture from section 7, figure 14, an IS-A hierarchy, an H/FOLLOW
+episode, and lossless export/import. The same report is available at
+`GET /api/v1/conformance/junior`.
+
+Copy `.env.example` to `.env` before launch. The parser is provider-neutral:
+
+```env
+AH_PARSER_PROVIDER=openai_compatible
+AH_LLM_BASE_URL=https://your-provider.example/v1
+AH_LLM_MODEL=your-model-id
+AH_LLM_API_KEY=your-key
+AH_INGESTION_INITIAL_WEIGHT=1.0
+```
+
+The local `.env` is configured for OpenRouter Ox Alpha. Paste an OpenRouter key
+into `AH_LLM_API_KEY`; `json_object` is used because this model does not enforce
+JSON Schema. Server-side Pydantic and AH compiler validation remain mandatory.
+
+Any Chat Completions compatible service can be used: Kimi, OpenRouter, OpenAI,
+or a local server. The model only proposes typed facts and exact quotes. AH Core
+anchors every quote back to the original document, validates roles/templates,
+and assigns UIDs. `auto` falls back to `rule-based-offline` and reports that fact
+in the preview response; `openai_compatible` returns an explicit parser error.
+Parser confidence is retained in Source Evidence and never becomes activation
+weight. Repeated extraction is cached by document hash, model, and prompt
+version. `POST /api/v1/evaluations/ingestion/rabbit` runs the live configured
+provider against the eight-fact monograph fixture; six matches are required.
 
 Demo flow:
 
@@ -18,4 +49,3 @@ curl -X POST http://127.0.0.1:8000/api/v1/dsl/query -H 'content-type: applicatio
 ```
 
 `POST /api/v1/memory/export` returns the complete `AH=<S,C,P,H,L>` dump, source manifest, and SHA-256 checksum. `M4`/`M5` are explicitly reported unavailable until external model providers are configured.
-

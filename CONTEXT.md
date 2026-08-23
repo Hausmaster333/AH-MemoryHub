@@ -32,9 +32,17 @@ _Avoid_: User data
 The `H` section containing facts and episodes experienced or attributed to the agent.
 _Avoid_: Log, chat history
 
-**Reference**:
-An independently identified pointer to a First-order Symbol or Memory Element.
-_Avoid_: Foreign key, edge
+**S Reference**:
+An independently identified `s*` pointer whose target is a First-order Symbol in `S`.
+_Avoid_: Foreign key, edge, generic reference
+
+**M Reference**:
+An independently identified `m*` pointer whose target is specifically a Second-order Symbol.
+_Avoid_: Memory Element reference, generic reference
+
+**Element Reference**:
+An independently identified `e*` pointer whose target is any Memory Element in `C`, `P`, or `H`; a template reference `t*` is an Element Reference constrained to a Control Template.
+_Avoid_: M Reference, ordinary edge
 
 **Second-order Symbol**:
 A symbolic Memory Element whose meaning is described by properties, meta-properties, references, and relations.

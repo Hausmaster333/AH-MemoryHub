@@ -10,39 +10,17 @@ const state = {
   tick: 0,
   animationSteps: [],
   selectedUid: null,
-  memory: { labels: new Map(), sections: new Map(), predicates: new Map(), hypernodes: new Map(), links: new Map() },
+  memory: { labels: new Map(), sections: new Map(), predicates: new Map(), templates: new Map(), hypernodes: new Map(), links: new Map() },
+  memoryExport: null,
+  memoryFilter: "ALL",
+  memoryPositions: [],
+  memorySelectedUid: null,
   candidates: [],
+  previewUid: null,
   selectedCandidate: 0,
   playing: null,
   resizeFrame: null,
 };
-
-const demoCandidates = [
-  {
-    predicate: "CAUSE",
-    assertion: "Перегрев насоса вызвал остановку агрегата в насосном зале.",
-    confidence: .92,
-    span: "0:62",
-    template: "CAUSE(SUBJECT, OBJECT, LOCATION)",
-    bindings: { SUBJECT: "перегрев насоса", OBJECT: "остановка агрегата", LOCATION: "насосный зал" },
-  },
-  {
-    predicate: "FOLLOW",
-    assertion: "Остановка агрегата привела к снижению давления.",
-    confidence: .86,
-    span: "63:112",
-    template: "FOLLOW(SUBJECT, OBJECT)",
-    bindings: { SUBJECT: "остановка агрегата", OBJECT: "снижение давления" },
-  },
-  {
-    predicate: "USES_TOOL",
-    assertion: "После этого оператор применил ручной ключ.",
-    confidence: .78,
-    span: "113:158",
-    template: "USES_TOOL(SUBJECT, TOOL)",
-    bindings: { SUBJECT: "оператор", TOOL: "ручной ключ" },
-  },
-];
 
 async function api(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -79,6 +57,7 @@ function showView(name, updateHash = true) {
   $$("[data-view]").forEach((button) => button.classList.toggle("is-active", button.dataset.view === name));
   if (updateHash) history.replaceState(null, "", `#${name}`);
   if (name === "evaluation" && $("#conformance-score").textContent === "—") runEvaluation();
+  if (name === "memory") refreshMemoryView();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -101,10 +80,12 @@ async function ensureDemo() {
 
 async function loadMemoryMap() {
   const exported = await api("/api/v1/memory/export", { method: "POST", body: "{}" });
+  state.memoryExport = exported;
   const dump = exported.dump || exported;
   state.memory.labels.clear();
   state.memory.sections.clear();
   state.memory.predicates.clear();
+  state.memory.templates.clear();
   state.memory.hypernodes.clear();
   state.memory.links.clear();
   for (const symbol of dump.S || []) {
@@ -116,16 +97,31 @@ async function loadMemoryMap() {
     for (const item of dump[section] || []) {
       state.memory.sections.set(item.uid, section);
       const payload = item.payload || {};
-      if (payload.predicate_ref) {
-        state.memory.labels.set(item.uid, payload.predicate_ref);
-      }
+      if (payload.predicate_ref) state.memory.templates.set(item.uid, payload);
+      const ownLabel = payload.properties?.find((property) => property.name === "label")?.value;
+      if (ownLabel) state.memory.labels.set(item.uid, String(ownLabel));
+    }
+  }
+  const refTarget = (reference) => typeof reference === "string" ? reference : reference?.target_uid;
+  const predicateLabel = (templateUid) => {
+    const predicateUid = refTarget(state.memory.templates.get(templateUid)?.predicate_ref);
+    return state.memory.labels.get(predicateUid) || predicateUid?.replace(/^pred_/, "").toUpperCase() || templateUid;
+  };
+  for (const section of ["C", "P", "H"]) {
+    for (const item of dump[section] || []) {
+      const payload = item.payload || {};
+      if (payload.kind === "S" || payload.kind === "M") state.memory.labels.set(item.uid, `${payload.kind}* → ${state.memory.labels.get(payload.target_uid) || payload.target_uid}`);
+      else if (payload.predicate_ref) state.memory.labels.set(item.uid, predicateLabel(item.uid));
+      else if (payload.function_id) state.memory.labels.set(item.uid, payload.function_id);
+      else if (payload.ordered_members) state.memory.labels.set(item.uid, `${payload.list_type || "LIST"} · ${payload.ordered_members.length}`);
     }
   }
   for (const section of ["C", "P", "H"]) {
     for (const item of dump[section] || []) {
       const payload = item.payload || {};
       if (!payload.template_ref) continue;
-      const predicate = payload.template_ref.replace(/^tpl_/, "").toUpperCase();
+      const templateUid = refTarget(payload.template_ref);
+      const predicate = predicateLabel(templateUid);
       const bindings = (payload.role_bindings || []).map((binding) => ({
         role: binding.role_id,
         uid: binding.target_ref?.target_uid,
@@ -145,6 +141,172 @@ async function loadMemoryMap() {
     state.memory.predicates.set(link.uid, link.type_id || "LINK");
     state.memory.links.set(link.uid, link);
   }
+  if (state.view === "memory") requestAnimationFrame(() => { updateMemoryStats(); renderMemoryGraph(); });
+  return exported;
+}
+
+function memoryKind(payload = {}) {
+  if (payload.kind === "S") return "S*";
+  if (payload.kind === "M") return "M*";
+  if (payload.template_ref) return "N";
+  if (payload.predicate_ref) return "T";
+  if (payload.ordered_members) return "LIST";
+  if (payload.function_id) return "FUNCTION";
+  return "M";
+}
+
+function completeMemoryGraph() {
+  const dump = state.memoryExport?.dump || {};
+  const nodes = [];
+  for (const symbol of dump.S || []) nodes.push({ uid: symbol.uid, section: "S", kind: "S", label: state.memory.labels.get(symbol.uid) || symbol.uid, raw: symbol });
+  for (const section of ["C", "P", "H"]) {
+    for (const item of dump[section] || []) {
+      const kind = memoryKind(item.payload);
+      nodes.push({ uid: item.uid, section, kind, label: state.memory.labels.get(item.uid) || item.uid, raw: item });
+    }
+  }
+  const known = new Set(nodes.map((node) => node.uid));
+  const edges = [];
+  for (const node of nodes) {
+    const payload = node.raw.payload || {};
+    if ((node.kind === "S*" || node.kind === "M*") && known.has(payload.target_uid)) edges.push({ source: node.uid, target: payload.target_uid, type: node.kind, kind: "reference" });
+    const predicateTarget = payload.predicate_ref?.target_uid;
+    if (predicateTarget && known.has(predicateTarget)) edges.push({ source: node.uid, target: predicateTarget, type: "PREDICATE", kind: "reference" });
+    const templateTarget = payload.template_ref?.target_uid;
+    if (templateTarget && known.has(templateTarget)) edges.push({ source: node.uid, target: templateTarget, type: "T*", kind: "reference" });
+  }
+  for (const node of nodes.filter((item) => item.kind === "N")) {
+    for (const binding of node.raw.payload.role_bindings || []) {
+      const target = binding.target_ref?.target_uid;
+      if (known.has(target)) edges.push({ source: node.uid, target, type: binding.role_id, kind: "role" });
+    }
+  }
+  for (const link of dump.L || []) {
+    const source = link.source_ref?.target_uid;
+    const target = link.target_ref?.target_uid;
+    if (known.has(source) && known.has(target)) edges.push({ source, target, type: link.type_id || "L", kind: "link", uid: link.uid });
+  }
+  return { nodes, edges };
+}
+
+function updateMemoryStats() {
+  const exported = state.memoryExport;
+  if (!exported) return;
+  const dump = exported.dump;
+  const values = [dump.S, dump.C, dump.P, dump.H, dump.L].map((items) => items?.length || 0);
+  $$("#memory-stats article:not(.memory-revision) strong").forEach((element, index) => { element.textContent = values[index]; });
+  $("#memory-revision").textContent = `rev ${dump.revision} · tick ${dump.current_tick}`;
+  $("#memory-checksum").textContent = exported.sha256;
+}
+
+function renderMemoryInspector(uid) {
+  const graph = completeMemoryGraph();
+  const node = graph.nodes.find((item) => item.uid === uid);
+  if (!node) return;
+  state.memorySelectedUid = uid;
+  const badge = $("#memory-selected-type");
+  badge.textContent = node.kind;
+  badge.className = `type-dot type-${node.kind === "N" ? "n" : node.section.toLowerCase()}`;
+  $("#memory-selected-label").textContent = node.label;
+  $("#memory-selected-uid").textContent = `uid: ${uid}`;
+  $("#memory-selected-section").textContent = node.section;
+  $("#memory-selected-degree").textContent = graph.edges.filter((edge) => edge.source === uid || edge.target === uid).length;
+  const templateUid = node.raw.payload?.template_ref?.target_uid;
+  const predicateUid = node.raw.payload?.predicate_ref?.target_uid;
+  $("#memory-selected-predicate").textContent = node.kind === "N"
+    ? state.memory.labels.get(templateUid) || templateUid || "—"
+    : state.memory.labels.get(predicateUid) || predicateUid || "—";
+  $("#memory-selected-kind").textContent = node.kind;
+  const hypernode = state.memory.hypernodes.get(uid);
+  const bindings = $("#memory-selected-bindings");
+  if (hypernode?.bindings.length) {
+    bindings.replaceChildren(...hypernode.bindings.map((binding) => {
+      const row = document.createElement("div"); row.innerHTML = "<b></b><span></span>";
+      $("b", row).textContent = binding.role; $("span", row).textContent = binding.label; return row;
+    }));
+  } else { const empty = document.createElement("span"); empty.textContent = "У элемента нет RoleBindings."; bindings.replaceChildren(empty); }
+  const evidence = hypernode?.evidence?.[0] || node.raw.payload?.evidence?.[0];
+  $("#memory-selected-source").textContent = evidence?.exact_text || "Для выбранного элемента нет отдельного source span.";
+  $("#memory-selected-coord").textContent = evidence ? `${evidence.document_uid} · span ${evidence.start_offset}:${evidence.end_offset}` : "document — · span —";
+  renderMemoryGraph();
+}
+
+function renderMemoryGraph() {
+  const canvas = $("#memory-canvas");
+  const wrap = $("#memory-canvas-wrap");
+  if (!canvas || !state.memoryExport) return;
+  const graph = completeMemoryGraph();
+  let nodes = graph.nodes;
+  if (state.memoryFilter !== "ALL") {
+    const focused = new Set(graph.nodes.filter((node) => node.section === state.memoryFilter).map((node) => node.uid));
+    const visibleWithContext = new Set(focused);
+    graph.edges.forEach((edge) => { if (focused.has(edge.source) || focused.has(edge.target)) { visibleWithContext.add(edge.source); visibleWithContext.add(edge.target); } });
+    nodes = graph.nodes.filter((node) => visibleWithContext.has(node.uid));
+  }
+  const visible = new Set(nodes.map((node) => node.uid));
+  const edges = graph.edges.filter((edge) => visible.has(edge.source) && visible.has(edge.target));
+  $("#memory-empty").hidden = Boolean(nodes.length);
+  $("#memory-visible-count").textContent = `${nodes.length} узлов · ${edges.length} рёбер`;
+  const rect = wrap.getBoundingClientRect();
+  const width = Math.max(320, rect.width || 900);
+  const height = Math.max(480, rect.height || 620);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
+  const sections = ["S", "C", "P", "H"].filter((section) => nodes.some((node) => node.section === section));
+  const laneWidth = width / sections.length;
+  const colors = { S: "#257f7a", C: "#c45b35", P: "#2367d1", H: "#7651a8", N: "#2f7e91" };
+  state.memoryPositions = [];
+  sections.forEach((section, sectionIndex) => {
+    const laneNodes = nodes.filter((node) => node.section === section);
+    const columns = Math.max(1, Math.ceil(Math.sqrt(laneNodes.length * Math.max(.45, laneWidth / height))));
+    const rows = Math.max(1, Math.ceil(laneNodes.length / columns));
+    ctx.fillStyle = "#656a67"; ctx.font = "10px Consolas"; ctx.fillText(`${section} · ${laneNodes.length}`, sectionIndex * laneWidth + 14, 22);
+    if (sectionIndex) { ctx.strokeStyle = "#d9d6cf"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sectionIndex * laneWidth, 0); ctx.lineTo(sectionIndex * laneWidth, height); ctx.stroke(); }
+    laneNodes.forEach((node, index) => {
+      const column = index % columns; const row = Math.floor(index / columns);
+      const x = sectionIndex * laneWidth + (column + 1) * laneWidth / (columns + 1);
+      const y = 44 + (row + 1) * (height - 64) / (rows + 1);
+      state.memoryPositions.push({ uid: node.uid, x, y, radius: laneNodes.length > 180 ? 3 : laneNodes.length > 60 ? 4 : 6 });
+    });
+  });
+  const positions = new Map(state.memoryPositions.map((position) => [position.uid, position]));
+  const query = $("#memory-search").value.trim().toLowerCase();
+  const matches = new Set(nodes.filter((node) => !query || `${node.uid} ${node.label} ${node.kind}`.toLowerCase().includes(query)).map((node) => node.uid));
+  ctx.lineWidth = 1;
+  edges.forEach((edge) => {
+    const from = positions.get(edge.source); const to = positions.get(edge.target); if (!from || !to) return;
+    const selected = state.memorySelectedUid && (edge.source === state.memorySelectedUid || edge.target === state.memorySelectedUid);
+    const matched = !query || matches.has(edge.source) || matches.has(edge.target);
+    ctx.strokeStyle = selected ? "rgba(18,97,216,.8)" : matched ? "rgba(70,76,73,.16)" : "rgba(70,76,73,.035)";
+    ctx.lineWidth = selected ? 1.8 : 1; ctx.setLineDash(edge.kind === "role" ? [3, 3] : []);
+    ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  nodes.forEach((node) => {
+    const position = positions.get(node.uid); if (!position) return;
+    const selected = node.uid === state.memorySelectedUid; const matched = matches.has(node.uid);
+    ctx.globalAlpha = query && !matched ? .13 : 1;
+    ctx.beginPath(); ctx.arc(position.x, position.y, selected ? position.radius + 3 : position.radius, 0, Math.PI * 2);
+    ctx.fillStyle = colors[node.kind === "N" ? "N" : node.section]; ctx.fill();
+    if (selected) { ctx.strokeStyle = "#17191a"; ctx.lineWidth = 2; ctx.stroke(); }
+  });
+  ctx.globalAlpha = 1;
+  if (query) $("#memory-visible-count").textContent += ` · ${matches.size} совпадений`;
+}
+
+async function refreshMemoryView() {
+  try { await loadMemoryMap(); updateMemoryStats(); renderMemoryGraph(); }
+  catch (error) { $("#memory-visible-count").textContent = error.message; }
+}
+
+function downloadMemoryDump() {
+  if (!state.memoryExport) return;
+  const revision = state.memoryExport.dump?.revision ?? "unknown";
+  const blob = new Blob([JSON.stringify(state.memoryExport, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob); const link = document.createElement("a");
+  link.href = url; link.download = `ah-memory-rev-${revision}.json`; link.click(); URL.revokeObjectURL(url);
 }
 
 function compactLabel(uid) {
@@ -452,19 +614,34 @@ async function runQuery(question = $("#query-input").value.trim()) {
   }
 }
 
-function deriveCandidates(text) {
-  let offset = 0;
-  const sentences = text.match(/[^.!?]+[.!?]?/g)?.map((item) => item.trim()).filter(Boolean) || [];
-  return sentences.slice(0, 6).map((assertion) => {
-    const start = text.indexOf(assertion, offset); const end = start + assertion.length; offset = end;
-    const low = assertion.toLowerCase();
-    const predicate = /вызвал|из-за|привел|привела|привело/.test(low) ? "CAUSE" : /после|затем/.test(low) ? "FOLLOW" : /ключ|инструмент|применил/.test(low) ? "USES_TOOL" : "OBSERVED";
-    const parts = assertion.replace(/[.!?]$/, "").split(/\s+(?:вызвал[аио]?|привел[аио]? к|после этого|применил[аио]?)\s+/i);
-    const bindings = { SUBJECT: parts[0] || assertion, OBJECT: parts[1] || assertion };
-    const location = assertion.match(/в\s+([а-яё\s-]+?(?:зале|цехе|помещении))/i); if (location) bindings.LOCATION = location[1];
-    const tool = assertion.match(/(?:ключ|инструмент)\w*(?:\s+[а-яё-]+)?/i); if (tool) bindings.TOOL = tool[0];
-    return { predicate, assertion, confidence: .78, span: `${start}:${end}`, template: `${predicate}(${Object.keys(bindings).join(", ")})`, bindings };
-  });
+function candidateFromPreview(item) {
+  const bindings = Object.fromEntries((item.bindings || []).map((binding) => [binding.role_id, binding.value]));
+  return { candidateUid: item.candidate_uid, predicate: item.predicate, assertion: item.exact_text, confidence: item.confidence, span: `${item.source_start}:${item.source_end}`, template: `${item.predicate}(${Object.keys(bindings).join(", ")})`, bindings, modelId: item.model_id, status: item.status || "pending" };
+}
+
+async function previewCandidates() {
+  const text = $("#ingestion-text").value.trim(); if (!text) return;
+  const button = $("#preview-candidates"); button.disabled = true; button.textContent = "Извлекаем…";
+  $("#parser-status").textContent = "Серверный parser обрабатывает документ";
+  try {
+    const result = await api("/api/v1/ingestions/preview", { method: "POST", body: JSON.stringify({ text, source_name: "ingestion-review" }) });
+    state.previewUid = result.preview_uid; state.selectedCandidate = 0;
+    state.candidates = result.candidates.map(candidateFromPreview);
+    const provider = result.provider;
+    const fallback = provider.fallback ? " · fallback" : "";
+    const cached = provider.cached ? " · cache" : "";
+    $("#parser-status").textContent = `${provider.active} · ${provider.model_id} · ${provider.prompt_version}${fallback}${cached}`;
+    $("#document-label").textContent = result.document_uid;
+    const rejected = result.rejection_log || [];
+    $("#admission-result").textContent = rejected.length
+      ? `${result.count} candidates · ${rejected.length} отсечено: ${rejected[0].message || rejected[0].reason}`
+      : `${result.count} candidates · ожидают решения`;
+    renderCandidates();
+  } catch (error) {
+    state.previewUid = null; state.candidates = []; renderCandidates();
+    $("#parser-status").textContent = "parser unavailable";
+    $("#admission-result").textContent = error.message;
+  } finally { button.disabled = false; button.textContent = "Собрать кандидатов"; }
 }
 
 function renderCandidates() {
@@ -472,11 +649,11 @@ function renderCandidates() {
   list.replaceChildren(...state.candidates.map((candidate, index) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `candidate-card ${index === state.selectedCandidate ? "is-selected" : ""}`;
+    button.className = `candidate-card is-${candidate.status} ${index === state.selectedCandidate ? "is-selected" : ""}`;
     button.innerHTML = `<span class="predicate">${candidate.predicate}</span><span class="candidate-copy"><b></b><code></code></span><span class="confidence"></span>`;
     $("b", button).textContent = candidate.assertion;
     $("code", button).textContent = `Hyperedge template · ${candidate.template}`;
-    $(".confidence", button).textContent = `${Math.round(candidate.confidence * 100)}% · span ${candidate.span}`;
+    $(".confidence", button).textContent = `${Math.round(candidate.confidence * 100)}% · span ${candidate.span} · ${candidate.status}`;
     button.addEventListener("click", () => { state.selectedCandidate = index; renderCandidates(); });
     return button;
   }));
@@ -484,12 +661,19 @@ function renderCandidates() {
   const selected = state.candidates[state.selectedCandidate];
   if (!selected) {
     $("#candidate-title").textContent = "Нет выбранного кандидата";
+    $("#candidate-span").textContent = "source span —";
+    $("#candidate-quote").textContent = "Сначала запросите серверный preview документа.";
+    $$(".check-list input").forEach((input) => { input.checked = false; });
     $("#binding-list").replaceChildren();
+    $("#reject-candidate").disabled = true; $("#admit-candidate").disabled = true;
     return;
   }
   $("#candidate-title").textContent = `${selected.predicate} · выбранный кандидат`;
+  $$(".check-list input").forEach((input) => { input.checked = true; });
   $("#candidate-span").textContent = `source span ${selected.span} · confidence ${selected.confidence.toFixed(2)}`;
   $("#candidate-quote").textContent = selected.assertion;
+  const pending = selected.status === "pending";
+  $("#reject-candidate").disabled = !pending; $("#admit-candidate").disabled = !pending;
   $("#binding-list").replaceChildren(...Object.entries(selected.bindings).map(([role, value]) => {
     const row = document.createElement("div"); row.className = "binding-row";
     const marker = document.createElement("span"); marker.textContent = role[0]; marker.title = role;
@@ -498,18 +682,25 @@ function renderCandidates() {
   }));
 }
 
-async function admitDocument(event) {
-  event.preventDefault();
-  const text = $("#ingestion-text").value.trim();
-  if (!text) return;
-  const button = $("#admit-candidate"); button.disabled = true;
+async function decideSelectedCandidate(decision, event) {
+  event?.preventDefault();
+  const candidate = state.candidates[state.selectedCandidate];
+  if (!state.previewUid || !candidate || candidate.status !== "pending") return;
+  const admit = $("#admit-candidate"); const reject = $("#reject-candidate"); admit.disabled = true; reject.disabled = true;
   try {
-    const result = await api("/api/v1/ingestions", { method: "POST", body: JSON.stringify({ text, source_name: "ingestion-review" }) });
-    $("#admission-result").textContent = `${result.candidates.length} candidates · ${result.accepted.length} admitted · ${result.rejected.length} rejected`;
-    toast(`AH Core принял ${result.accepted.length} фактов`);
+    const result = await api("/api/v1/ingestions/decision", { method: "POST", body: JSON.stringify({ preview_uid: state.previewUid, candidate_uid: candidate.candidateUid, decision }) });
+    candidate.status = result.status;
+    const admitted = state.candidates.filter((item) => item.status === "admitted").length;
+    const rejected = state.candidates.filter((item) => item.status === "rejected").length;
+    const pending = state.candidates.length - admitted - rejected;
+    $("#admission-result").textContent = `${admitted} admitted · ${rejected} rejected · ${pending} pending`;
+    if (result.accepted.length) { await loadMemoryMap(); toast(`Факт записан в AH · rev ${result.memory_revision}`); }
+    else toast("Кандидат отклонён");
+    renderCandidates();
   } catch (error) {
     $("#admission-result").textContent = `validation error · ${error.message}`;
-  } finally { button.disabled = false; }
+    renderCandidates();
+  }
 }
 
 function percent(value) { return Number.isFinite(value) ? `${Math.round(value * 100)}%` : "—"; }
@@ -562,24 +753,40 @@ function bindEvents() {
   $("#params-close").addEventListener("click", () => openParams(false));
   $("#drawer-backdrop").addEventListener("click", () => openParams(false));
   $("#profile").addEventListener("change", (event) => { $("#profile-label").textContent = event.target.value; });
-  $("#preview-candidates").addEventListener("click", () => { state.candidates = deriveCandidates($("#ingestion-text").value); state.selectedCandidate = 0; renderCandidates(); });
-  $("#ingestion-form").addEventListener("submit", admitDocument);
-  $("#reject-candidate").addEventListener("click", () => { if (!state.candidates.length) return; state.candidates.splice(state.selectedCandidate, 1); state.selectedCandidate = Math.max(0, state.selectedCandidate - 1); renderCandidates(); $("#admission-result").textContent = `${state.candidates.length} candidates · 0 admitted`; });
+  $("#preview-candidates").addEventListener("click", previewCandidates);
+  $("#ingestion-form").addEventListener("submit", (event) => decideSelectedCandidate("admit", event));
+  $("#reject-candidate").addEventListener("click", (event) => decideSelectedCandidate("reject", event));
   $("#run-evaluation").addEventListener("click", runEvaluation);
+  $("#memory-refresh").addEventListener("click", refreshMemoryView);
+  $("#memory-download").addEventListener("click", downloadMemoryDump);
+  $("#memory-search").addEventListener("input", renderMemoryGraph);
+  $$("[data-memory-filter]").forEach((button) => button.addEventListener("click", () => {
+    state.memoryFilter = button.dataset.memoryFilter;
+    $$("[data-memory-filter]").forEach((item) => item.classList.toggle("is-active", item === button));
+    renderMemoryGraph();
+  }));
+  $("#memory-canvas").addEventListener("click", (event) => {
+    const rect = event.currentTarget.getBoundingClientRect(); const x = event.clientX - rect.left; const y = event.clientY - rect.top;
+    const nearest = state.memoryPositions.map((position) => ({ ...position, distance: Math.hypot(position.x - x, position.y - y) })).sort((a, b) => a.distance - b.distance)[0];
+    if (nearest && nearest.distance <= Math.max(12, nearest.radius + 5)) renderMemoryInspector(nearest.uid);
+  });
+  $("#memory-canvas").addEventListener("mousemove", (event) => {
+    const rect = event.currentTarget.getBoundingClientRect(); const x = event.clientX - rect.left; const y = event.clientY - rect.top;
+    event.currentTarget.style.cursor = state.memoryPositions.some((position) => Math.hypot(position.x - x, position.y - y) <= Math.max(10, position.radius + 4)) ? "pointer" : "default";
+  });
   $("#gc-preview").addEventListener("click", async () => {
     try { const result = await api("/api/v1/gc/preview", { method: "POST", body: "{}" }); $("#gc-output").textContent = `${result.orphan_count_before} collectible · token ${result.preview_token}`; }
     catch (error) { $("#gc-output").textContent = error.message; }
   });
-  window.addEventListener("hashchange", () => { const next = location.hash.slice(1); if (["observatory", "ingestion", "evaluation"].includes(next)) showView(next, false); });
-  window.addEventListener("resize", () => { cancelAnimationFrame(state.resizeFrame); state.resizeFrame = requestAnimationFrame(renderGraph); });
+  window.addEventListener("hashchange", () => { const next = location.hash.slice(1); if (["observatory", "ingestion", "evaluation", "memory"].includes(next)) showView(next, false); });
+  window.addEventListener("resize", () => { cancelAnimationFrame(state.resizeFrame); state.resizeFrame = requestAnimationFrame(() => { renderGraph(); renderMemoryGraph(); }); });
 }
 
 async function boot() {
   bindEvents();
-  state.candidates = demoCandidates.map((item) => ({ ...item, bindings: { ...item.bindings } }));
   renderCandidates();
   const initialView = location.hash.slice(1);
-  if (["observatory", "ingestion", "evaluation"].includes(initialView)) showView(initialView, false);
+  if (["observatory", "ingestion", "evaluation", "memory"].includes(initialView)) showView(initialView, false);
   try {
     const health = await api("/health");
     setOnline(true, health.revision);

@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f1ea">
   <title>AH-MemoryHub · Memory Observatory</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2317191a'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Arial' font-size='12' font-weight='700' fill='white'%3EAH%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/assets/styles.css?v=20260823-ingestion2">
 </head>
 <body>
   <div class="app-shell">
@@ -18,6 +19,7 @@
         <button class="nav-item is-active" data-view="observatory"><span>01</span><b>Observatory</b></button>
         <button class="nav-item" data-view="ingestion"><span>02</span><b>Ingestion</b></button>
         <button class="nav-item" data-view="evaluation"><span>03</span><b>Evaluation</b></button>
+        <button class="nav-item" data-view="memory"><span>04</span><b>Memory</b></button>
       </nav>
       <div class="rail-meta">
         <button class="utility-button" id="params-open"><span>Params</span><b id="profile-label">integrated_v1</b></button>
@@ -32,6 +34,7 @@
           <button class="mobile-nav is-active" data-view="observatory">Обзор</button>
           <button class="mobile-nav" data-view="ingestion">Приём</button>
           <button class="mobile-nav" data-view="evaluation">Оценка</button>
+          <button class="mobile-nav" data-view="memory">Память</button>
         </nav>
         <button class="mobile-params" id="params-mobile-open">Params</button>
       </header>
@@ -129,7 +132,7 @@
             <form class="document-form" id="ingestion-form">
               <label for="ingestion-text">Исходный документ</label>
               <textarea id="ingestion-text" rows="4" required>Перегрев насоса вызвал остановку агрегата в насосном зале. Остановка агрегата привела к снижению давления. После этого оператор применил ручной ключ.</textarea>
-              <div><button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button><span>Запись в AH пока не выполняется</span></div>
+              <div><button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button><span id="parser-status">Preview выполнит серверный модуль восприятия</span></div>
             </form>
             <div class="section-heading"><div><span class="eyebrow">CANDIDATE FACTS</span><h2>Предложенные утверждения</h2></div><span id="candidate-count">3 candidates</span></div>
             <div class="candidate-list" id="candidate-list"></div>
@@ -143,8 +146,8 @@
             <ul class="check-list">
               <li><input type="checkbox" checked disabled>span совпадает с источником</li><li><input type="checkbox" checked disabled>шаблон входит в реестр</li><li><input type="checkbox" checked disabled>RoleBindings типизированы</li><li><input type="checkbox" checked disabled>UID назначит AH Core</li>
             </ul>
-            <div class="admission-actions"><button class="button button-ghost" type="button" id="reject-candidate">Reject</button><button class="button button-primary" type="submit" form="ingestion-form" id="admit-candidate">Admit в AH</button></div>
-            <p class="admission-result" id="admission-result" aria-live="polite">3 candidates · 1 selected · 0 admitted</p>
+            <div class="admission-actions"><button class="button button-ghost" type="button" id="reject-candidate">Отклонить</button><button class="button button-primary" type="submit" form="ingestion-form" id="admit-candidate">Принять факт</button></div>
+            <p class="admission-result" id="admission-result" aria-live="polite">Сначала соберите кандидатов</p>
           </aside>
         </div>
       </section>
@@ -176,6 +179,37 @@
         </section>
         <div class="evaluation-note"><span>ENGINE PROFILE</span><b>integrated_v1</b><p>M4 и M5 остаются честно недоступными, пока не подключены внешний LLM и локальная SLM ≤ 8B.</p></div>
       </section>
+
+      <section class="view" id="view-memory" aria-labelledby="memory-title">
+        <div class="page-head memory-head">
+          <div><span class="eyebrow">04 · MEMORY DUMP</span><h1 id="memory-title">Полная карта AH-памяти.</h1><p>Весь кортеж AH = &lt;S, C, P, H, L&gt; одной ревизии. Карта нужна для обзора, JSON — для воспроизводимой проверки и сдачи.</p></div>
+          <div class="memory-actions"><button class="button button-secondary" id="memory-refresh" type="button">Обновить</button><button class="button button-primary" id="memory-download" type="button">Скачать JSON</button></div>
+        </div>
+        <div class="memory-stats" id="memory-stats" aria-label="Мощности разделов AH">
+          <article><span>S · SYMBOLS</span><strong>—</strong></article><article><span>C · COMMON</span><strong>—</strong></article><article><span>P · PRIVATE</span><strong>—</strong></article><article><span>H · HISTORY</span><strong>—</strong></article><article><span>L · LINKS</span><strong>—</strong></article>
+          <article class="memory-revision"><span>REVISION / SHA-256</span><strong id="memory-revision">—</strong><code id="memory-checksum">—</code></article>
+        </div>
+        <div class="memory-toolbar">
+          <label><span class="sr-only">Поиск по памяти</span><input id="memory-search" type="search" placeholder="Найти UID, символ или предикат…" autocomplete="off"></label>
+          <div class="memory-filters" role="group" aria-label="Фильтр раздела памяти">
+            <button class="is-active" type="button" data-memory-filter="ALL">Все</button><button type="button" data-memory-filter="S">S</button><button type="button" data-memory-filter="C">C</button><button type="button" data-memory-filter="P">P</button><button type="button" data-memory-filter="H">H</button>
+          </div>
+          <span id="memory-visible-count">ожидает загрузки</span>
+        </div>
+        <div class="memory-layout">
+          <section class="memory-map-panel" aria-label="Полный граф AH-памяти">
+            <div class="memory-map-key"><span><i class="type-s"></i>S</span><span><i class="type-c"></i>C</span><span><i class="type-p"></i>P</span><span><i class="type-h"></i>H</span><span><i class="type-n"></i>N</span><span><i class="memory-link-key"></i>L</span><small>Нажмите на узел для инспекции</small></div>
+            <div class="memory-canvas-wrap" id="memory-canvas-wrap"><canvas id="memory-canvas" aria-label="Визуализация полного графа памяти"></canvas><div class="graph-empty" id="memory-empty"><b>Память не загружена</b><span>Обновите дамп после запуска AH Core.</span></div></div>
+          </section>
+          <aside class="memory-inspector" aria-live="polite">
+            <span class="eyebrow">MEMORY INSPECTOR</span>
+            <div class="selected-identity"><span class="type-dot type-s" id="memory-selected-type">—</span><div><b id="memory-selected-label">Выберите узел</b><code id="memory-selected-uid">uid: —</code></div></div>
+            <dl class="fact-grid"><div><dt>Раздел</dt><dd id="memory-selected-section">—</dd></div><div><dt>Степень</dt><dd id="memory-selected-degree">—</dd></div><div><dt>Предикат</dt><dd id="memory-selected-predicate">—</dd></div><div><dt>Тип</dt><dd id="memory-selected-kind">—</dd></div></dl>
+            <div class="inspector-section"><h3>Ролевые связи</h3><div class="role-bindings" id="memory-selected-bindings"><span>Для гиперузла здесь появятся RoleBindings.</span></div></div>
+            <div class="inspector-section"><h3>Источник</h3><blockquote id="memory-selected-source">Для выбранного элемента нет отдельного source span.</blockquote><div class="source-coord" id="memory-selected-coord">document — · span —</div></div>
+          </aside>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -193,6 +227,6 @@
   </aside>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="/assets/app.js" defer></script>
+  <script src="/assets/app.js?v=20260823-ingestion2" defer></script>
 </body>
 </html>

@@ -12,6 +12,7 @@ from .models import *
 ROLE_IDS = (
     "SUBJECT", "OBJECT", "LOCATION", "TIME", "CAUSE", "TOOL", "RESULT", "AGENT",
     "PATIENT", "ACTION", "STATE", "SOURCE", "DESTINATION", "CONDITION", "VALUE", "PART",
+    "HOW-TO",
 )
 
 
@@ -165,17 +166,27 @@ class AHMemory:
         self._commit(deepcopy(self.symbols), sections, links, deepcopy(self.templates))
 
     def _ref_exists(self, ref: Reference) -> bool:
-        return ref.target_uid in self.symbols if ref.kind == "S" else ref.target_uid in self.elements
+        if ref.kind == "S":
+            return ref.target_uid in self.symbols
+        target = self.elements.get(ref.target_uid)
+        if ref.kind == "M":
+            return target is not None and isinstance(target.payload, SecondOrderSymbol)
+        return target is not None
 
     def _reference_records(self):
         """Yield every stored first-class reference, preserving its identity."""
         for element in self.elements.values():
             payload = element.payload
-            if isinstance(payload, MemoryList):
+            if isinstance(payload, (SReference, MReference)):
+                yield payload
+            elif isinstance(payload, MemoryList):
                 yield from payload.ordered_members
             elif isinstance(payload, FunctionalSymbol):
                 yield from payload.ordered_operands
+            elif isinstance(payload, ControlTemplate):
+                yield payload.predicate_ref
             elif isinstance(payload, Hypernode):
+                yield payload.template_ref
                 yield from (binding.target_ref for binding in payload.role_bindings)
         for link in self.links.values():
             yield link.source_ref
@@ -194,7 +205,14 @@ class AHMemory:
             if prior is not None and (prior.kind != ref.kind or prior.target_uid != ref.target_uid):
                 raise InvariantError(f"reference UID has conflicting identity: {ref.reference_uid}")
             reference_index[ref.reference_uid] = ref
-        identity_uids = list(all_uids) + list(reference_index)
+        external_reference_uids = []
+        for reference_uid, ref in reference_index.items():
+            stored = self.elements.get(reference_uid)
+            if stored is None:
+                external_reference_uids.append(reference_uid)
+            elif not isinstance(stored.payload, (SReference, MReference)) or stored.payload != ref:
+                raise InvariantError(f"reference UID conflicts with addressable element: {reference_uid}")
+        identity_uids = list(all_uids) + external_reference_uids
         if len(identity_uids) != len(set(identity_uids)):
             raise InvariantError("reference and addressable UIDs must be globally unique")
         for section, values in self.sections.items():
@@ -202,8 +220,12 @@ class AHMemory:
                 raise InvariantError("invalid section")
             for e in values.values():
                 p = e.payload
+                if isinstance(p, (SReference, MReference)) and not self._ref_exists(p):
+                    raise InvariantError("dangling reference element")
                 if isinstance(p, ControlTemplate) and p.uid not in self.templates:
                     raise InvariantError("unregistered template")
+                if isinstance(p, ControlTemplate) and not self._ref_exists(p.predicate_ref):
+                    raise InvariantError("template predicate must reference S")
                 if isinstance(p, (SecondOrderSymbol, MemoryList, Hypernode)):
                     props = p.properties + p.meta_properties
                     if len({x.name for x in props}) != len(props):
@@ -215,7 +237,10 @@ class AHMemory:
                     for ref in p.ordered_operands:
                         if not self._ref_exists(ref): raise InvariantError("dangling operand reference")
                 if isinstance(p, Hypernode):
-                    template = self.templates.get(p.template_ref)
+                    template_element = self.elements.get(p.template_ref.target_uid)
+                    template = self.templates.get(p.template_ref.target_uid)
+                    if not template_element or not isinstance(template_element.payload, ControlTemplate):
+                        raise InvariantError("template reference must target ControlTemplate")
                     if not template: raise InvariantError("dangling template reference")
                     declared = {r.role_id: r for r in template.ordered_roles}
                     seen = set()
@@ -261,15 +286,17 @@ class AHMemory:
         ref = self.reference_index().get(reference_uid)
         return ref if ref is not None and ref.kind == "M" else None
     def find_m_references(self, target_uid: str): return [r for r in self.reference_index().values() if r.kind == "M" and r.target_uid == target_uid]
-    def get_symbol(self, uid_: str): return self.elements.get(uid_)
+    def get_symbol(self, uid_: str):
+        element = self.elements.get(uid_)
+        return element.payload if element and isinstance(element.payload, SecondOrderSymbol) else None
     def find_symbols(self, primary_symbol: str):
         q = norm(primary_symbol)
-        found = [s for s in self.symbols.values() if any(norm(r.value) == q for r in s.sensory_representations)]
-        found.extend(e for e in self.elements.values() if isinstance(e.payload, SecondOrderSymbol) and any(norm(p.value) == q for p in e.payload.properties))
-        return found
-    def get_list(self, uid_: str): return self.elements.get(uid_)
+        return [e.payload for e in self.elements.values() if isinstance(e.payload, SecondOrderSymbol) and any(norm(str(p.value)) == q for p in e.payload.properties)]
+    def get_list(self, uid_: str):
+        element = self.elements.get(uid_)
+        return element.payload if element and isinstance(element.payload, MemoryList) else None
     def find_lists(self, element_uid: str | None = None, list_type: str | None = None):
-        return [e for e in self.elements.values() if isinstance(e.payload, MemoryList) and (element_uid is None or any(r.target_uid == element_uid for r in e.payload.ordered_members)) and (list_type is None or e.payload.list_type == list_type)]
+        return [e.payload for e in self.elements.values() if isinstance(e.payload, MemoryList) and (element_uid is None or any(r.target_uid == element_uid for r in e.payload.ordered_members)) and (list_type is None or e.payload.list_type == list_type)]
     def get_template(self, uid_: str): return self.templates.get(uid_)
     def get_hypernode(self, uid_: str):
         e = self.elements.get(uid_); return e.payload if e and isinstance(e.payload, Hypernode) else None
@@ -277,7 +304,7 @@ class AHMemory:
         q = norm(query or "")
         out = []
         for e in self.elements.values():
-            if isinstance(e.payload, Hypernode) and (not q or e.payload.template_ref == query or any(r.target_uid == query or norm(self.label(r.target_uid)) == q for r in [b.target_ref for b in e.payload.role_bindings])):
+            if isinstance(e.payload, Hypernode) and (not q or e.payload.template_ref.target_uid == query or any(r.target_uid == query or norm(self.label(r.target_uid)) == q for r in [b.target_ref for b in e.payload.role_bindings])):
                 out.append(e.payload)
         return out
     def find_roles(self, role: str, value: str):
@@ -293,6 +320,8 @@ class AHMemory:
         s = self.symbols.get(target_uid)
         if s: return s.sensory_representations[0].value
         e = self.elements.get(target_uid)
+        if e and isinstance(e.payload, (SReference, MReference)):
+            return self.label(e.payload.target_uid)
         if e and isinstance(e.payload, SecondOrderSymbol):
             for p in e.payload.properties:
                 if p.name == "label": return str(p.value)

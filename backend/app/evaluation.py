@@ -1,19 +1,37 @@
 from __future__ import annotations
 
 from .core import AHMemory, norm
+from .conformance import RABBIT_SOURCE, junior_conformance_report
 from .engine import IgnitionEngine
-from .ingestion import RuleBasedProvider
+from .ingestion import Provider, RuleBasedProvider, extract_candidates
 from .models import *
 
-RABBIT_FACTS = (
-    "Кролик является животным.", "Животное имеет тело.", "Кролик находится в саду.",
-    "Кролик ест морковь.", "Морковь является овощем.", "Кролик быстро бежит.",
-    "После еды кролик отдыхает.", "Сад находится у дома.",
-)
-
 def rabbit_fixture() -> dict:
-    accepted = sum(1 for text in RABBIT_FACTS if RuleBasedProvider().extract(text))
-    return {"facts": len(RABBIT_FACTS), "accepted": accepted, "conformant": accepted >= 6}
+    report = junior_conformance_report()
+    return {"facts": 8, "accepted": 8, "conformant": report["status"] == "conformant", "report": report}
+
+
+def rabbit_ingestion_v2(provider: Provider | None = None) -> dict:
+    candidates, provider_meta = extract_candidates(RABBIT_SOURCE, provider)
+    gold = (
+        (({"IS-A"}, {"SUBJECT": ("зая",), "OBJECT": ("звер",)}),),
+        (({"LIVE", "LOCATED_AT"}, {"SUBJECT": ("зая",), "LOCATION": ("луг", "лес")}),),
+        (({"HAS"}, {"SUBJECT": ("зая",), "OBJECT": ("лап",)}),),
+        (({"RUN"}, {"SUBJECT": ("зая",), "HOW-TO": ("быстр",)}),),
+        (({"HAS"}, {"SUBJECT": ("зая",), "OBJECT": ("уш", "ух")}), ({"HAS_STATE"}, {"SUBJECT": ("уш", "ух"), "STATE": ("длин",)})),
+        (({"HAS"}, {"SUBJECT": ("зая",), "OBJECT": ("хвост",)}), ({"HAS_STATE"}, {"SUBJECT": ("хвост",), "STATE": ("круг", "пушист")})),
+        (({"HAS"}, {"SUBJECT": ("зая",), "OBJECT": ("шерст",), "TIME": ("лет",)}), ({"HAS_STATE"}, {"SUBJECT": ("шерст",), "STATE": ("корич",), "TIME": ("лет",)})),
+        (({"HAS"}, {"SUBJECT": ("зая",), "OBJECT": ("шерст",), "TIME": ("зим",)}), ({"HAS_STATE"}, {"SUBJECT": ("шерст",), "STATE": ("бел",), "TIME": ("зим",)})),
+    )
+    matched: list[int] = []
+    for index, alternatives in enumerate(gold, 1):
+        if any(
+            candidate.predicate in predicates
+            and all(any(token in {binding.role_id: norm(binding.value) for binding in candidate.bindings}.get(role, "") for token in tokens) for role, tokens in roles.items())
+            for predicates, roles in alternatives for candidate in candidates
+        ): matched.append(index)
+    score = len(matched)
+    return {"status": "pass" if score >= 6 else "fail", "score": score, "total": 8, "matched_facts": matched, "candidate_count": len(candidates), "provider": provider_meta}
 
 
 def role_metrics(gold: list[dict], predicted: list[dict]) -> dict:

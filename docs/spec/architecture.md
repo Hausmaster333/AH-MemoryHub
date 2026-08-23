@@ -127,17 +127,18 @@ Every UID is unique across its addressable type and immutable after creation. A 
 FirstOrderSymbol = <uid, sensory_representations>
 SReference       = <'S', target_uid, reference_uid>
 MReference       = <'M', target_uid, reference_uid>
+ElementReference = <'E', target_uid, reference_uid>
 SecondOrderSymbol= <uid, properties, meta_properties>
 FunctionalSymbol = <uid, function_id, ordered_operands>
 MemoryList        = <uid, ordered_members, properties, meta_properties>
-ControlTemplate   = <uid, predicate_ref, ordered_roles>
+ControlTemplate   = <uid, predicate_ref:SReference, ordered_roles>
 RoleBinding       = <role_id, target_ref>
-Hypernode         = <uid, weight, template_ref, role_bindings, properties, meta_properties>
+Hypernode         = <uid, weight, template_ref:ElementReference, role_bindings, properties, meta_properties>
 AssociativeLink   = <uid, type_id, weight, source_ref, target_ref>
 MemoryElement     = <payload, excitation, activation_function>
 ```
 
-The endpoint type of an Associative Link is `SReference | MReference`. This deliberately resolves the conflict between the declared `S,C,P,H` connectivity and the narrower `e*` notation on monograph page 23.
+`SReference` is `s*`, `MReference` is restricted to a Second-order Symbol, and `ElementReference` is the generic `e*` pointer into `C/P/H`. The endpoint type of an Associative Link is their union. This deliberately resolves the conflict between the declared `S,C,P,H` connectivity and the narrower `e*` notation on monograph page 23 without overloading `m*`.
 
 `RoleBinding` is explicit because the monograph allows partially filled templates while `N` otherwise stores only an unlabelled sequence of actants. Empty roles are absent bindings, not positional shifts.
 
@@ -209,8 +210,8 @@ sequenceDiagram
 The parser may return only:
 
 - predicate/template candidate;
-- role bindings using the 16-role registry;
-- canonical labels and observed word forms;
+- role bindings using the typed role registry;
+- labels observed in the document;
 - event time, location, cause, tool, and other role values;
 - exact source span and confidence;
 - unresolved-entity flags.
@@ -229,6 +230,18 @@ The compiler:
 6. creates Source Evidence;
 7. derives required IS-A, FOLLOW, and CAUSE links;
 8. validates the complete delta before mutation.
+
+Ingestion v2 segments the untouched document deterministically and carries each
+candidate's exact offsets plus previous/next sentence context. Canonicalization
+resolves only unambiguous local pronouns, rejects unresolved references and
+`FOLLOW` inferred from a temporal marker alone, enforces required roles, and
+deduplicates canonical fact signatures. Rejections have stable reason codes.
+Successful candidates are compiled in isolated staging memories and committed
+to AH Core in one batch. Parser confidence is stored only in Source Evidence;
+the initial activation weight is an independent configuration value.
+
+Extraction results are cached in memory by document SHA-256, model ID, and
+prompt version. The LLM never writes AH UIDs or mutates memory directly.
 
 The rabbit fixture from monograph section 7 remains a permanent conformance test. At least six of its eight facts must be extracted automatically.
 

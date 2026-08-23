@@ -52,17 +52,32 @@ def parse(text: str) -> list[Call]:
 
 
 class Interpreter:
-    READS = {"findRoles", "findLists", "findHypernodes", "findLinks", "findSymbols", "getTemplate", "follow"}
+    READS = {
+        "getAbstractSymbol", "findAbstractSymbols", "getSReference", "findSReferences",
+        "getMReference", "findMReferences", "getSymbol", "findSymbols", "getList",
+        "findLists", "getTemplate", "getHypernode", "findHypernodes", "findRoles",
+        "getLink", "findLinks", "follow",
+    }
 
     def __init__(self, memory: AHMemory): self.memory = memory
 
     def query(self, expression: str):
         result = None
         for call in parse(expression):
-            if call.name == "findRoles": result = self.memory.find_roles(call.args.get("role", ""), call.args.get("value", ""))
+            if call.name == "getAbstractSymbol": result = self.memory.get_abstract_symbol(call.args.get("uid", ""))
+            elif call.name == "findAbstractSymbols": result = self.memory.find_abstract_symbols(call.args.get("value", ""))
+            elif call.name == "getSReference": result = self.memory.get_s_reference(call.args.get("uid", ""))
+            elif call.name == "findSReferences": result = self.memory.find_s_references(call.args.get("target", call.args.get("uid", "")))
+            elif call.name == "getMReference": result = self.memory.get_m_reference(call.args.get("uid", ""))
+            elif call.name == "findMReferences": result = self.memory.find_m_references(call.args.get("target", call.args.get("uid", "")))
+            elif call.name == "getSymbol": result = self.memory.get_symbol(call.args.get("uid", ""))
+            elif call.name == "findRoles": result = self.memory.find_roles(call.args.get("role", ""), call.args.get("value", ""))
             elif call.name == "findLists": result = self.memory.find_lists(call.args.get("element"), call.args.get("type"))
+            elif call.name == "getList": result = self.memory.get_list(call.args.get("uid", ""))
             elif call.name == "findHypernodes": result = self.memory.find_hypernodes(call.args.get("query"))
+            elif call.name == "getHypernode": result = self.memory.get_hypernode(call.args.get("uid", ""))
             elif call.name == "findLinks": result = self.memory.find_links(call.args.get("uid", ""))
+            elif call.name == "getLink": result = self.memory.get_link(call.args.get("uid", ""))
             elif call.name == "findSymbols": result = self.memory.find_symbols(call.args.get("value", ""))
             elif call.name == "getTemplate": result = self.memory.get_template(call.args.get("uid", ""))
             elif call.name == "intersect":
@@ -78,7 +93,8 @@ class Interpreter:
                     current = nxt - seen; seen |= nxt
                 result = sorted(seen)
             else: raise DSLParseError(f"unknown read operation: {call.name}")
-        return [x.model_dump(mode="json") if hasattr(x, "model_dump") else x for x in (result or [])]
+        values = result if isinstance(result, (list, tuple, set)) else ([] if result is None else [result])
+        return [x.model_dump(mode="json") if hasattr(x, "model_dump") else x for x in values]
 
     def mutate(self, expression: str):
         calls = parse(expression)
@@ -89,4 +105,3 @@ class Interpreter:
         link = AssociativeLink(uid=uid("l"), type_id=a.get("type", "ASSOCIATES"), weight=float(a.get("weight", "1")), source_ref=SReference(reference_uid=uid("sr"), target_uid=source), target_ref=SReference(reference_uid=uid("sr"), target_uid=target))
         self.memory.add_link(link)
         return link.model_dump(mode="json")
-

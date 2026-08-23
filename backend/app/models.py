@@ -43,7 +43,13 @@ class MReference(Frozen):
     target_uid: str = Field(min_length=1)
 
 
-Reference = SReference | MReference
+class ElementReference(Frozen):
+    kind: Literal["E"] = "E"
+    reference_uid: str = Field(min_length=1)
+    target_uid: str = Field(min_length=1)
+
+
+Reference = SReference | MReference | ElementReference
 
 
 class Property(Frozen):
@@ -100,7 +106,7 @@ class Role(Frozen):
 
 class ControlTemplate(Frozen):
     uid: str
-    predicate_ref: str
+    predicate_ref: SReference
     ordered_roles: tuple[Role, ...]
 
 
@@ -112,7 +118,7 @@ class RoleBinding(Frozen):
 class Hypernode(Frozen):
     uid: str
     weight: float = Field(ge=0, le=1)
-    template_ref: str
+    template_ref: ElementReference
     role_bindings: tuple[RoleBinding, ...] = ()
     properties: tuple[Property, ...] = ()
     meta_properties: tuple[Property, ...] = ()
@@ -143,7 +149,7 @@ class AssociativeLink(Frozen):
         return v
 
 
-Payload = SecondOrderSymbol | FunctionalSymbol | MemoryList | ControlTemplate | Hypernode
+Payload = SReference | SecondOrderSymbol | MReference | FunctionalSymbol | MemoryList | ControlTemplate | Hypernode
 
 
 class MemoryElement(Frozen):
@@ -151,6 +157,13 @@ class MemoryElement(Frozen):
     payload: Payload
     excitation: float = Field(default=0.0, ge=0, le=1)
     activation_function: str = "clip_sum"
+
+    @model_validator(mode="after")
+    def payload_identity(self):
+        payload_uid = self.payload.reference_uid if isinstance(self.payload, (SReference, MReference)) else self.payload.uid
+        if self.uid != payload_uid:
+            raise ValueError("MemoryElement UID must match payload identity")
+        return self
 
 
 class CandidateBinding(Frozen):
@@ -168,6 +181,10 @@ class CandidateFact(Frozen):
     confidence: float = Field(ge=0, le=1)
     unresolved_entities: bool = False
     model_id: str = "rule-based-demo"
+    span_uid: str | None = None
+    sentence_index: int = Field(default=0, ge=0)
+    context_before: str = ""
+    context_after: str = ""
 
     @model_validator(mode="after")
     def valid_span(self):
@@ -180,6 +197,12 @@ class DocumentIngestRequest(BaseModel):
     text: str = Field(min_length=1)
     document_uid: str | None = None
     source_name: str = "api"
+
+
+class CandidateDecisionRequest(BaseModel):
+    preview_uid: str = Field(min_length=1)
+    candidate_uid: str = Field(min_length=1)
+    decision: Literal["admit", "reject"]
 
 
 class FactIngestRequest(BaseModel):

@@ -4,6 +4,8 @@ import os
 import re
 import time
 import uuid
+import hashlib
+import json
 from pathlib import Path
 from typing import Any
 from fastapi import FastAPI, HTTPException, Request
@@ -13,10 +15,11 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .core import AHMemory, norm
+from .conformance import junior_conformance_report
 from .dsl import Interpreter, DSLParseError
 from .engine import IgnitionEngine, build_candidate_snapshot, gc_commit, gc_preview
-from .ingestion import ingest
-from .evaluation import internal_m1, internal_m2, rabbit_fixture, role_metrics
+from .ingestion import Compiler, RuleBasedProvider, configured_provider, extract_candidates, ingest
+from .evaluation import internal_m1, internal_m2, rabbit_fixture, rabbit_ingestion_v2, role_metrics
 from .models import *
 
 
@@ -27,6 +30,7 @@ storage_adapter = None
 ingestions: dict[str, Any] = {}
 document_index: dict[str, str] = {}
 runs: dict[str, IgnitionRun] = {}
+previews: dict[str, Any] = {}
 
 app = FastAPI(title="AH-MemoryHub", version="0.1.0", description="Executable AH=<S,C,P,H,L> modular monolith")
 FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
@@ -45,6 +49,8 @@ async def request_id(request: Request, call_next):
     except ValueError as exc:
         return JSONResponse(status_code=422, content={"error": {"code": "validation_error", "message": str(exc), "request_id": rid}})
     response.headers["x-request-id"] = rid
+    if request.url.path == "/" or request.url.path.startswith("/assets/"):
+        response.headers["cache-control"] = "no-store"
     return response
 
 
@@ -69,28 +75,83 @@ def frontend_index():
 
 
 @app.get("/health")
-def health(): return {"status": "ok", "mode": storage_mode, "storage_mode": storage_mode, "revision": memory.revision}
+def health():
+    try: _, parser = configured_provider()
+    except ValueError as exc: parser = {"active": "configuration_error", "message": str(exc)}
+    return {"status": "ok", "mode": storage_mode, "storage_mode": storage_mode, "revision": memory.revision, "parser": parser}
 
 
-@app.post("/api/v1/ingestions")
-def create_ingestion(body: DocumentIngestRequest):
+def _persist_memory():
+    if storage_mode != "neo4j": return
+    global storage_adapter
+    try:
+        if storage_adapter is None:
+            from .persistence import Neo4jAdapter
+            storage_adapter = Neo4jAdapter().connect()
+        storage_adapter.persist(memory)
+    except Exception as exc:
+        raise HTTPException(503, {"code": "storage_unavailable", "message": str(exc)})
+
+
+def _create_ingestion(body: DocumentIngestRequest, provider=None):
     if body.document_uid and body.document_uid in document_index:
         cached = dict(ingestions[document_index[body.document_uid]])
         cached["reused"] = True
         return cached
-    result = ingest(memory, body.text, body.document_uid)
-    if storage_mode == "neo4j":
-        global storage_adapter
-        try:
-            if storage_adapter is None:
-                from .persistence import Neo4jAdapter
-                storage_adapter = Neo4jAdapter().connect()
-            storage_adapter.persist(memory)
-        except Exception as exc:
-            raise HTTPException(503, {"code": "storage_unavailable", "message": str(exc)})
+    result = ingest(memory, body.text, body.document_uid, provider)
+    _persist_memory()
     ingestions[result.ingestion_uid] = {"ingestion_uid": result.ingestion_uid, "document_uid": result.document_uid, "accepted": result.accepted, "rejected": result.rejected, "candidates": [c.model_dump(mode="json") for c in result.candidates], "reused": False}
     document_index[result.document_uid] = result.ingestion_uid
     return ingestions[result.ingestion_uid]
+
+
+@app.post("/api/v1/ingestions")
+def create_ingestion(body: DocumentIngestRequest): return _create_ingestion(body)
+
+
+@app.post("/api/v1/ingestions/preview")
+def preview_ingestion(body: DocumentIngestRequest):
+    try: candidates, provider = extract_candidates(body.text)
+    except ValueError as exc: raise HTTPException(502, {"code": "parser_unavailable", "message": str(exc)})
+    document_uid = body.document_uid or f"doc_{hashlib.sha256(body.text.encode()).hexdigest()[:16]}"
+    preview_uid = uid("prv")
+    items = []
+    for index, candidate in enumerate(candidates):
+        signature = json.dumps(candidate.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)
+        candidate_uid = f"cand_{hashlib.sha256(f'{document_uid}:{index}:{signature}'.encode()).hexdigest()[:16]}"
+        items.append({"candidate_uid": candidate_uid, "status": "pending", **candidate.model_dump(mode="json")})
+    rejection_log = provider.get("rejection_log", [])
+    previews[preview_uid] = {"preview_uid": preview_uid, "ingestion_uid": uid("ing"), "document_uid": document_uid, "source_name": body.source_name, "text": body.text, "provider": provider, "items": items, "candidates": {item["candidate_uid"]: candidate for item, candidate in zip(items, candidates)}, "decisions": {}, "rejection_log": rejection_log}
+    return {"preview_uid": preview_uid, "document_uid": document_uid, "provider": provider, "candidates": items, "rejection_log": rejection_log, "count": len(items)}
+
+
+@app.post("/api/v1/ingestions/decision")
+def decide_candidate(body: CandidateDecisionRequest):
+    preview = previews.get(body.preview_uid)
+    if preview is None: raise HTTPException(404, {"code": "not_found", "message": "ingestion preview not found"})
+    candidate = preview["candidates"].get(body.candidate_uid)
+    if candidate is None: raise HTTPException(404, {"code": "not_found", "message": "candidate not found"})
+    previous = preview["decisions"].get(body.candidate_uid)
+    if previous:
+        if previous["decision"] != body.decision: raise HTTPException(409, {"code": "decision_conflict", "message": "candidate already has another decision"})
+        return {**previous, "reused": True}
+    accepted: list[str] = []
+    rejected: list[dict] = []
+    if body.decision == "admit":
+        accepted, rejected = Compiler(memory).compile([candidate], preview["text"], preview["document_uid"], parser_run_uid=preview["preview_uid"])
+        if accepted: _persist_memory()
+    else:
+        rejected = [{"candidate": candidate.model_dump(mode="json"), "reason": "user_rejected"}]
+    status = "admitted" if accepted else "rejected"
+    result = {"preview_uid": body.preview_uid, "candidate_uid": body.candidate_uid, "decision": body.decision, "status": status, "accepted": accepted, "rejected": rejected, "memory_revision": memory.revision, "reused": False}
+    preview["decisions"][body.candidate_uid] = result
+    next(item for item in preview["items"] if item["candidate_uid"] == body.candidate_uid)["status"] = status
+    if accepted or preview["ingestion_uid"] in ingestions:
+        record = ingestions.setdefault(preview["ingestion_uid"], {"ingestion_uid": preview["ingestion_uid"], "document_uid": preview["document_uid"], "accepted": [], "rejected": [], "candidates": preview["items"], "provider": preview["provider"], "reused": False})
+        record["accepted"].extend(uid_ for uid_ in accepted if uid_ not in record["accepted"])
+        record["rejected"].extend(rejected)
+        if accepted: document_index[preview["document_uid"]] = preview["ingestion_uid"]
+    return result
 
 
 @app.get("/api/v1/ingestions")
@@ -121,7 +182,7 @@ def _term_match(question: str, value: str) -> int:
 def _causal_answer(question: str, working_memory: tuple[str, ...]):
     candidates = []
     for h in memory.find_hypernodes():
-        if h.uid not in working_memory or h.template_ref != "tpl_cause" or not h.evidence:
+        if h.uid not in working_memory or h.template_ref.target_uid != "tpl_cause" or not h.evidence:
             continue
         bindings = {b.role_id: b.target_ref.target_uid for b in h.role_bindings}
         object_label = memory.label(bindings["OBJECT"]) if "OBJECT" in bindings else ""
@@ -219,6 +280,10 @@ def templates(): return {"items": [x.model_dump(mode="json") for x in memory.tem
 def export_memory(): return memory.export()
 
 
+@app.get("/api/v1/conformance/junior")
+def junior_conformance(): return junior_conformance_report()
+
+
 def seed_demo() -> dict:
     corpus = (
         "Оператор обнаружил перегрев насоса в насосном зале. "
@@ -227,7 +292,7 @@ def seed_demo() -> dict:
         "Снижение давления вызвало аварийное оповещение. "
         "После этого оператор применил ручной ключ в насосном зале."
     )
-    return create_ingestion(DocumentIngestRequest(text=corpus, document_uid="demo_incidents"))
+    return _create_ingestion(DocumentIngestRequest(text=corpus, document_uid="demo_incidents"), RuleBasedProvider())
 
 
 @app.post("/api/v1/demo/seed")
@@ -244,3 +309,9 @@ def evaluations(request: EvaluationRequest | None = None):
     protected = gc_preview(fixture, IgnitionConfig(initial_life_ticks=5)); fixture.advance_ticks(50); gc = gc_preview(fixture, IgnitionConfig(initial_life_ticks=5)); gc_commit(fixture, gc["preview_token"], gc["deletable_uids"])
     m3_eff = len(gc["deletable_uids"]) / max(1, gc["orphan_count_before"])
     return {"status": "computed", "fixtures": {"rabbit": rabbit_fixture()}, "metrics": {"M1": m1, "M2": m2, "M3": {"protected_before_grace": protected["orphan_count_before"] == 0, "preview_orphans": gc["orphan_count_before"], "deleted": len(gc["deletable_uids"]), "gc_efficiency": m3_eff, "false_deletions": 0}, "M4": {"status": "unavailable", "reason": "external LLM not configured"}, "M5": {"status": "unavailable", "reason": "SLM/frontier providers not configured"}}, "elapsed_ms": round((time.perf_counter() - start) * 1000, 3)}
+
+
+@app.post("/api/v1/evaluations/ingestion/rabbit")
+def evaluate_rabbit_ingestion():
+    try: return rabbit_ingestion_v2()
+    except ValueError as exc: raise HTTPException(502, {"code": "parser_unavailable", "message": str(exc)})
