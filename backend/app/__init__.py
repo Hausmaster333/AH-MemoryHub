@@ -1,0 +1,2 @@
+"""AH-MemoryHub modular monolith."""
+

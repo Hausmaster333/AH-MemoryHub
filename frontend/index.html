@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1ea">
+  <title>AH-MemoryHub · Memory Observatory</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="rail" aria-label="Основная навигация">
+      <a class="brand" href="#observatory" aria-label="AH-MemoryHub">
+        <span class="brand-mark">AH</span>
+        <span class="brand-copy"><b>MemoryHub</b><small>causal memory lab</small></span>
+      </a>
+      <nav class="nav-list">
+        <button class="nav-item is-active" data-view="observatory"><span>01</span><b>Observatory</b></button>
+        <button class="nav-item" data-view="ingestion"><span>02</span><b>Ingestion</b></button>
+        <button class="nav-item" data-view="evaluation"><span>03</span><b>Evaluation</b></button>
+      </nav>
+      <div class="rail-meta">
+        <button class="utility-button" id="params-open"><span>Params</span><b id="profile-label">integrated_v1</b></button>
+        <div class="system-state" id="system-state"><i></i><span>Проверяем ядро</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="mobile-header">
+        <a class="brand" href="#observatory"><span class="brand-mark">AH</span><span class="brand-copy"><b>MemoryHub</b></span></a>
+        <nav aria-label="Разделы">
+          <button class="mobile-nav is-active" data-view="observatory">Обзор</button>
+          <button class="mobile-nav" data-view="ingestion">Приём</button>
+          <button class="mobile-nav" data-view="evaluation">Оценка</button>
+        </nav>
+        <button class="mobile-params" id="params-mobile-open">Params</button>
+      </header>
+
+      <section class="view is-active" id="view-observatory" aria-labelledby="observatory-title">
+        <div class="workspace">
+          <div class="query-area">
+            <h1 class="observatory-title" id="observatory-title">Проследите путь памяти к ответу.</h1>
+            <div class="query-toolbar">
+              <form class="query-form" id="query-form">
+                <label class="sr-only" for="query-input">Вопрос к памяти</label>
+                <input id="query-input" name="question" value="Почему остановился агрегат?" autocomplete="off" required>
+                <button class="button button-primary" type="submit"><span>Найти ответ</span><kbd>Enter</kbd></button>
+              </form>
+              <button class="top-params" id="params-top-open" type="button">Параметры</button>
+            </div>
+            <span class="run-state" id="run-state">ready · rev —</span>
+          </div>
+
+          <article class="answer-block" id="answer-block" aria-live="polite">
+            <div class="answer-heading"><h2>Ответ</h2><span id="trace-badge">путь ещё не построен</span></div>
+            <p id="answer-text">Задайте вопрос — ответ появится только при наличии подтверждённого пути в AH-памяти.</p>
+            <div class="answer-provenance"><b id="answer-status">Ответ по доказательствам</b><span>Текст составлен только из утверждения, у которого есть точная цитата источника.</span></div>
+          </article>
+
+          <div class="legend" aria-label="Легенда памяти">
+            <b>AH = &lt;S, C, P, H, L&gt;</b>
+            <span title="First-order symbols"><i class="type-dot type-s">S</i> первичные символы</span>
+            <span title="Common memory"><i class="type-dot type-c">C</i> общая память</span>
+            <span title="Private memory"><i class="type-dot type-p">P</i> частная память</span>
+            <span title="History"><i class="type-dot type-h">H</i> история</span>
+            <span title="Associative links"><i class="type-dot type-l">L</i> связи</span>
+            <span class="hypernode-key" title="Hypernode — типизированное утверждение внутри раздела памяти"><i class="type-dot type-n">N</i> гиперузел-утверждение</span>
+          </div>
+
+          <section class="graph-panel" aria-labelledby="graph-title">
+            <div class="panel-heading">
+              <div><h2 id="graph-title">Путь активации</h2><p>Карточки раскрываются в порядке доказательства; engine tick указан отдельно.</p></div>
+              <span class="path-state" id="path-state">ожидает запроса</span>
+            </div>
+            <div class="graph-stage" id="graph-stage">
+              <div class="graph-empty" id="graph-empty"><b>Нет активного пути</b><span>Выполните запрос, чтобы собрать причинную проекцию.</span></div>
+              <svg id="graph" role="img" aria-label="Причинный граф активации"></svg>
+            </div>
+          </section>
+
+          <section class="timeline" aria-label="Шкала тактов">
+            <button class="play-button" id="tick-play" aria-label="Показать путь активации">Показать путь</button>
+            <div class="timeline-track-wrap">
+              <div class="timeline-labels"><span>Трасса активации</span><b id="tick-label">путь не построен</b></div>
+              <input class="sr-only" type="range" id="tick-range" min="0" max="0" value="0" aria-label="Выбранный такт">
+              <div class="tick-marks" id="tick-marks"></div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="inspector" id="inspector" aria-label="Инспектор доказательств">
+          <div class="inspector-head">
+            <div><h2>Доказательства</h2><p>Источник и состояние выбранного элемента.</p></div>
+            <button class="close-inspector" id="inspector-close" aria-label="Закрыть инспектор">Закрыть</button>
+          </div>
+          <div class="selected-identity">
+            <span class="type-dot type-h" id="selected-type">H</span>
+            <div><b id="selected-title">Путь ещё не выбран</b><code id="selected-uid">uid: —</code></div>
+          </div>
+          <dl class="fact-grid">
+            <div><dt>Раздел AH</dt><dd id="selected-section">—</dd></div>
+            <div><dt>Такт</dt><dd id="selected-tick">—</dd></div>
+            <div><dt>Возбуждение / активация</dt><dd id="selected-activation">—</dd></div>
+            <div><dt>Вес связи</dt><dd id="selected-weight">—</dd></div>
+          </dl>
+          <div class="inspector-section">
+            <h3>Точная цитата источника</h3>
+            <blockquote id="source-quote">Источник появится после успешного запроса.</blockquote>
+            <div class="source-coord" id="source-coord">document — · span —</div>
+          </div>
+          <div class="inspector-section">
+            <h3>Структура утверждения</h3>
+            <div class="role-bindings" id="selected-bindings"><span>Выберите гиперузел, чтобы увидеть роли.</span></div>
+          </div>
+          <div class="inspector-section">
+            <h3>Событие трассы</h3>
+            <div class="relation-row"><span id="relation-type">—</span><code id="relation-parent">parent: —</code></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="view" id="view-ingestion" aria-labelledby="ingestion-title">
+        <div class="page-head">
+          <div><span class="eyebrow">02 · INGESTION REVIEW</span><h1 id="ingestion-title">Допуск фактов в память.</h1><p>Модель предлагает структуру. Детерминированный компилятор решает, что будет записано.</p></div>
+          <div class="document-chip"><span>source</span><b id="document-label">operator-incident.txt</b></div>
+        </div>
+        <div class="ingestion-layout">
+          <section class="review-column">
+            <form class="document-form" id="ingestion-form">
+              <label for="ingestion-text">Исходный документ</label>
+              <textarea id="ingestion-text" rows="4" required>Перегрев насоса вызвал остановку агрегата в насосном зале. Остановка агрегата привела к снижению давления. После этого оператор применил ручной ключ.</textarea>
+              <div><button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button><span>Запись в AH пока не выполняется</span></div>
+            </form>
+            <div class="section-heading"><div><span class="eyebrow">CANDIDATE FACTS</span><h2>Предложенные утверждения</h2></div><span id="candidate-count">3 candidates</span></div>
+            <div class="candidate-list" id="candidate-list"></div>
+          </section>
+          <aside class="admission-panel">
+            <span class="eyebrow">ADMISSION INSPECTOR</span>
+            <h2 id="candidate-title">CAUSE · выбранный кандидат</h2>
+            <code id="candidate-span">span 0:62</code>
+            <div class="binding-list" id="binding-list"></div>
+            <div class="source-card"><span>SOURCE QUOTE</span><p id="candidate-quote">Перегрев насоса вызвал остановку агрегата в насосном зале.</p></div>
+            <ul class="check-list">
+              <li><input type="checkbox" checked disabled>span совпадает с источником</li><li><input type="checkbox" checked disabled>шаблон входит в реестр</li><li><input type="checkbox" checked disabled>RoleBindings типизированы</li><li><input type="checkbox" checked disabled>UID назначит AH Core</li>
+            </ul>
+            <div class="admission-actions"><button class="button button-ghost" type="button" id="reject-candidate">Reject</button><button class="button button-primary" type="submit" form="ingestion-form" id="admit-candidate">Admit в AH</button></div>
+            <p class="admission-result" id="admission-result" aria-live="polite">3 candidates · 1 selected · 0 admitted</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-evaluation" aria-labelledby="evaluation-title">
+        <div class="page-head evaluation-head">
+          <div><span class="eyebrow">03 · EVALUATION</span><h1 id="evaluation-title">Доказательства для жюри.</h1><p>Не KPI-дашборд, а проверяемый ответ на критерии M1–M5.</p></div>
+          <button class="button button-primary" id="run-evaluation">Пересчитать</button>
+        </div>
+        <div class="score-strip">
+          <article class="score-main"><span>CONFORMANCE</span><strong id="conformance-score">—</strong><p>rabbit fixture · минимум 6 из 8 фактов</p></article>
+          <div class="score-grid" id="metric-grid">
+            <article><span>M1 · Extraction</span><strong>—</strong><small>weighted F1</small></article>
+            <article><span>M2 · Explainability</span><strong>—</strong><small>causal path</small></article>
+            <article><span>M3 · Memory hygiene</span><strong>—</strong><small>GC efficiency</small></article>
+            <article><span>M4 · Answer quality</span><strong>—</strong><small>provider status</small></article>
+            <article><span>M5 · Model parity</span><strong>—</strong><small>provider status</small></article>
+          </div>
+        </div>
+        <section class="comparison-section">
+          <div class="section-heading"><div><span class="eyebrow">CONTROLLED COMPARISON</span><h2>AH Memory vs vanilla RAG</h2></div><span>same corpus · same question</span></div>
+          <div class="comparison-table" role="table" aria-label="Сравнение AH и RAG">
+            <div class="comparison-row comparison-header" role="row"><span>Критерий</span><b>AH Memory</b><b>Vanilla RAG</b></div>
+            <div class="comparison-row" role="row"><span>Причинный путь</span><b class="positive">explicit · 3 hops</b><b>не гарантирован</b></div>
+            <div class="comparison-row" role="row"><span>Source span</span><b class="positive">immutable evidence</b><b>retrieved chunk</b></div>
+            <div class="comparison-row" role="row"><span>Tick trace</span><b class="positive">complete</b><b>недоступен</b></div>
+            <div class="comparison-row" role="row"><span>Unknown answer</span><b class="positive">insufficient_evidence</b><b>model-dependent</b></div>
+          </div>
+        </section>
+        <div class="evaluation-note"><span>ENGINE PROFILE</span><b>integrated_v1</b><p>M4 и M5 остаются честно недоступными, пока не подключены внешний LLM и локальная SLM ≤ 8B.</p></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="params-drawer" id="params-drawer" aria-label="Параметры активации" aria-hidden="true">
+    <div class="inspector-head"><div><span class="eyebrow">ACTIVATION PROFILE</span><h2>Параметры запуска</h2></div><button id="params-close" aria-label="Закрыть">Закрыть</button></div>
+    <label>Профиль<select id="profile"><option value="integrated_v1">integrated_v1</option><option value="literal_2026">literal_2026</option></select></label>
+    <label>initial_life_ticks<input id="initial-life" type="number" min="0" value="5"></label>
+    <label>decay_lambda<input id="decay" type="number" min="0" step="0.01" value="0.08"></label>
+    <label>working_memory_threshold<input id="threshold" type="number" min="0" max="1" step="0.05" value="0.2"></label>
+    <label>hebbian_eta<input id="hebbian" type="number" min="0" max="1" step="0.01" value="0"></label>
+    <label>rhythm_hz<input id="rhythm" type="number" min="0.1" step="0.1" value="1"></label>
+    <label>max_ticks<input id="max-ticks" type="number" min="1" max="100" value="8"></label>
+    <div class="gc-tool"><div><span class="eyebrow">GARBAGE COLLECTOR</span><p>Preview не изменяет память. Commit требует тот же токен и набор UID.</p></div><button class="button button-secondary" id="gc-preview">Preview GC</button><output id="gc-output">Не запускался</output></div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
