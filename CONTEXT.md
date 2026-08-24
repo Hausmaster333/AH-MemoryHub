@@ -117,3 +117,45 @@ _Avoid_: Debug log, chain of thought
 **Source Evidence**:
 An immutable reference from an admitted memory fact to its document and exact source span.
 _Avoid_: Citation string
+
+**Query Seed**:
+A grounded addressable memory item whose meaning is explicitly present in the question and from which an Ignition Run begins.
+_Avoid_: Search term, every retrieved fact
+
+**Candidate Subgraph**:
+A bounded retrieval projection that may contain relevant symbols, facts, and links but is not itself evidence for an answer.
+_Avoid_: Working Memory, Evidence Path
+
+**Evidence Path**:
+The trace-supported sequence from Query Seeds through activated facts and actants that directly supports an answer.
+_Avoid_: Candidate Subgraph, all trace events
+
+**Answer Evidence**:
+The Source Evidence attached to facts on the Evidence Path and explicitly cited by the final answer.
+_Avoid_: All retrieved sources, prompt context
+
+## Perception
+
+**Source Span**:
+An exact, offset-addressed fragment of the untouched input document with optional neighbouring context.
+_Avoid_: Sentence string, chunk
+
+**Mention**:
+An occurrence of an entity, event, state, time, or location anchored to a Source Span; several Mentions may denote the same referent.
+_Avoid_: Entity, Symbol
+
+**Coreference**:
+A directed assertion that one Mention denotes the same referent as an earlier Mention.
+_Avoid_: String replacement, pronoun rule
+
+**Candidate Term**:
+A proposed actant value that is either one Mention or an ordered composition of Candidate Terms through `AND`, `OR`, or `VERY`.
+_Avoid_: Binding string, final Symbol
+
+**Candidate Fact**:
+One atomic, source-grounded predicate proposal whose Role Bindings refer to Candidate Terms; it is not part of AH Memory until deterministic admission succeeds.
+_Avoid_: Fact, extracted sentence
+
+**Candidate Group**:
+The set of Candidate Facts supported by one Source Span, reviewed together but admitted independently.
+_Avoid_: Combined fact, paragraph

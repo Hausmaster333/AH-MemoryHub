@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Iterable
 import hashlib
 import json
+import re
 
 from .models import *
 
@@ -18,6 +19,20 @@ ROLE_IDS = (
 
 def norm(text: str) -> str:
     return " ".join(text.casefold().strip().split())
+
+
+def lexical_key(text: str) -> tuple[str, ...]:
+    """Conservative wordform key used for grounding, never for claim validation."""
+    return tuple(token[:5] if len(token) > 5 else token for token in re.findall(r"[\w-]+", norm(text)))
+
+
+def lexical_score(query: str, value: str) -> int:
+    """Token overlap with conservative morphology and compact equipment identifiers."""
+    def tokens(text: str) -> set[str]:
+        canonical = re.sub(r"(?<=\w)-(?=\d)", "", norm(text))
+        return {token for token in re.findall(r"\w+", canonical) if len(token) > 3 or any(char.isdigit() for char in token)}
+    query_tokens, value_tokens = tokens(query), tokens(value)
+    return sum(1 for left in query_tokens if any(left == right or (len(left) >= 5 and len(right) >= 5 and (left.startswith(right[:5]) or right.startswith(left[:5]))) for right in value_tokens))
 
 
 class InvariantError(ValueError):
@@ -325,6 +340,11 @@ class AHMemory:
         if e and isinstance(e.payload, SecondOrderSymbol):
             for p in e.payload.properties:
                 if p.name == "label": return str(p.value)
+        if e and isinstance(e.payload, FunctionalSymbol):
+            separator = " или " if e.payload.function_id == "OR" else " и " if e.payload.function_id == "AND" else ", "
+            return separator.join(self.label(ref.target_uid) for ref in e.payload.ordered_operands)
+        if e and isinstance(e.payload, MemoryList):
+            return ", ".join(self.label(ref.target_uid) for ref in e.payload.ordered_members)
         return target_uid
 
     def stats(self):

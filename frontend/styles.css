@@ -190,10 +190,21 @@ code, .source-coord { color: var(--muted); font: 10px/1.45 "IBM Plex Mono", Cons
 .document-form textarea:focus { border-color: var(--cobalt); box-shadow: 0 0 0 3px rgba(18,97,216,.1); }
 .document-form > div { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
 .document-form > div span { color: var(--muted); font-size: 11px; }
+.document-form .parser-controls { flex-wrap: wrap; }
+.parser-controls label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+.parser-controls select { height: 36px; border: 1px solid var(--hairline); border-radius: 6px; padding: 0 28px 0 10px; color: var(--ink); background: var(--surface); }
+.parser-controls .auto-admit { height: 36px; padding: 0 11px; border: 1px solid var(--hairline); border-radius: 6px; color: var(--ink); background: var(--surface); cursor: pointer; }
+.auto-admit input { width: 14px; height: 14px; margin: 0; accent-color: var(--positive); }
 .section-heading { margin: 28px 0 14px; }
 .section-heading h2 { margin-top: 3px; }
 .section-heading > span { color: var(--muted); font: 10px "IBM Plex Mono", Consolas, monospace; }
 .candidate-list { display: grid; gap: 10px; }
+.candidate-group-label { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--hairline); color: var(--muted); font: 9px "IBM Plex Mono", Consolas, monospace; letter-spacing: .08em; }
+.candidate-group-label:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.candidate-rejection { display: grid; grid-template-columns: minmax(120px, auto) 1fr; gap: 12px; padding: 11px 13px; border: 1px solid rgba(163,60,36,.18); border-radius: 6px; color: var(--muted); background: rgba(163,60,36,.04); font-size: 11px; }
+.candidate-rejection b { color: var(--danger); font: 700 9px "IBM Plex Mono", Consolas, monospace; text-transform: uppercase; }
+.candidate-rejection.is-warning { border-color: rgba(181,126,24,.25); background: rgba(181,126,24,.05); }
+.candidate-rejection.is-warning b { color: #9a6810; }
 .candidate-card { position: relative; display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 16px; align-items: start; width: 100%; border: 1px solid var(--hairline); border-radius: 8px; padding: 17px; background: rgba(251,250,247,.65); text-align: left; cursor: pointer; }
 .candidate-card:hover { border-color: #aaa9a4; background: var(--surface); }
 .candidate-card.is-selected { border-color: var(--cobalt); background: var(--surface); box-shadow: 0 0 0 2px rgba(18,97,216,.08); }
@@ -275,6 +286,7 @@ code, .source-coord { color: var(--muted); font: 10px/1.45 "IBM Plex Mono", Cons
 .params-drawer.is-open { transform: translateX(0); }.drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
 .params-drawer > label { display: grid; grid-template-columns: 1fr 140px; gap: 14px; align-items: center; min-height: 56px; border-bottom: 1px solid var(--hairline); color: var(--muted); font: 11px "IBM Plex Mono", Consolas, monospace; }
 .params-drawer input, .params-drawer select { width: 100%; height: 34px; border: 1px solid var(--hairline); border-radius: 6px; padding: 0 8px; background: white; }
+.external-data-note { margin: 8px 0 14px; color: var(--muted); font-size: 10px; line-height: 1.45; }
 .gc-tool { display: grid; gap: 12px; margin-top: 30px; padding: 18px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--canvas); }
 .gc-tool p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
 .gc-tool output { color: var(--muted); font: 10px/1.5 "IBM Plex Mono", Consolas, monospace; overflow-wrap: anywhere; }

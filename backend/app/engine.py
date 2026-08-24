@@ -14,18 +14,24 @@ class EngineResult:
     run: IgnitionRun
     element_excitation: dict[str, float]
 
-def build_candidate_snapshot(memory: AHMemory, seed_uids: list[str], max_nodes: int = 256) -> tuple[MemorySnapshot, list[str]]:
-    """Typed retrieval; reverse hypernode lookup happens before ignition."""
+def build_candidate_snapshot(memory: AHMemory, seed_uids: list[str], max_nodes: int = 256, max_hops: int = 6) -> tuple[MemorySnapshot, list[str]]:
+    """Build a bounded relevance projection; only question-grounded items remain ignition seeds."""
     snap = memory.snapshot(); selected = set(seed_uids); frontier = set(seed_uids)
-    for h in memory.find_hypernodes():
-        if any(b.target_ref.target_uid in selected for b in h.role_bindings):
-            selected.add(h.uid); selected.update(b.target_ref.target_uid for b in h.role_bindings)
-    for _ in range(max_nodes):
-        nxt = {l.target_ref.target_uid for l in snap.links.values() if l.source_ref.target_uid in frontier and l.weight > 0} - selected
+    hypernodes = sorted(memory.find_hypernodes(), key=lambda item: item.uid)
+    links = sorted(snap.links.values(), key=lambda item: item.uid)
+    for _ in range(max_hops):
+        discovered = set()
+        for hypernode in hypernodes:
+            members = {hypernode.uid, *(binding.target_ref.target_uid for binding in hypernode.role_bindings)}
+            if members & frontier: discovered.update(members)
+        for link in links:
+            endpoints = {link.source_ref.target_uid, link.target_ref.target_uid}
+            if link.weight > 0 and endpoints & frontier: discovered.update(endpoints)
+        nxt = [uid_ for uid_ in sorted(discovered - selected) if uid_ in snap.symbols or uid_ in snap.elements]
         if not nxt: break
-        selected.update(nxt); frontier = nxt
-        if len(selected) >= max_nodes: break
-    selected = set(sorted(selected)[:max_nodes])
+        room = max_nodes - len(selected)
+        if room <= 0: break
+        frontier = set(nxt[:room]); selected.update(frontier)
     elements = {k: v for k, v in snap.elements.items() if k in selected or isinstance(v.payload, ControlTemplate)}
     symbols = {k: v for k, v in snap.symbols.items() if k in selected}
     for e in elements.values():
@@ -34,7 +40,7 @@ def build_candidate_snapshot(memory: AHMemory, seed_uids: list[str], max_nodes: 
                 if b.target_ref.kind == "S": symbols[b.target_ref.target_uid] = snap.symbols[b.target_ref.target_uid]
     links = {k: v for k, v in snap.links.items() if v.source_ref.target_uid in selected and v.target_ref.target_uid in selected}
     candidate = MemorySnapshot(snap.revision, snap.current_tick, symbols, elements, links, snap.templates)
-    initial = sorted(set(seed_uids) | {h.uid for h in memory.find_hypernodes() if h.uid in selected})
+    initial = sorted(set(seed_uids) & selected)
     return candidate, initial
 
 class IgnitionEngine:
@@ -53,9 +59,14 @@ class IgnitionEngine:
                 if out > cfg.epsilon: impulses.setdefault(link.target_ref.target_uid, []).append((link.source_ref.target_uid, lid, out * link_weights[lid], link_weights[lid], "associative"))
             for eid, element in sorted(snapshot.elements.items()):
                 if not isinstance(element.payload, Hypernode): continue
+                actants = sorted({b.target_ref.target_uid for b in element.payload.role_bindings})
+                if profile == "integrated_v1":
+                    for source in actants:
+                        out = current.get(source, 0.0)
+                        if out > cfg.epsilon: impulses.setdefault(eid, []).append((source, eid, out * hyper_weights[eid] / max(1, len(actants)), hyper_weights[eid], "role_to_hypernode"))
                 out = current.get(eid, 0.0)
                 if out <= cfg.epsilon: continue
-                actants = sorted({b.target_ref.target_uid for b in element.payload.role_bindings}); evidence.update(ev.parser_run_uid for ev in element.payload.evidence)
+                evidence.update(ev.parser_run_uid for ev in element.payload.evidence)
                 for target in actants: impulses.setdefault(target, []).append((eid, eid, out * hyper_weights[eid], hyper_weights[eid], "hypernode"))
             if tick % period == 0:
                 for target in sorted(initial): impulses.setdefault(target, []).append((None, None, min(1.0, cfg.epsilon * 10), None, "rhythm_pulse"))
@@ -77,7 +88,8 @@ class IgnitionEngine:
                     if new != old: traces.append(TickTrace(tick=tick, target_uid=eid, link_or_hypernode_uid=eid, impulse_type="hebbian_hypernode", impulse_value=new-old, previous_excitation=current.get(eid, 0), next_excitation=next_exc.get(eid, 0), activation=current.get(eid, 0), previous_weight=old, next_weight=new, parent_trace=last_trace.get(eid)))
             change = max((abs(next_exc[k] - current[k]) for k in ids), default=0.0); stable_ticks = stable_ticks + 1 if change <= cfg.epsilon else 0; current = next_exc
             if stable_ticks >= 2 or (not any(v > cfg.epsilon for v in current.values()) and not working): break
-        weight_deltas = {k: v - snapshot.links[k].weight for k, v in link_weights.items() if v != snapshot.links[k].weight}; weight_deltas.update({k: v - snapshot.elements[k].payload.weight for k, v in hyper_weights.items() if v != snapshot.elements[k].payload.weight}); path = tuple(sorted({x for t in traces for x in (t.source_uid, t.target_uid, t.link_or_hypernode_uid) if x}))
+        weight_deltas = {k: v - snapshot.links[k].weight for k, v in link_weights.items() if v != snapshot.links[k].weight}; weight_deltas.update({k: v - snapshot.elements[k].payload.weight for k, v in hyper_weights.items() if v != snapshot.elements[k].payload.weight})
+        path = tuple(sorted(set(initial) | {x for t in traces if t.impulse_type in {"associative", "role_to_hypernode", "hypernode"} and t.impulse_value > cfg.epsilon for x in (t.source_uid, t.target_uid, t.link_or_hypernode_uid) if x}))
         run = IgnitionRun(run_uid=run_uid or uid("ign"), profile=profile, source_revision=snapshot.revision, ticks=tuple(traces), working_memory=tuple(sorted(working)), status="completed", evidence_uids=tuple(sorted(evidence)), effective_config=cfg, minimal_path=path, trace_complete=bool(traces and path), weight_deltas=weight_deltas)
         return EngineResult(run, current)
 

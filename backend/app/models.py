@@ -166,10 +166,45 @@ class MemoryElement(Frozen):
         return self
 
 
+class CandidateMention(Frozen):
+    mention_id: str = Field(min_length=1)
+    observed_text: str = Field(min_length=1)
+    source_start: int = Field(ge=0)
+    source_end: int = Field(ge=0)
+    mention_type: Literal["entity", "event", "state", "time", "location", "property"] = "entity"
+    canonical_label: str | None = None
+    coref_to: str | None = None
+
+    @model_validator(mode="after")
+    def valid_mention_span(self):
+        if self.source_end < self.source_start: raise ValueError("invalid mention span")
+        return self
+
+
+class CandidateTerm(Frozen):
+    operator: Literal["ATOM", "AND", "OR", "VERY"] = "ATOM"
+    mention_ids: tuple[str, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def valid_arity(self):
+        if self.operator in {"ATOM", "VERY"} and len(self.mention_ids) != 1:
+            raise ValueError(f"{self.operator} requires exactly one operand")
+        if self.operator in {"AND", "OR"} and len(self.mention_ids) < 2:
+            raise ValueError(f"{self.operator} requires at least two operands")
+        return self
+
+
 class CandidateBinding(Frozen):
     role_id: str
-    value: str = Field(min_length=1)
+    value: str | None = None
     observed: str | None = None
+    term: CandidateTerm | None = None
+
+    @model_validator(mode="after")
+    def has_value_or_term(self):
+        if not (self.value and self.value.strip()) and self.term is None:
+            raise ValueError("candidate binding requires value or term")
+        return self
 
 
 class CandidateFact(Frozen):
@@ -185,6 +220,8 @@ class CandidateFact(Frozen):
     sentence_index: int = Field(default=0, ge=0)
     context_before: str = ""
     context_after: str = ""
+    mentions: tuple[CandidateMention, ...] = ()
+    group_uid: str | None = None
 
     @model_validator(mode="after")
     def valid_span(self):
@@ -197,12 +234,17 @@ class DocumentIngestRequest(BaseModel):
     text: str = Field(min_length=1)
     document_uid: str | None = None
     source_name: str = "api"
+    parser_model: Literal["configured", "stealth/ox-alpha", "~deepseek/deepseek-v4-flash-latest", "deepseek/deepseek-v4-flash-0731:nitro"] = "configured"
 
 
 class CandidateDecisionRequest(BaseModel):
     preview_uid: str = Field(min_length=1)
     candidate_uid: str = Field(min_length=1)
     decision: Literal["admit", "reject"]
+
+
+class AutoAdmissionRequest(BaseModel):
+    preview_uid: str = Field(min_length=1)
 
 
 class FactIngestRequest(BaseModel):
@@ -225,6 +267,7 @@ class QueryRequest(BaseModel):
     max_ticks: int = Field(default=8, ge=1, le=100)
     profile: Literal["literal_2026", "integrated_v1"] = "integrated_v1"
     ignition: IgnitionConfig | None = None
+    answer_model: Literal["local", "configured", "stealth/ox-alpha", "~deepseek/deepseek-v4-flash-latest", "deepseek/deepseek-v4-flash-0731:nitro"] = "local"
 
     @model_validator(mode="after")
     def apply_max_ticks(self):

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f4f1ea">
   <title>AH-MemoryHub · Memory Observatory</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2317191a'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Arial' font-size='12' font-weight='700' fill='white'%3EAH%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/assets/styles.css?v=20260823-ingestion2">
+  <link rel="stylesheet" href="/assets/styles.css?v=20260824-retrieval3">
 </head>
 <body>
   <div class="app-shell">
@@ -57,7 +57,7 @@
           <article class="answer-block" id="answer-block" aria-live="polite">
             <div class="answer-heading"><h2>Ответ</h2><span id="trace-badge">путь ещё не построен</span></div>
             <p id="answer-text">Задайте вопрос — ответ появится только при наличии подтверждённого пути в AH-памяти.</p>
-            <div class="answer-provenance"><b id="answer-status">Ответ по доказательствам</b><span>Текст составлен только из утверждения, у которого есть точная цитата источника.</span></div>
+            <div class="answer-provenance"><b id="answer-status">Ответ по доказательствам</b><span id="answer-provenance-detail">Текст составлен только из утверждения, у которого есть точная цитата источника.</span></div>
           </article>
 
           <div class="legend" aria-label="Легенда памяти">
@@ -72,7 +72,7 @@
 
           <section class="graph-panel" aria-labelledby="graph-title">
             <div class="panel-heading">
-              <div><h2 id="graph-title">Путь активации</h2><p>Карточки раскрываются в порядке доказательства; engine tick указан отдельно.</p></div>
+              <div><h2 id="graph-title">Путь активации</h2><p>Один шаг — один факт доказательства; соответствующий engine tick указан отдельно.</p></div>
               <span class="path-state" id="path-state">ожидает запроса</span>
             </div>
             <div class="graph-stage" id="graph-stage">
@@ -84,7 +84,7 @@
           <section class="timeline" aria-label="Шкала тактов">
             <button class="play-button" id="tick-play" aria-label="Показать путь активации">Показать путь</button>
             <div class="timeline-track-wrap">
-              <div class="timeline-labels"><span>Трасса активации</span><b id="tick-label">путь не построен</b></div>
+              <div class="timeline-labels"><span>Доказательный путь</span><b id="tick-label">путь не построен</b></div>
               <input class="sr-only" type="range" id="tick-range" min="0" max="0" value="0" aria-label="Выбранный такт">
               <div class="tick-marks" id="tick-marks"></div>
             </div>
@@ -132,7 +132,12 @@
             <form class="document-form" id="ingestion-form">
               <label for="ingestion-text">Исходный документ</label>
               <textarea id="ingestion-text" rows="4" required>Перегрев насоса вызвал остановку агрегата в насосном зале. Остановка агрегата привела к снижению давления. После этого оператор применил ручной ключ.</textarea>
-              <div><button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button><span id="parser-status">Preview выполнит серверный модуль восприятия</span></div>
+              <div class="parser-controls">
+                <label>Модель<select id="parser-model"><option value="configured">Настроенная в .env</option><option value="stealth/ox-alpha">Ox Alpha · JSON mode</option><option value="deepseek/deepseek-v4-flash-0731:nitro">DeepSeek V4 Flash · Nitro</option><option value="~deepseek/deepseek-v4-flash-latest">DeepSeek V4 Flash · Latest</option></select></label>
+                <button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button>
+                <label class="auto-admit"><input id="auto-admit" type="checkbox">Автоприём</label>
+                <span id="parser-status">Preview выполнит серверный модуль восприятия</span>
+              </div>
             </form>
             <div class="section-heading"><div><span class="eyebrow">CANDIDATE FACTS</span><h2>Предложенные утверждения</h2></div><span id="candidate-count">3 candidates</span></div>
             <div class="candidate-list" id="candidate-list"></div>
@@ -217,6 +222,8 @@
   <aside class="params-drawer" id="params-drawer" aria-label="Параметры активации" aria-hidden="true">
     <div class="inspector-head"><div><span class="eyebrow">ACTIVATION PROFILE</span><h2>Параметры запуска</h2></div><button id="params-close" aria-label="Закрыть">Закрыть</button></div>
     <label>Профиль<select id="profile"><option value="integrated_v1">integrated_v1</option><option value="literal_2026">literal_2026</option></select></label>
+    <label>Модель ответа<select id="answer-model"><option value="local">Локально · без передачи данных</option><option value="stealth/ox-alpha">Ox Alpha</option><option value="deepseek/deepseek-v4-flash-0731:nitro">DeepSeek V4 Flash · Nitro</option><option value="configured">Настроенная в .env</option></select></label>
+    <p class="external-data-note">При выборе внешней модели ей передаются вопрос, активированные AH-факты и соответствующие точные цитаты.</p>
     <label>initial_life_ticks<input id="initial-life" type="number" min="0" value="5"></label>
     <label>decay_lambda<input id="decay" type="number" min="0" step="0.01" value="0.08"></label>
     <label>working_memory_threshold<input id="threshold" type="number" min="0" max="1" step="0.05" value="0.2"></label>
@@ -227,6 +234,6 @@
   </aside>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="/assets/app.js?v=20260823-ingestion2" defer></script>
+  <script src="/assets/app.js?v=20260824-semantic2" defer></script>
 </body>
 </html>

@@ -207,35 +207,49 @@ sequenceDiagram
 
 ### 6.1 LLM output contract
 
-The parser may return only:
+The primary parser returns Perception IR v3:
 
-- predicate/template candidate;
-- role bindings using the typed role registry;
-- labels observed in the document;
-- event time, location, cause, tool, and other role values;
-- exact source span and confidence;
-- unresolved-entity flags.
+- source-anchored Mentions with local IDs and optional backward coreference;
+- atomic Candidate Facts grouped by source span;
+- Role Bindings whose Candidate Terms reference Mention IDs;
+- `ATOM`, `AND`, `OR`, or `VERY` as explicit term operators;
+- an exact fact quote, parser confidence, and unresolved-entity flag.
 
 It cannot assign final UIDs, choose `C/P/H` without a deterministic policy, create arbitrary link types, or execute DSL.
+Flat string bindings remain accepted only for the deterministic offline fallback
+and compatibility with saved previews; external LLM prompts use IR v3.
 
 ### 6.2 Deterministic compiler
 
 The compiler:
 
 1. checks source spans against the original text;
-2. resolves or creates First-order and Second-order Symbols;
-3. selects one of at least eight Control Templates;
-4. converts role values into explicit Role Bindings;
-5. assigns `C`, `P`, or `H` from a documented policy;
-6. creates Source Evidence;
-7. derives required IS-A, FOLLOW, and CAUSE links;
-8. validates the complete delta before mutation.
+2. validates Mention identity, exact offsets, backward-only acyclic coreference, and Candidate Term arity;
+3. resolves or creates First-order and Second-order Symbols;
+4. compiles `AND`, `OR`, and `VERY` into Functional Symbols;
+5. selects one of at least eight Control Templates;
+6. converts Candidate Terms into explicit Role Bindings;
+7. assigns `C`, `P`, or `H` from a documented policy;
+8. creates Source Evidence;
+9. derives required IS-A, FOLLOW, and CAUSE links;
+10. validates the complete delta before mutation.
 
 Ingestion v2 segments the untouched document deterministically and carries each
 candidate's exact offsets plus previous/next sentence context. Canonicalization
 resolves only unambiguous local pronouns, rejects unresolved references and
 `FOLLOW` inferred from a temporal marker alone, enforces required roles, and
 deduplicates canonical fact signatures. Rejections have stable reason codes.
+Semantic canonicalization treats “X используется для Y” as `RUN(X, Y)`, maps
+`RUN.OBJECT` to `HOW-TO`, preserves the complete later event in
+`FOLLOW.SUBJECT`, and restores explicit temporal bounds such as “до завершения
+проверки” into `TIME`. Independent states and effects remain separate atomic
+facts; `AND` and `OR` are reserved for composite values inside one role.
+When an OpenAI-compatible model covers a sentence but omits an explicit
+`После <event> <later event>` relation or the second half of
+`X имеет A и находится в B`, conservative source-anchored recovery adds the
+missing `FOLLOW` or `HAS_STATE`. A `STATE` is admitted only when all of its
+meaningful tokens are grounded in the exact quote; generic words such as
+“состояние” do not count as evidence by themselves.
 Successful candidates are compiled in isolated staging memories and committed
 to AH Core in one batch. Parser confidence is stored only in Source Evidence;
 the initial activation weight is an independent configuration value.
@@ -301,20 +315,31 @@ The interpreter is read-only by default. Mutation commands require an explicit m
 
 The question-answer path combines three distinct mechanisms:
 
-1. **Seed resolution** maps query phrases to First-order or Second-order Symbols using exact forms, normalized forms, and embedding similarity.
-2. **Typed retrieval** uses `findHypernodes`, `findRoles`, `findLists`, and directed link traversal to create a bounded candidate snapshot.
+1. **Seed resolution** maps query phrases to grounded Symbols using exact forms and conservative lexical wordform keys.
+2. **Typed retrieval** repeatedly closes over incident Hypernodes and positive Associative Links, in either retrieval direction, to create a hop- and size-bounded candidate snapshot.
 3. **Ignition** propagates dynamic activation through that immutable snapshot and produces Working Memory plus an Ignition Trace.
 
-This distinction resolves the apparent reverse-hyperlink problem. `findHypernodes` may retrieve a Hypernode from an actant; ignition itself still sends a Hypernode impulse to its actants as specified on monograph page 48.
+Retrieval never turns retrieved facts into Query Seeds. In `literal_2026`, ignition sends only the Hypernode-to-actant impulse described on monograph page 48. The product profile `integrated_v1` additionally supports weighted actant-to-Hypernode incidence impulses, recorded as `role_to_hypernode`, so reverse causal questions produce an explicit trace instead of pre-activated facts.
+
+`minimal_path` is the complete trace-supported activation projection and may contain relevant context in both causal directions. `answer_path` is the smaller set of cited Hypernodes and their RoleBindings that directly supports the returned answer. Observatory shows `answer_path` by default and groups repeated engine impulses into one semantic step per fact; raw ticks remain available in the Ignition Trace.
 
 The answer composer receives only:
 
-- Working Memory elements;
-- the minimal traced subgraph actually used;
+- evidence-bearing Hypernodes inside the bounded typed candidate snapshot;
+- the cited `answer_path` actually used;
 - exact Source Evidence;
 - the question and requested response shape.
 
 If the evidence cannot support an answer, the result is `insufficient_evidence`; the LLM is not allowed to complete from parametric knowledge.
+
+The deterministic answer composer is intent-aware: property questions select
+relevant `HAS_STATE` and `HAS` facts, location questions select
+`LOCATED_AT`/`LIVE`, causal questions select `CAUSE`, and ownership,
+responsibility, purpose, instrument, temporal-boundary, and `FOLLOW` questions
+select their corresponding typed roles. Equipment identifiers
+are compared in compact form, so `ДТ-4` and `ДТ4` resolve to the same symbol. An
+external-provider failure keeps the same evidence selection and returns an
+explicit local-fallback reason.
 
 ## 9. Ignition Engine
 
@@ -335,13 +360,14 @@ The engine uses current and next buffers, so results do not depend on iteration 
 For each tick, in deterministic order:
 
 1. compute incoming associative impulses `z_a = activation(source) * weight`;
-2. compute Hypernode impulses `z_h = activation(hypernode) * weight` for each actant;
-3. sum incoming impulses `z` per element;
-4. compute activation output `a = f(z, x)`;
-5. compute next excitation;
-6. update Working Memory membership using threshold `t`;
-7. update link and Hypernode weights with `h`;
-8. commit next buffers and append the trace.
+2. in `integrated_v1`, compute actant-to-Hypernode incidence impulses;
+3. compute Hypernode impulses `z_h = activation(hypernode) * weight` for each actant;
+4. sum incoming impulses `z` per element;
+5. compute activation output `a = f(z, x)`;
+6. compute next excitation;
+7. update Working Memory membership using threshold `t`;
+8. update link and Hypernode weights with `h`;
+9. commit next buffers and append the trace.
 
 The monograph leaves the integration of `z` into `x` underspecified. AH-MemoryHub exposes two documented profiles:
 

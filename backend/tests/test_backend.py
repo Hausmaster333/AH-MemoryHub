@@ -3,13 +3,14 @@ import time
 from fastapi.testclient import TestClient
 import pytest
 import app.ingestion as ingestion_module
-from app.core import AHMemory, InvariantError
+from app.core import AHMemory, InvariantError, lexical_score
+from app.answering import generate_evidence_answer, select_local_answer, validate_evidence_answer
 from app.conformance import RABBIT_FACT_UIDS, build_junior_conformance_memory, junior_conformance_report
 from app.dsl import Interpreter
 from app.engine import IgnitionEngine, build_candidate_snapshot, gc_commit, gc_preview
 from app.evaluation import rabbit_ingestion_v2
 from app.ingestion import ingest
-from app.ingestion import Compiler, OpenAICompatibleProvider, RuleBasedProvider, canonicalize_candidates, extract_candidates, segment_text
+from app.ingestion import Compiler, OpenAICompatibleProvider, RuleBasedProvider, _coordinated_property_candidates, _explicit_follow_candidates, _temporal_state_candidates, canonicalize_candidates, extract_candidates, segment_text
 from app.main import app
 from app.models import *
 
@@ -45,6 +46,12 @@ def test_openai_compatible_provider_requests_strict_json_schema():
     response_format = requests[0]["response_format"]
     assert response_format["type"] == "json_schema"
     assert response_format["json_schema"]["strict"] is True
+    assert requests[0]["max_tokens"] == 4096 and "reasoning" not in requests[0]
+    deepseek = OpenAICompatibleProvider("http://local.test/v1", "deepseek/deepseek-v4-flash-0731:nitro")
+    deepseek_requests = []
+    deepseek._request_json = lambda payload: deepseek_requests.append(payload) or {"choices": [{"message": {"content": '{"facts":[]}'}}]}
+    deepseek._completion("Наблюдение")
+    assert deepseek_requests[0]["reasoning"] == {"effort": "none", "exclude": True}
     json_provider = OpenAICompatibleProvider("http://local.test/v1", "test-model", response_format="json_object")
     json_requests = []
     json_provider._request_json = lambda payload: json_requests.append(payload) or {"choices": [{"message": {"content": '{"facts":[]}'}}]}
@@ -54,9 +61,11 @@ def test_openai_compatible_provider_requests_strict_json_schema():
 def test_preview_and_candidate_decisions_are_server_side(monkeypatch):
     monkeypatch.setenv("AH_PARSER_PROVIDER", "rule")
     c = TestClient(app)
-    response = c.post("/api/v1/ingestions/preview", json={"text": "Перегрев насоса вызвал остановку агрегата. Затем оператор применил ручной ключ."})
+    text = "Перегрев насоса вызвал остановку агрегата. Затем оператор применил ручной ключ."
+    response = c.post("/api/v1/ingestions/preview", json={"text": text})
     assert response.status_code == 200
     preview = response.json(); assert preview["provider"]["active"] == "rule" and len(preview["candidates"]) == 2
+    assert [(group["start"], group["end"]) for group in preview["source_groups"]] == [(span.start, span.end) for span in segment_text(text)]
     before = c.get("/api/v1/memory/stats").json()["revision"]
     rejected = c.post("/api/v1/ingestions/decision", json={"preview_uid": preview["preview_uid"], "candidate_uid": preview["candidates"][1]["candidate_uid"], "decision": "reject"})
     assert rejected.status_code == 200 and rejected.json()["status"] == "rejected"
@@ -64,6 +73,32 @@ def test_preview_and_candidate_decisions_are_server_side(monkeypatch):
     assert admitted.status_code == 200 and admitted.json()["accepted"] and c.get("/api/v1/memory/stats").json()["revision"] > before
     reused = c.post("/api/v1/ingestions/decision", json={"preview_uid": preview["preview_uid"], "candidate_uid": preview["candidates"][0]["candidate_uid"], "decision": "admit"})
     assert reused.json()["reused"] is True
+
+def test_auto_admission_processes_only_pending_candidates(monkeypatch):
+    monkeypatch.setenv("AH_PARSER_PROVIDER", "rule")
+    c = TestClient(app)
+    text = "Перегрев турбины вызвал остановку генератора. Затем техник применил ручной ключ."
+    preview = c.post("/api/v1/ingestions/preview", json={"text": text}).json()
+    first, second = (item["candidate_uid"] for item in preview["candidates"])
+    manual = c.post("/api/v1/ingestions/decision", json={"preview_uid": preview["preview_uid"], "candidate_uid": second, "decision": "reject"})
+    assert manual.status_code == 200
+    admitted = c.post("/api/v1/ingestions/auto-admit", json={"preview_uid": preview["preview_uid"]})
+    assert admitted.status_code == 200
+    result = admitted.json()
+    assert result["processed"] == 1 and result["admitted"] == 1 and result["rejected"] == 1 and result["pending"] == 0
+    assert next(item for item in result["candidates"] if item["candidate_uid"] == first)["status"] == "admitted"
+    repeated = c.post("/api/v1/ingestions/auto-admit", json={"preview_uid": preview["preview_uid"]}).json()
+    assert repeated["processed"] == 0 and repeated["reused"] is True
+
+def test_preview_reports_source_spans_silently_missed_by_provider():
+    text = "Насос вызвал остановку. Двигатель принадлежит компании Промтех."
+    first, second = segment_text(text)
+    class SparseProvider(RuleBasedProvider):
+        def extract(self, _):
+            return [CandidateFact(predicate="CAUSE", bindings=(CandidateBinding(role_id="SUBJECT", value="насос"), CandidateBinding(role_id="OBJECT", value="остановка")), source_start=first.start, source_end=first.end, exact_text=first.text, confidence=.9, span_uid=first.uid, group_uid=first.uid)]
+    candidates, meta = extract_candidates(text, SparseProvider())
+    assert len(candidates) == 1
+    assert meta["coverage_warnings"] == [{"group_uid": second.uid, "source_start": second.start, "source_end": second.end, "exact_text": second.text, "reason": "uncovered_source_span", "message": "parser returned no reviewable fact for this source span"}]
 
 def test_reference_identity_index_and_target_lookup():
     m = AHMemory(); symbol(m, "s1", "alpha"); symbol(m, "s2", "beta"); template(m); hyper(m)
@@ -103,11 +138,26 @@ def test_atomic_cycle_and_reference_conflict():
     with pytest.raises(InvariantError): m.add_link(AssociativeLink(uid="l2", type_id="IS-A", weight=1, source_ref=SReference(reference_uid="r3", target_uid="s2"), target_ref=SReference(reference_uid="r4", target_uid="s1")))
     assert "l2" not in m.links and m.revision > before
 
-def test_retrieval_precedes_one_way_ignition():
+def test_retrieval_keeps_only_question_items_as_seeds():
     m = AHMemory(); symbol(m, "s1", "a"); symbol(m, "s2", "b"); template(m); hyper(m)
-    raw = IgnitionEngine().run(m.snapshot(), ["s1"], IgnitionConfig(max_ticks=2)); assert not any(t.impulse_type == "hypernode" for t in raw.run.ticks)
-    snap, seeds = build_candidate_snapshot(m, ["s1"]); assert "h_test" in seeds
-    prepared = IgnitionEngine().run(snap, seeds, IgnitionConfig(max_ticks=2)); assert any(t.impulse_type == "hypernode" for t in prepared.run.ticks)
+    snap, seeds = build_candidate_snapshot(m, ["s1"])
+    assert seeds == ["s1"] and "h_test" in snap.elements
+    prepared = IgnitionEngine().run(snap, seeds, IgnitionConfig(max_ticks=3))
+    assert any(t.source_uid == "s1" and t.target_uid == "h_test" and t.impulse_type == "role_to_hypernode" for t in prepared.run.ticks)
+    assert any(t.source_uid == "h_test" and t.target_uid == "s2" and t.impulse_type == "hypernode" for t in prepared.run.ticks)
+
+def test_retrieval_and_ignition_follow_three_hypernodes_backwards_from_effect():
+    m = AHMemory()
+    for uid_, label in (("s1", "перегрев"), ("s2", "остановка"), ("s3", "снижение давления"), ("s4", "оповещение")): symbol(m, uid_, label)
+    template(m)
+    for index, (source, target) in enumerate((("s1", "s2"), ("s2", "s3"), ("s3", "s4")), 1):
+        uid_ = f"h{index}"
+        m.add_element("C", MemoryElement(uid=uid_, payload=Hypernode(uid=uid_, weight=.9, template_ref=ElementReference(reference_uid=uid_+"_tpl", target_uid="tpl_test"), role_bindings=(RoleBinding(role_id="SUBJECT", target_ref=SReference(reference_uid=uid_+"_s", target_uid=source)), RoleBinding(role_id="OBJECT", target_ref=SReference(reference_uid=uid_+"_o", target_uid=target))))))
+    snapshot, seeds = build_candidate_snapshot(m, ["s4"])
+    assert seeds == ["s4"] and {"h1", "h2", "h3"} <= set(snapshot.elements)
+    run = IgnitionEngine().run(snapshot, seeds, IgnitionConfig(max_ticks=12, working_memory_threshold=.15)).run
+    assert {"h1", "h2", "h3", "s1", "s2", "s3", "s4"} <= set(run.minimal_path)
+    assert any(trace.target_uid == "h1" and trace.impulse_type == "role_to_hypernode" for trace in run.ticks)
 
 def test_profiles_rhythm_parent_trace_and_hebbian_deltas():
     m = AHMemory(); symbol(m, "s1", "a"); symbol(m, "s2", "b")
@@ -142,7 +192,19 @@ def test_api_end_to_end_all_critical_routes():
 def test_demo_three_hop_answer_and_honest_evaluation():
     c = TestClient(app); d = c.post("/api/v1/demo/seed").json(); assert len(d["accepted"]) + sum(item["reason"] == "duplicate_memory_fact" for item in d["rejected"]) >= 5
     q = c.post("/api/v1/queries", json={"question": "почему остановился агрегат?", "max_ticks": 8}).json(); assert q["status"] == "answered" and q["trace_complete"] and q["evidence"]
+    assert len([uid_ for uid_ in q["answer_path"] if uid_.startswith("h_")]) == 1
     e = c.post("/api/v1/evaluations").json(); assert e["metrics"]["M4"]["status"] == "unavailable" and e["metrics"]["M5"]["status"] == "unavailable"
+
+def test_independent_three_hop_document_reaches_all_grounded_facts_from_final_effect():
+    c = TestClient(app)
+    text = "Короткое замыкание вызвало отключение сервера. Отключение сервера привело к остановке обработки. Остановка обработки вызвала задержку отчёта."
+    ingested = c.post("/api/v1/ingestions", json={"document_uid": "three_hop_server_chain", "text": text}).json()
+    assert len(ingested["accepted"]) + sum(item["reason"] == "duplicate_memory_fact" for item in ingested["rejected"]) >= 3
+    result = c.post("/api/v1/queries", json={"question": "Почему задержался отчёт?", "max_ticks": 14}).json()
+    assert result["status"] == "answered" and result["trace_complete"]
+    assert result["grounded_fact_count"] >= 3
+    assert len([uid_ for uid_ in result["minimal_path"] if uid_.startswith("h_")]) >= 3
+    assert sum(item["impulse_type"] == "role_to_hypernode" for item in result["trace"]) >= 3
 
 def test_m3_fixture_and_n1000_tick_benchmark():
     m = AHMemory()
@@ -194,9 +256,27 @@ def test_query_answer_is_selected_causal_evidence_bound_phrase():
     c.post("/api/v1/ingestions", json={"document_uid": "answer_check", "text": "Перегрев насоса вызвал остановку агрегата."})
     result = c.post("/api/v1/queries", json={"question": "Почему остановился агрегат?"}).json()
     assert result["status"] == "answered" and result["evidence"]
+    assert result["answer_mode"] == "deterministic_grounded" and result["grounded_fact_count"] >= 1
     assert "Подтверждено AH-памятью" not in result["answer"] and result["answer"].count("агрегат") == 1
     assert "останов" in result["answer"].lower() and "перегрев" in result["answer"].lower()
     assert result["evidence"][0]["exact_text"] in "Перегрев насоса вызвал остановку агрегата."
+
+def test_evidence_answer_validator_requires_known_citation_on_every_sentence():
+    facts = [{"evidence_id": "E1"}, {"evidence_id": "E2"}]
+    valid = validate_evidence_answer({"status": "answered", "answer": "Агрегат остановился из-за перегрева [E1].", "evidence_ids": ["E1"]}, facts)
+    assert valid["evidence_ids"] == ["E1"]
+    with pytest.raises(ValueError): validate_evidence_answer({"status": "answered", "answer": "Это внешний вывод [E3].", "evidence_ids": ["E3"]}, facts)
+    with pytest.raises(ValueError): validate_evidence_answer({"status": "answered", "answer": "Первое. [E1] Второе без ссылки.", "evidence_ids": ["E1"]}, facts)
+
+def test_external_evidence_answer_has_small_budget_and_validated_citations(monkeypatch):
+    provider = OpenAICompatibleProvider("https://openrouter.ai/api/v1", "deepseek/deepseek-v4-flash-0731:nitro")
+    requests = []
+    provider._request_json = lambda payload: requests.append(payload) or {"choices": [{"message": {"content": '{"status":"answered","answer":"Остановка вызвана перегревом [E1].","evidence_ids":["E1"]}'}}]}
+    monkeypatch.setattr("app.answering.configured_provider", lambda _: (provider, {"model_id": provider.model_id}))
+    result = generate_evidence_answer("Почему остановка?", [{"evidence_id": "E1", "predicate": "CAUSE", "bindings": {"SUBJECT": "перегрев", "OBJECT": "остановка"}, "source_quotes": ["Перегрев вызвал остановку."]}], provider.model_id, "Перегрев вызвал остановку.")
+    assert result["status"] == "answered" and result["evidence_ids"] == ["E1"]
+    assert requests[0]["max_tokens"] == 2048 and requests[0]["reasoning"]["effort"] == "none"
+    assert requests[0]["messages"][1]["content"].find("GROUNDED_DRAFT") > 0
 
 def test_rule_provider_does_not_make_location_from_word_suffix():
     facts = RuleBasedProvider().extract("Перегрев насоса вызвал остановку агрегата.")
@@ -238,6 +318,9 @@ def test_v2_canonicalizes_provider_role_synonyms_before_template_validation():
     isa = CandidateFact(predicate="IS-A", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="зверёк")), source_start=0, source_end=len(text), exact_text=text, confidence=.8)
     accepted, rejected = canonicalize_candidates(text, [isa])
     assert not rejected and [binding.role_id for binding in accepted[0].bindings] == ["SUBJECT", "OBJECT"]
+    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="быстрый")), source_start=0, source_end=len(text), exact_text=text, confidence=.8)
+    accepted, rejected = canonicalize_candidates(text, [state])
+    assert not rejected and [binding.role_id for binding in accepted[0].bindings] == ["SUBJECT", "STATE"]
 
 def test_v2_parser_confidence_is_not_activation_weight(monkeypatch):
     monkeypatch.setenv("AH_INGESTION_INITIAL_WEIGHT", "0.65")
@@ -278,6 +361,58 @@ def test_v2_retries_only_transient_upstream_rate_limit(monkeypatch):
     provider = OpenAICompatibleProvider("http://local.test/v1", "retry-model")
     assert provider._request_json({}) == {"choices": []} and len(calls) == 3 and delays == [1, 2]
 
+def test_deepseek_ui_preset_reuses_server_key_and_enforces_json_schema(monkeypatch):
+    monkeypatch.setenv("AH_PARSER_PROVIDER", "auto")
+    monkeypatch.setenv("AH_LLM_BASE_URL", "https://openrouter.ai/api/v1")
+    monkeypatch.setenv("AH_LLM_API_KEY", "server-secret")
+    provider, meta = ingestion_module.configured_provider("~deepseek/deepseek-v4-flash-latest")
+    assert provider.model_id == "~deepseek/deepseek-v4-flash-latest"
+    assert provider.response_format == "json_schema" and provider.api_key == "server-secret"
+    assert meta["configured"] == "ui_override"
+
+def test_ox_alpha_ui_preset_uses_openrouter_json_mode(monkeypatch):
+    monkeypatch.setenv("AH_PARSER_PROVIDER", "auto")
+    monkeypatch.setenv("AH_LLM_BASE_URL", "https://openrouter.ai/api/v1")
+    monkeypatch.setenv("AH_LLM_API_KEY", "server-secret")
+    provider, meta = ingestion_module.configured_provider("stealth/ox-alpha")
+    assert provider.model_id == "stealth/ox-alpha"
+    assert provider.response_format == "json_object" and provider.api_key == "server-secret"
+    assert meta["configured"] == "ui_override"
+
+def test_semantic_canonicalization_repairs_function_follow_and_time():
+    function_text = "Компрессор используется для подачи воздуха в производственную линию"
+    function = CandidateFact(predicate="USES_TOOL", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="OBJECT", value="подача воздуха"), CandidateBinding(role_id="TOOL", value="производственная линия")), source_start=0, source_end=len(function_text), exact_text=function_text, confidence=.9)
+    accepted, rejected = canonicalize_candidates(function_text, [function])
+    assert not rejected and accepted[0].predicate == "RUN"
+    assert {binding.role_id: binding.value for binding in accepted[0].bindings}["HOW-TO"] == "подачи воздуха в производственную линию"
+
+    follow_text = "После восстановления давления аварийный сигнал отключился"
+    earlier, later = "восстановления давления", "аварийный сигнал"
+    earlier_start, later_start = follow_text.index(earlier), follow_text.index(later)
+    mentions = (CandidateMention(mention_id="before", observed_text=earlier, source_start=earlier_start, source_end=earlier_start + len(earlier), mention_type="event", canonical_label="восстановление давления"), CandidateMention(mention_id="after", observed_text=later, source_start=later_start, source_end=later_start + len(later), mention_type="event", canonical_label="аварийный сигнал"))
+    follow = CandidateFact(predicate="FOLLOW", bindings=(CandidateBinding(role_id="SUBJECT", term=CandidateTerm(mention_ids=("after",))), CandidateBinding(role_id="OBJECT", term=CandidateTerm(mention_ids=("before",)))), source_start=0, source_end=len(follow_text), exact_text=follow_text, confidence=.9, mentions=mentions)
+    accepted, rejected = canonicalize_candidates(follow_text, [follow])
+    bindings = {binding.role_id: binding.value for binding in accepted[0].bindings}
+    assert not rejected and bindings == {"SUBJECT": "аварийный сигнал отключился", "OBJECT": "восстановление давления"}
+
+    state_text = "компрессор остался остановлен до завершения проверки."
+    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="STATE", value="остановленное состояние")), source_start=0, source_end=len(state_text), exact_text=state_text, confidence=.9)
+    accepted, rejected = canonicalize_candidates(state_text, [state])
+    assert not rejected and {binding.role_id: binding.value for binding in accepted[0].bindings}["TIME"] == "до завершения проверки"
+
+def test_identifier_grounding_and_local_property_answer():
+    assert lexical_score("Какие свойства у датчика ДТ4?", "датчик температуры ДТ-4") == 2
+    memory = AHMemory()
+    text = "Датчик ДТ-4 имеет красный корпус и находится в горячем состоянии."
+    facts = [
+        CandidateFact(predicate="HAS", bindings=(CandidateBinding(role_id="SUBJECT", value="датчик температуры ДТ-4"), CandidateBinding(role_id="OBJECT", value="красный корпус")), source_start=0, source_end=len(text), exact_text=text, confidence=.9),
+        CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="датчик температуры ДТ-4"), CandidateBinding(role_id="STATE", value="горячее состояние")), source_start=0, source_end=len(text), exact_text=text, confidence=.9),
+    ]
+    accepted, rejected = Compiler(memory).compile(facts, text, "sensor-properties")
+    answer, selected = select_local_answer(memory, "Какие свойства у датчика ДТ4?", tuple(accepted))
+    assert not rejected and len(selected) == 2
+    assert "красный корпус" in answer and "горячее состояние" in answer
+
 def test_v2_structured_rabbit_contract_admits_at_least_six_of_eight():
     from app.conformance import RABBIT_SOURCE
     sentences = [span.text for span in segment_text(RABBIT_SOURCE)]
@@ -298,3 +433,66 @@ def test_v2_structured_rabbit_contract_admits_at_least_six_of_eight():
     score = rabbit_ingestion_v2(provider)
     assert not meta["rejection_log"] and not rejected and len(accepted) >= 6
     assert score["status"] == "pass" and score["score"] == 8
+
+def test_ir_v3_general_composition_coreference_and_atomic_groups():
+    text = "Двигатель установлен в цехе A или цехе B. У него есть датчик. Датчик красный и горячий. Перегрев вызвал остановку."
+    raw = {
+        "mentions": [
+            {"id": "motor", "text": "Двигатель", "type": "entity", "canonical_label": "двигатель", "coref_to": None},
+            {"id": "hall_a", "text": "цехе A", "type": "location", "canonical_label": "цех A", "coref_to": None},
+            {"id": "hall_b", "text": "цехе B", "type": "location", "canonical_label": "цех B", "coref_to": None},
+            {"id": "owner", "text": "него", "type": "entity", "canonical_label": None, "coref_to": "motor"},
+            {"id": "sensor", "text": "датчик", "type": "device", "canonical_label": "датчик", "coref_to": None},
+            {"id": "red", "text": "красный", "type": "state", "canonical_label": "красный", "coref_to": None},
+            {"id": "hot", "text": "горячий", "type": "state", "canonical_label": "горячий", "coref_to": None},
+            {"id": "overheat", "text": "Перегрев", "type": "event", "canonical_label": "перегрев", "coref_to": None},
+            {"id": "stop", "text": "остановку", "type": "event", "canonical_label": "остановка", "coref_to": None},
+        ],
+        "facts": [
+            {"predicate": "LOCATED_AT", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["motor"]}}, {"role_id": "LOCATION", "term": {"operator": "OR", "mention_ids": ["hall_a", "hall_b"]}}], "quote": text[0:44], "confidence": .9, "unresolved_entities": False},
+            {"predicate": "HAS", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["owner"]}}, {"role_id": "OBJECT", "term": {"operator": "ATOM", "mention_ids": ["sensor"]}}], "quote": "У него есть датчик.", "confidence": .9, "unresolved_entities": False},
+            {"predicate": "HAS_STATE", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["sensor"]}}, {"role_id": "STATE", "term": {"operator": "ATOM", "mention_ids": ["red"]}}], "quote": "Датчик красный и горячий.", "confidence": .85, "unresolved_entities": False},
+            {"predicate": "HAS_STATE", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["sensor"]}}, {"role_id": "STATE", "term": {"operator": "ATOM", "mention_ids": ["hot"]}}], "quote": "Датчик красный и горячий.", "confidence": .85, "unresolved_entities": False},
+            {"predicate": "CAUSE", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["overheat"]}}, {"role_id": "OBJECT", "term": {"operator": "ATOM", "mention_ids": ["stop"]}}], "quote": "Перегрев вызвал остановку.", "confidence": .95, "unresolved_entities": False},
+        ],
+    }
+    provider = OpenAICompatibleProvider("http://local.test/v1", "ir-v3-general")
+    provider._completion = lambda _: {"choices": [{"message": {"content": json.dumps(raw, ensure_ascii=False)}}]}
+    candidates, meta = extract_candidates(text, provider)
+    memory = AHMemory(); accepted, rejected = Compiler(memory).compile(candidates, text, "general_ir_v3")
+    functions = [element.payload for element in memory.elements.values() if isinstance(element.payload, FunctionalSymbol)]
+    assert not meta["rejection_log"] and not rejected and len(accepted) == 5
+    assert len({candidate.group_uid for candidate in candidates}) == 4
+    assert any(function.function_id == "OR" and len(function.ordered_operands) == 2 for function in functions)
+    has = next(candidate for candidate in candidates if candidate.predicate == "HAS")
+    assert {binding.role_id: binding.value for binding in has.bindings}["SUBJECT"] == "двигатель"
+
+def test_ir_v3_rejects_forward_and_cyclic_coreference():
+    text = "Он увидел датчик."
+    mentions = (
+        CandidateMention(mention_id="a", observed_text="Он", source_start=0, source_end=2, coref_to="b"),
+        CandidateMention(mention_id="b", observed_text="датчик", source_start=10, source_end=16, coref_to="a"),
+    )
+    candidate = CandidateFact(predicate="OBSERVED", bindings=(CandidateBinding(role_id="SUBJECT", term=CandidateTerm(mention_ids=("a",))), CandidateBinding(role_id="OBJECT", term=CandidateTerm(mention_ids=("b",)))), source_start=0, source_end=len(text), exact_text=text, confidence=.8, mentions=mentions)
+    accepted, rejected = canonicalize_candidates(text, [candidate])
+    assert not accepted and rejected[0]["reason"] in {"forward_coreference", "coreference_cycle"}
+
+def test_general_recovery_for_coordinated_state_and_explicit_follow():
+    properties = _coordinated_property_candidates("Этикетка E-9 имеет синий фон и находится в повреждённом состоянии.")
+    assert [(item.predicate, {binding.role_id: binding.value for binding in item.bindings}) for item in properties] == [
+        ("HAS", {"SUBJECT": "Этикетка E-9", "OBJECT": "синий фон"}),
+        ("HAS_STATE", {"SUBJECT": "Этикетка E-9", "STATE": "повреждённом состоянии"}),
+    ]
+    follow = _explicit_follow_candidates("После падения тестов инженер Ли откатил изменение схемы.")
+    assert {binding.role_id: binding.value for binding in follow[0].bindings} == {"SUBJECT": "инженер Ли откатил изменение схемы", "OBJECT": "падения тестов"}
+    assert not _explicit_follow_candidates("После этого инженер выполнил откат.")
+    temporal = _temporal_state_candidates("Наблюдение оставалось приостановленным до следующего окна связи.")
+    assert {binding.role_id: binding.value for binding in temporal[0].bindings} == {"SUBJECT": "Наблюдение", "STATE": "приостановленным", "TIME": "до следующего окна связи"}
+
+def test_functional_label_and_leading_citation_cleanup():
+    memory = AHMemory()
+    symbol(memory, "s_a", "цех А"); symbol(memory, "s_b", "резервный зал")
+    memory.add_element("C", MemoryElement(uid="fn_or", payload=FunctionalSymbol(uid="fn_or", function_id="OR", ordered_operands=(SReference(reference_uid="r_a", target_uid="s_a"), SReference(reference_uid="r_b", target_uid="s_b")))))
+    assert memory.label("fn_or") == "цех А или резервный зал"
+    result = validate_evidence_answer({"status": "answered", "answer": "[E1] Причина подтверждена [E1].", "evidence_ids": ["E1"]}, [{"evidence_id": "E1"}])
+    assert result["answer"] == "Причина подтверждена [E1]."

@@ -16,6 +16,9 @@ const state = {
   memoryPositions: [],
   memorySelectedUid: null,
   candidates: [],
+  rejectionLog: [],
+  coverageWarnings: [],
+  sourceGroups: new Map(),
   previewUid: null,
   selectedCandidate: 0,
   playing: null,
@@ -320,25 +323,22 @@ function nodeType(uid) {
 }
 
 function uniqueGraph(result) {
-  const path = new Set(result.minimal_path || []);
-  const evidenceText = new Set((result.evidence || []).map((item) => item.exact_text));
+  const path = new Set(result.answer_path?.length ? result.answer_path : result.minimal_path || []);
   let hypernodes = [...state.memory.hypernodes.values()].filter((item) => path.has(item.uid));
-  const exact = hypernodes.filter((item) => item.evidence.some((ev) => evidenceText.has(ev.exact_text)));
-  if (exact.length) hypernodes = exact;
   const signatures = new Set();
   hypernodes = hypernodes.filter((item) => {
     const signature = `${item.predicate}:${item.bindings.map((binding) => `${binding.role}:${binding.label.toLowerCase()}`).join("|")}`;
     if (signatures.has(signature)) return false;
     signatures.add(signature);
     return true;
-  }).slice(0, 2);
+  }).slice(0, 8);
   const nodes = [];
   const nodeSet = new Set();
   const edges = [];
   const addNode = (uid) => { if (uid && !nodeSet.has(uid)) { nodeSet.add(uid); nodes.push(uid); } };
   for (const hypernode of hypernodes) {
     addNode(hypernode.uid);
-    for (const binding of hypernode.bindings.filter((item) => ["SUBJECT", "OBJECT", "LOCATION", "RESULT"].includes(item.role))) {
+    for (const binding of hypernode.bindings) {
       addNode(binding.uid);
       edges.push({ source: hypernode.uid, target: binding.uid, type: binding.role, impulseType: "hypernode" });
     }
@@ -346,13 +346,17 @@ function uniqueGraph(result) {
   for (const link of state.memory.links.values()) {
     const source = link.source_ref?.target_uid;
     const target = link.target_ref?.target_uid;
-    if (nodeSet.has(source) && nodeSet.has(target)) edges.push({ source, target, type: link.type_id, impulseType: "associative" });
+    const representedByHypernode = hypernodes.some((item) => item.predicate === link.type_id && item.bindings.some((binding) => binding.uid === source) && item.bindings.some((binding) => binding.uid === target));
+    if (!representedByHypernode && nodeSet.has(source) && nodeSet.has(target)) edges.push({ source, target, type: link.type_id, impulseType: "associative" });
   }
   return { nodes, edges };
 }
 
 function firstTraceTick(edge) {
-  const matches = state.trace.filter((item) => item.source_uid === edge.source && item.target_uid === edge.target && item.impulse_type === edge.impulseType);
+  const matches = state.trace.filter((item) =>
+    (item.source_uid === edge.source && item.target_uid === edge.target && item.impulse_type === edge.impulseType)
+    || (edge.impulseType === "hypernode" && item.source_uid === edge.target && item.target_uid === edge.source && item.impulse_type === "role_to_hypernode")
+  );
   return matches.length ? Math.min(...matches.map((item) => item.tick)) : 0;
 }
 
@@ -365,46 +369,15 @@ function edgeKey(edge) { return `${edge.source}>${edge.target}:${edge.impulseTyp
 
 function buildAnimationSteps() {
   const graph = uniqueGraph(state.result || {});
-  const hypernodeUid = graph.nodes.find((uid) => nodeType(uid) === "N");
-  const hypernode = state.memory.hypernodes.get(hypernodeUid);
-  if (!hypernode) return [];
-  const binding = (role) => hypernode.bindings.filter((item) => item.role === role && graph.nodes.includes(item.uid));
-  const objects = [...binding("OBJECT"), ...binding("RESULT")];
-  const subjects = binding("SUBJECT");
-  const roleEdges = (roles) => graph.edges.filter((edge) => edge.source === hypernodeUid && roles.includes(edge.type));
-  const associative = graph.edges.filter((edge) => edge.impulseType === "associative");
   const seedUids = graph.nodes.filter((uid) => (state.result?.seed_uids || []).includes(uid));
-  const targetUids = seedUids.length ? seedUids : objects.map((item) => item.uid);
-  const steps = [
-    {
-      label: `Цель: ${objects[0]?.label || compactLabel(targetUids[0] || hypernodeUid)}`,
-      nodeUids: targetUids,
-      edgeKeys: [],
-      focusUid: targetUids[0] || hypernodeUid,
-      traceTick: targetUids.length ? Math.min(...targetUids.map(nodeFirstTick)) : 0,
-    },
-    {
-      label: `${hypernode.predicate} · утверждение найдено`,
-      nodeUids: [hypernodeUid],
-      edgeKeys: roleEdges(["OBJECT", "RESULT"]).map(edgeKey),
-      focusUid: hypernodeUid,
-      traceTick: nodeFirstTick(hypernodeUid),
-    },
-  ];
-  if (subjects.length) steps.push({
-    label: `Причина: ${subjects[0].label}`,
-    nodeUids: subjects.map((item) => item.uid),
-    edgeKeys: roleEdges(["SUBJECT", "CAUSE"]).map(edgeKey),
-    focusUid: subjects[0].uid,
-    traceTick: nodeFirstTick(subjects[0].uid),
+  const steps = seedUids.length ? [{ label: `Запрос активировал: ${seedUids.map(compactLabel).join(", ")}`, nodeUids: seedUids, edgeKeys: [], focusUid: seedUids[0], traceTick: 0 }] : [];
+  const events = graph.nodes.filter((uid) => nodeType(uid) === "N").map((uid) => {
+    const edges = graph.edges.filter((edge) => edge.source === uid && edge.impulseType === "hypernode");
+    return { label: `${state.memory.hypernodes.get(uid)?.predicate || "FACT"}: ${compactLabel(uid)}`, nodeUids: [uid, ...edges.map((edge) => edge.target)], edgeKeys: edges.map(edgeKey), focusUid: uid, traceTick: Math.min(...edges.map(firstTraceTick)) };
   });
-  if (associative.length) steps.push({
-    label: "Причинная связь подтверждена",
-    nodeUids: [],
-    edgeKeys: associative.map(edgeKey),
-    focusUid: hypernodeUid,
-    traceTick: Math.min(...associative.map(firstTraceTick)),
-  });
+  for (const edge of graph.edges.filter((item) => item.impulseType === "associative")) events.push({ label: `${edge.type}: ${compactLabel(edge.source)} → ${compactLabel(edge.target)}`, nodeUids: [edge.source, edge.target], edgeKeys: [edgeKey(edge)], focusUid: edge.target, traceTick: firstTraceTick(edge) });
+  events.sort((a, b) => a.traceTick - b.traceTick || a.label.localeCompare(b.label));
+  steps.push(...events.slice(0, 15));
   return steps;
 }
 
@@ -452,16 +425,18 @@ function renderGraph() {
   const positions = new Map();
   const hypernodes = nodes.filter((uid) => nodeType(uid) === "N");
   hypernodes.forEach((uid, index) => positions.set(uid, { x: width * .5, y: height * ((index + 1) / (hypernodes.length + 1)) }));
-  const slots = { SUBJECT: 0, OBJECT: 0, LOCATION: 0, RESULT: 0 };
-  for (const edge of edges.filter((item) => item.impulseType === "hypernode")) {
-    if (positions.has(edge.target)) continue;
-    const side = ["OBJECT", "RESULT"].includes(edge.type) ? .79 : .21;
-    const count = edges.filter((item) => item.impulseType === "hypernode" && item.type === edge.type).length;
-    const index = slots[edge.type]++;
-    if (width < 640) {
+  const roleEdges = edges.filter((item) => item.impulseType === "hypernode");
+  if (width < 640) {
+    for (const edge of roleEdges) {
+      if (positions.has(edge.target)) continue;
       const order = edge.type === "SUBJECT" ? 0 : ["OBJECT", "RESULT"].includes(edge.type) ? 2 : 3;
       positions.set(edge.target, { x: width * .5, y: 66 + order * ((height - 132) / 3) });
-    } else positions.set(edge.target, { x: width * side, y: height * ((index + 1) / (count + 1)) });
+    }
+  } else {
+    for (const side of ["left", "right"]) {
+      const targets = [...new Set(roleEdges.filter((edge) => (["OBJECT", "RESULT"].includes(edge.type) ? "right" : "left") === side).map((edge) => edge.target))];
+      targets.forEach((uid, index) => positions.set(uid, { x: width * (side === "right" ? (width < 800 ? .83 : .79) : (width < 800 ? .17 : .21)), y: height * ((index + 1) / (targets.length + 1)) }));
+    }
   }
   const completedSteps = state.animationSteps.slice(0, state.tick + 1);
   const activeNodes = new Set(completedSteps.flatMap((step) => step.nodeUids));
@@ -588,18 +563,21 @@ async function runQuery(question = $("#query-input").value.trim()) {
   try {
     const result = await api("/api/v1/queries", {
       method: "POST",
-      body: JSON.stringify({ question, profile: $("#profile").value, ignition: ignitionConfig() }),
+      body: JSON.stringify({ question, profile: $("#profile").value, answer_model: $("#answer-model").value, ignition: ignitionConfig() }),
     });
     state.result = result;
     state.trace = result.trace || [];
     await loadMemoryMap();
-    $("#answer-status").textContent = result.status === "answered" ? "Ответ по доказательствам" : "Недостаточно доказательств";
+    $("#answer-status").textContent = result.status === "answered" ? `${result.answer_mode === "llm_grounded" ? "LLM" : result.answer_warning ? "Локальный fallback" : "Локальный"} · ответ по доказательствам` : "Недостаточно доказательств";
+    $("#answer-provenance-detail").textContent = result.answer_mode === "llm_grounded"
+      ? `${result.answer_fact_count ?? result.grounded_fact_count} фактов ответа · citations проверены сервером${result.answer_provider?.model_id ? ` · ${result.answer_provider.model_id}` : ""}`
+      : result.answer_warning || "Внешняя модель не использовалась";
     $("#answer-text").textContent = result.status === "answered" ? result.answer : "В AH-памяти нет достаточного подтверждённого пути. Ответ не был дополнен знаниями модели.";
     $("#trace-badge").textContent = result.trace_complete ? `полная трасса · ${state.trace.length} событий` : "трасса недоступна";
     $("#path-state").textContent = result.trace_complete ? "путь подтверждён" : "неполный путь";
     $("#run-state").textContent = `${result.profile || $("#profile").value} · ${result.run_uid ? result.run_uid.slice(0, 14) : "no run"}`;
     configureTimeline();
-    const first = result.working_memory?.[0] || result.minimal_path?.find((uid) => !uid.startsWith("l_"));
+    const first = result.answer_path?.find((uid) => uid.startsWith("h_")) || result.answer_path?.[0] || result.working_memory?.[0] || result.minimal_path?.find((uid) => !uid.startsWith("l_"));
     if (first) selectNode(first, false); else renderGraph();
   } catch (error) {
     state.result = null; state.trace = [];
@@ -616,7 +594,23 @@ async function runQuery(question = $("#query-input").value.trim()) {
 
 function candidateFromPreview(item) {
   const bindings = Object.fromEntries((item.bindings || []).map((binding) => [binding.role_id, binding.value]));
-  return { candidateUid: item.candidate_uid, predicate: item.predicate, assertion: item.exact_text, confidence: item.confidence, span: `${item.source_start}:${item.source_end}`, template: `${item.predicate}(${Object.keys(bindings).join(", ")})`, bindings, modelId: item.model_id, status: item.status || "pending" };
+  const term = (value = "") => value
+    .replace(/^OR\((.*)\)$/u, (_, operands) => operands.split(", ").join(" или "))
+    .replace(/^AND\((.*)\)$/u, (_, operands) => operands.split(", ").join(" и "))
+    .replace(/^VERY\((.*)\)$/u, "очень $1");
+  const b = Object.fromEntries(Object.entries(bindings).map(([role, value]) => [role, term(value)]));
+  const assertion = ({
+    "IS-A": () => `${b.SUBJECT} — ${b.OBJECT}`,
+    LOCATED_AT: () => `${b.SUBJECT} находится: ${b.LOCATION}`,
+    LIVE: () => `${b.SUBJECT} обитает: ${b.LOCATION}`,
+    HAS: () => `${b.SUBJECT} имеет: ${b.OBJECT}`,
+    HAS_STATE: () => `${b.SUBJECT}: ${b.STATE}${b.TIME ? ` · ${b.TIME}` : ""}`,
+    CAUSE: () => `${b.SUBJECT} вызывает: ${b.OBJECT}`,
+    FOLLOW: () => `${b.SUBJECT} следует после: ${b.OBJECT}`,
+    USES_TOOL: () => `${b.SUBJECT} использует ${b.TOOL}${b.OBJECT ? ` для: ${b.OBJECT}` : ""}`,
+    RUN: () => `${b.SUBJECT} выполняет функцию: ${b["HOW-TO"]}`,
+  }[item.predicate] || (() => item.exact_text))();
+  return { candidateUid: item.candidate_uid, predicate: item.predicate, assertion, sourceQuote: item.exact_text, confidence: item.confidence, span: `${item.source_start}:${item.source_end}`, groupUid: item.group_uid || item.span_uid, template: `${item.predicate}(${Object.keys(bindings).join(", ")})`, bindings, modelId: item.model_id, status: item.status || "pending" };
 }
 
 async function previewCandidates() {
@@ -624,29 +618,57 @@ async function previewCandidates() {
   const button = $("#preview-candidates"); button.disabled = true; button.textContent = "Извлекаем…";
   $("#parser-status").textContent = "Серверный parser обрабатывает документ";
   try {
-    const result = await api("/api/v1/ingestions/preview", { method: "POST", body: JSON.stringify({ text, source_name: "ingestion-review" }) });
+    const result = await api("/api/v1/ingestions/preview", { method: "POST", body: JSON.stringify({ text, source_name: "ingestion-review", parser_model: $("#parser-model").value }) });
     state.previewUid = result.preview_uid; state.selectedCandidate = 0;
     state.candidates = result.candidates.map(candidateFromPreview);
+    state.rejectionLog = result.rejection_log || [];
+    state.coverageWarnings = result.coverage_warnings || [];
+    state.sourceGroups = new Map((result.source_groups || []).map((group) => [group.uid, group]));
     const provider = result.provider;
     const fallback = provider.fallback ? " · fallback" : "";
     const cached = provider.cached ? " · cache" : "";
     $("#parser-status").textContent = `${provider.active} · ${provider.model_id} · ${provider.prompt_version}${fallback}${cached}`;
     $("#document-label").textContent = result.document_uid;
-    const rejected = result.rejection_log || [];
-    $("#admission-result").textContent = rejected.length
-      ? `${result.count} candidates · ${rejected.length} отсечено: ${rejected[0].message || rejected[0].reason}`
+    const rejected = result.rejection_log || []; const uncovered = result.coverage_warnings || [];
+    $("#admission-result").textContent = rejected.length || uncovered.length
+      ? `${result.count} candidates · ${rejected.length} отсечено · ${uncovered.length} фрагментов без фактов`
       : `${result.count} candidates · ожидают решения`;
     renderCandidates();
+    if ($("#auto-admit").checked) await autoAdmitCandidates();
   } catch (error) {
-    state.previewUid = null; state.candidates = []; renderCandidates();
+    state.previewUid = null; state.candidates = []; state.rejectionLog = []; state.coverageWarnings = []; state.sourceGroups.clear(); renderCandidates();
     $("#parser-status").textContent = "parser unavailable";
     $("#admission-result").textContent = error.message;
   } finally { button.disabled = false; button.textContent = "Собрать кандидатов"; }
 }
 
+async function autoAdmitCandidates() {
+  if (!state.previewUid) return;
+  $("#admission-result").textContent = "Автоприём: компилятор проверяет кандидатов…";
+  const result = await api("/api/v1/ingestions/auto-admit", { method: "POST", body: JSON.stringify({ preview_uid: state.previewUid }) });
+  state.candidates = result.candidates.map(candidateFromPreview);
+  $("#admission-result").textContent = `${result.admitted} admitted · ${result.rejected} rejected · ${result.pending} pending`;
+  renderCandidates();
+  if (result.admitted) await loadMemoryMap();
+  toast(result.processed ? `Автоприём завершён · rev ${result.memory_revision}` : "Все кандидаты уже обработаны");
+}
+
 function renderCandidates() {
   const list = $("#candidate-list");
-  list.replaceChildren(...state.candidates.map((candidate, index) => {
+  const groupCounts = new Map(state.candidates.map((candidate) => [candidate.groupUid, state.candidates.filter((item) => item.groupUid === candidate.groupUid).length]));
+  const children = [];
+  let previousGroup = null;
+  state.candidates.forEach((candidate, index) => {
+    if (candidate.groupUid !== previousGroup) {
+      const group = document.createElement("div"); group.className = "candidate-group-label";
+      const source = state.sourceGroups.get(candidate.groupUid);
+      const span = source ? `${source.start}:${source.end}` : candidate.span;
+      const count = groupCounts.get(candidate.groupUid);
+      const factLabel = count === 1 ? "1 атомарный факт" : `${count} атомарных ${count < 5 ? "факта" : "фактов"}`;
+      group.textContent = `ИСХОДНЫЙ ФРАГМЕНТ · ${span} · ${factLabel}`;
+      if (source) group.title = source.text;
+      children.push(group); previousGroup = candidate.groupUid;
+    }
     const button = document.createElement("button");
     button.type = "button";
     button.className = `candidate-card is-${candidate.status} ${index === state.selectedCandidate ? "is-selected" : ""}`;
@@ -655,8 +677,27 @@ function renderCandidates() {
     $("code", button).textContent = `Hyperedge template · ${candidate.template}`;
     $(".confidence", button).textContent = `${Math.round(candidate.confidence * 100)}% · span ${candidate.span} · ${candidate.status}`;
     button.addEventListener("click", () => { state.selectedCandidate = index; renderCandidates(); });
-    return button;
-  }));
+    children.push(button);
+  });
+  if (state.rejectionLog.length) {
+    const heading = document.createElement("div"); heading.className = "candidate-group-label"; heading.textContent = `REJECTION LOG · ${state.rejectionLog.length}`; children.push(heading);
+    state.rejectionLog.forEach((rejection) => {
+      const row = document.createElement("div"); row.className = "candidate-rejection";
+      const code = document.createElement("b"); code.textContent = rejection.reason;
+      const message = document.createElement("span"); message.textContent = rejection.message || rejection.reason;
+      row.append(code, message); children.push(row);
+    });
+  }
+  if (state.coverageWarnings.length) {
+    const heading = document.createElement("div"); heading.className = "candidate-group-label"; heading.textContent = `ТРЕБУЮТ ПРОВЕРКИ · ${state.coverageWarnings.length}`; children.push(heading);
+    state.coverageWarnings.forEach((warning) => {
+      const row = document.createElement("div"); row.className = "candidate-rejection is-warning";
+      const code = document.createElement("b"); code.textContent = `${warning.source_start}:${warning.source_end}`;
+      const message = document.createElement("span"); message.textContent = `Факты не извлечены: «${warning.exact_text}»`;
+      row.append(code, message); children.push(row);
+    });
+  }
+  list.replaceChildren(...children);
   $("#candidate-count").textContent = `${state.candidates.length} candidates`;
   const selected = state.candidates[state.selectedCandidate];
   if (!selected) {
@@ -671,7 +712,7 @@ function renderCandidates() {
   $("#candidate-title").textContent = `${selected.predicate} · выбранный кандидат`;
   $$(".check-list input").forEach((input) => { input.checked = true; });
   $("#candidate-span").textContent = `source span ${selected.span} · confidence ${selected.confidence.toFixed(2)}`;
-  $("#candidate-quote").textContent = selected.assertion;
+  $("#candidate-quote").textContent = selected.sourceQuote;
   const pending = selected.status === "pending";
   $("#reject-candidate").disabled = !pending; $("#admit-candidate").disabled = !pending;
   $("#binding-list").replaceChildren(...Object.entries(selected.bindings).map(([role, value]) => {

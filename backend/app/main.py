@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import re
 import time
 import uuid
 import hashlib
@@ -14,11 +13,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from .core import AHMemory, norm
+from .core import AHMemory, lexical_score
 from .conformance import junior_conformance_report
+from .answering import build_evidence_packet, generate_evidence_answer, select_local_answer
 from .dsl import Interpreter, DSLParseError
 from .engine import IgnitionEngine, build_candidate_snapshot, gc_commit, gc_preview
-from .ingestion import Compiler, RuleBasedProvider, configured_provider, extract_candidates, ingest
+from .ingestion import Compiler, RuleBasedProvider, configured_provider, extract_candidates, ingest, segment_text
 from .evaluation import internal_m1, internal_m2, rabbit_fixture, rabbit_ingestion_v2, role_metrics
 from .models import *
 
@@ -111,7 +111,7 @@ def create_ingestion(body: DocumentIngestRequest): return _create_ingestion(body
 
 @app.post("/api/v1/ingestions/preview")
 def preview_ingestion(body: DocumentIngestRequest):
-    try: candidates, provider = extract_candidates(body.text)
+    try: candidates, provider = extract_candidates(body.text, model_override=None if body.parser_model == "configured" else body.parser_model)
     except ValueError as exc: raise HTTPException(502, {"code": "parser_unavailable", "message": str(exc)})
     document_uid = body.document_uid or f"doc_{hashlib.sha256(body.text.encode()).hexdigest()[:16]}"
     preview_uid = uid("prv")
@@ -121,8 +121,9 @@ def preview_ingestion(body: DocumentIngestRequest):
         candidate_uid = f"cand_{hashlib.sha256(f'{document_uid}:{index}:{signature}'.encode()).hexdigest()[:16]}"
         items.append({"candidate_uid": candidate_uid, "status": "pending", **candidate.model_dump(mode="json")})
     rejection_log = provider.get("rejection_log", [])
+    source_groups = [span.__dict__ for span in segment_text(body.text)]
     previews[preview_uid] = {"preview_uid": preview_uid, "ingestion_uid": uid("ing"), "document_uid": document_uid, "source_name": body.source_name, "text": body.text, "provider": provider, "items": items, "candidates": {item["candidate_uid"]: candidate for item, candidate in zip(items, candidates)}, "decisions": {}, "rejection_log": rejection_log}
-    return {"preview_uid": preview_uid, "document_uid": document_uid, "provider": provider, "candidates": items, "rejection_log": rejection_log, "count": len(items)}
+    return {"preview_uid": preview_uid, "document_uid": document_uid, "provider": provider, "source_groups": source_groups, "candidates": items, "rejection_log": rejection_log, "coverage_warnings": provider.get("coverage_warnings", []), "count": len(items)}
 
 
 @app.post("/api/v1/ingestions/decision")
@@ -154,6 +155,16 @@ def decide_candidate(body: CandidateDecisionRequest):
     return result
 
 
+@app.post("/api/v1/ingestions/auto-admit")
+def auto_admit_candidates(body: AutoAdmissionRequest):
+    preview = previews.get(body.preview_uid)
+    if preview is None: raise HTTPException(404, {"code": "not_found", "message": "ingestion preview not found"})
+    pending = [item["candidate_uid"] for item in preview["items"] if item["status"] == "pending"]
+    results = [decide_candidate(CandidateDecisionRequest(preview_uid=body.preview_uid, candidate_uid=candidate_uid, decision="admit")) for candidate_uid in pending]
+    counts = {status: sum(item["status"] == status for item in preview["items"]) for status in ("admitted", "rejected", "pending")}
+    return {"preview_uid": body.preview_uid, "processed": len(results), **counts, "memory_revision": memory.revision, "candidates": preview["items"], "results": results, "reused": not pending}
+
+
 @app.get("/api/v1/ingestions")
 def list_ingestions():
     return {"items": list(ingestions.values()), "count": len(ingestions)}
@@ -166,44 +177,8 @@ def get_ingestion(ingestion_uid: str):
 
 
 def _seed_ids(question: str) -> list[str]:
-    q = norm(question)
-    exact = [s.uid for s in memory.symbols.values() if any(norm(r.value) in q or q in norm(r.value) for r in s.sensory_representations)]
-    if exact: return sorted(set(exact))
-    words = {x for x in q.split() if len(x) > 3}
-    return sorted({s.uid for s in memory.symbols.values() if any(any(w in norm(r.value) or norm(r.value).startswith(w[:5]) or w.startswith(norm(r.value)[:5]) for w in words) for r in s.sensory_representations)})
-
-
-def _term_match(question: str, value: str) -> int:
-    qwords = {w for w in norm(question).split() if len(w) > 3}
-    vwords = {w for w in norm(value).split() if len(w) > 3}
-    return sum(1 for q in qwords if any(q == v or q.startswith(v[:5]) or v.startswith(q[:5]) for v in vwords))
-
-
-def _causal_answer(question: str, working_memory: tuple[str, ...]):
-    candidates = []
-    for h in memory.find_hypernodes():
-        if h.uid not in working_memory or h.template_ref.target_uid != "tpl_cause" or not h.evidence:
-            continue
-        bindings = {b.role_id: b.target_ref.target_uid for b in h.role_bindings}
-        object_label = memory.label(bindings["OBJECT"]) if "OBJECT" in bindings else ""
-        subject_label = memory.label(bindings["SUBJECT"]) if "SUBJECT" in bindings else ""
-        subject_norm, object_norm = norm(subject_label), norm(object_label)
-        atomic = bool(subject_norm and object_norm and subject_norm not in object_norm and object_norm not in subject_norm)
-        # Prefer a clean SUBJECT/OBJECT pair, then the shortest concrete labels;
-        # UID order is deliberately not a semantic tie-breaker.
-        candidates.append((_term_match(question, object_label), atomic, -(len(subject_norm) + len(object_norm)), -len(object_norm), h, bindings))
-    selected = max(candidates, key=lambda item: (item[0], item[1], item[2], item[3])) if candidates else None
-    if selected and selected[0] > 0:
-        _, _, _, _, h, bindings = selected
-        subject = memory.label(bindings["SUBJECT"]) if "SUBJECT" in bindings else "причины"
-        obj = memory.label(bindings["OBJECT"]) if "OBJECT" in bindings else "событие"
-        for old, new in (("остановку", "остановка"), ("остановке", "остановка"), ("остановился", "остановка")):
-            obj = obj.replace(old, new)
-        cause = subject.lower()
-        cause = re.sub(r"^перегрев\b", "перегрева", cause)
-        return f"{obj[:1].upper() + obj[1:]} произошла из-за {cause}.", h
-    fallback = next((h for h in memory.find_hypernodes() if h.uid in working_memory and h.evidence), None)
-    return (f"По данным источника: {fallback.evidence[0].exact_text}" if fallback else "insufficient_evidence"), fallback
+    scored = [(max((lexical_score(question, r.value) for r in s.sensory_representations), default=0), s.uid) for s in memory.symbols.values()]
+    return [uid_ for score, uid_ in sorted(scored, key=lambda item: (-item[0], item[1])) if score > 0][:8]
 
 
 @app.post("/api/v1/queries")
@@ -211,15 +186,35 @@ def query(body: QueryRequest):
     seeds = _seed_ids(body.question)
     if not seeds:
         cfg = body.ignition or IgnitionConfig(max_ticks=body.max_ticks)
-        return {"status": "insufficient_evidence", "answer": "insufficient_evidence", "seed_uids": [], "run_uid": None, "trace": [], "evidence": [], "effective_config": cfg.model_dump(mode="json"), "minimal_path": [], "trace_complete": False}
+        return {"status": "insufficient_evidence", "answer": "insufficient_evidence", "seed_uids": [], "run_uid": None, "trace": [], "evidence": [], "effective_config": cfg.model_dump(mode="json"), "answer_path": [], "minimal_path": [], "trace_complete": False}
     cfg = body.ignition or IgnitionConfig(max_ticks=body.max_ticks)
     snapshot, ignition_seeds = build_candidate_snapshot(memory, seeds)
     result = IgnitionEngine().run(snapshot, ignition_seeds, cfg, body.profile)
     if cfg.hebbian_eta and result.run.weight_deltas:
         memory.apply_weight_deltas(result.run.weight_deltas)
     runs[result.run.run_uid] = result.run
-    answer, selected_hypernode = _causal_answer(body.question, result.run.working_memory)
-    selected_evidence = selected_hypernode.evidence if selected_hypernode else ()
+    answer, selected_hypernodes = select_local_answer(memory, body.question, tuple(uid_ for uid_, element in snapshot.elements.items() if isinstance(element.payload, Hypernode)))
+    selected_predicates = {
+        memory.label(memory.templates[item.template_ref.target_uid].predicate_ref.target_uid)
+        for item in selected_hypernodes if item.template_ref.target_uid in memory.templates
+    }
+    evidence_scope = tuple(item.uid for item in selected_hypernodes) if selected_hypernodes else result.run.minimal_path
+    evidence_packet = build_evidence_packet(memory, result.run.working_memory, evidence_scope)
+    activated_evidence_packet = build_evidence_packet(memory, result.run.working_memory, result.run.minimal_path)
+    answer_mode, answer_provider, answer_warning = "deterministic_grounded", None, None
+    if body.answer_model != "local" and evidence_packet:
+        try:
+            generated = generate_evidence_answer(body.question, evidence_packet, body.answer_model, answer)
+            if generated["status"] == "answered":
+                answer, answer_mode, answer_provider = generated["answer"], "llm_grounded", generated["provider"]
+                cited = set(generated["evidence_ids"])
+                cited_uids = {fact["hypernode_uid"] for fact in evidence_packet if fact["evidence_id"] in cited}
+                selected_hypernodes = [item for item in memory.find_hypernodes() if item.uid in cited_uids]
+            else: answer_warning = "answer model reported insufficient evidence; deterministic grounded fallback used"
+        except ValueError as exc:
+            message = str(exc)
+            answer_warning = "OpenRouter временно ограничил выбранную модель (HTTP 429); показан локальный доказательный ответ" if "HTTP 429" in message else message
+    selected_evidence = tuple(ev for item in selected_hypernodes for ev in item.evidence)
     seen_evidence = set()
     evidence = []
     for ev in selected_evidence:
@@ -229,7 +224,8 @@ def query(body: QueryRequest):
             evidence.append(ev.model_dump(mode="json"))
     if not evidence and answer != "insufficient_evidence":
         answer = "insufficient_evidence"
-    return {"status": "answered" if evidence else "insufficient_evidence", "answer": answer, "seed_uids": seeds, "run_uid": result.run.run_uid, "working_memory": result.run.working_memory, "trace": [x.model_dump(mode="json") for x in result.run.ticks], "evidence": evidence, "profile": body.profile, "effective_config": result.run.effective_config.model_dump(mode="json"), "minimal_path": result.run.minimal_path, "trace_complete": result.run.trace_complete}
+    answer_path = tuple(sorted({uid_ for item in selected_hypernodes for uid_ in (item.uid, *(binding.target_ref.target_uid for binding in item.role_bindings))}))
+    return {"status": "answered" if evidence else "insufficient_evidence", "answer": answer, "answer_mode": answer_mode, "answer_provider": answer_provider, "answer_warning": answer_warning, "grounded_fact_count": len(activated_evidence_packet), "answer_fact_count": len(evidence_packet), "seed_uids": seeds, "run_uid": result.run.run_uid, "working_memory": result.run.working_memory, "trace": [x.model_dump(mode="json") for x in result.run.ticks], "evidence": evidence, "profile": body.profile, "effective_config": result.run.effective_config.model_dump(mode="json"), "answer_path": answer_path, "minimal_path": result.run.minimal_path, "trace_complete": result.run.trace_complete}
 
 
 @app.get("/api/v1/ignition-runs/{run_uid}")
