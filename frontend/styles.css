@@ -205,7 +205,7 @@ code, .source-coord { color: var(--muted); font: 10px/1.45 "IBM Plex Mono", Cons
 .candidate-rejection b { color: var(--danger); font: 700 9px "IBM Plex Mono", Consolas, monospace; text-transform: uppercase; }
 .candidate-rejection.is-warning { border-color: rgba(181,126,24,.25); background: rgba(181,126,24,.05); }
 .candidate-rejection.is-warning b { color: #9a6810; }
-.candidate-card { position: relative; display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 16px; align-items: start; width: 100%; border: 1px solid var(--hairline); border-radius: 8px; padding: 17px; background: rgba(251,250,247,.65); text-align: left; cursor: pointer; }
+.candidate-card { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 16px; align-items: start; width: 100%; border: 1px solid var(--hairline); border-radius: 8px; padding: 17px; background: rgba(251,250,247,.65); text-align: left; cursor: pointer; }
 .candidate-card:hover { border-color: #aaa9a4; background: var(--surface); }
 .candidate-card.is-selected { border-color: var(--cobalt); background: var(--surface); box-shadow: 0 0 0 2px rgba(18,97,216,.08); }
 .candidate-card.is-admitted { border-left: 3px solid var(--positive); }
@@ -217,6 +217,9 @@ code, .source-coord { color: var(--muted); font: 10px/1.45 "IBM Plex Mono", Cons
 .candidate-card .confidence { color: var(--muted); font: 10px "IBM Plex Mono", Consolas, monospace; }
 .admission-panel { padding: 32px 28px; border-left: 1px solid var(--hairline); background: var(--surface); }
 .admission-panel h2 { margin: 6px 0 7px; font-size: 20px; }
+.section-assignment { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin-top: 16px; color: var(--muted); font-size: 10px; }
+.section-assignment select { min-width: 0; height: 34px; border: 1px solid var(--hairline); border-radius: 6px; padding: 0 8px; color: var(--ink); background: var(--surface); }
+.section-assignment small { grid-column: 1 / -1; line-height: 1.4; }
 .binding-list { display: grid; gap: 7px; margin: 24px 0; }
 .binding-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; min-height: 38px; border-bottom: 1px solid var(--hairline); }
 .binding-row span { color: var(--cobalt); font: 700 10px "IBM Plex Mono", Consolas, monospace; }

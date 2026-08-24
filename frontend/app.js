@@ -606,11 +606,13 @@ function candidateFromPreview(item) {
     HAS: () => `${b.SUBJECT} имеет: ${b.OBJECT}`,
     HAS_STATE: () => `${b.SUBJECT}: ${b.STATE}${b.TIME ? ` · ${b.TIME}` : ""}`,
     CAUSE: () => `${b.SUBJECT} вызывает: ${b.OBJECT}`,
-    FOLLOW: () => `${b.SUBJECT} следует после: ${b.OBJECT}`,
+    FOLLOW: () => `${b.SUBJECT} → затем: ${b.OBJECT}`,
     USES_TOOL: () => `${b.SUBJECT} использует ${b.TOOL}${b.OBJECT ? ` для: ${b.OBJECT}` : ""}`,
-    RUN: () => `${b.SUBJECT} выполняет функцию: ${b["HOW-TO"]}`,
+    RUN: () => `${b.SUBJECT} действует: ${b["HOW-TO"]}`,
+    ACTION: () => `${b.SUBJECT} совершает: ${b.OBJECT}${b.TOOL ? ` · инструмент: ${b.TOOL}` : ""}`,
+    PURPOSE: () => `${b.SUBJECT} предназначен для: ${b.PURPOSE}`,
   }[item.predicate] || (() => item.exact_text))();
-  return { candidateUid: item.candidate_uid, predicate: item.predicate, assertion, sourceQuote: item.exact_text, confidence: item.confidence, span: `${item.source_start}:${item.source_end}`, groupUid: item.group_uid || item.span_uid, template: `${item.predicate}(${Object.keys(bindings).join(", ")})`, bindings, modelId: item.model_id, status: item.status || "pending" };
+  return { candidateUid: item.candidate_uid, predicate: item.predicate, assertion, sourceQuote: item.exact_text, confidence: item.confidence, span: `${item.source_start}:${item.source_end}`, groupUid: item.group_uid || item.span_uid, template: `${item.predicate}(${Object.keys(bindings).join(", ")})`, bindings, modelId: item.model_id, status: item.status || "pending", sectionHint: item.section_hint || "C", sectionConfidence: item.section_confidence ?? .5, sectionReason: item.section_reason || "" };
 }
 
 async function previewCandidates() {
@@ -673,6 +675,7 @@ function renderCandidates() {
     button.type = "button";
     button.className = `candidate-card is-${candidate.status} ${index === state.selectedCandidate ? "is-selected" : ""}`;
     button.innerHTML = `<span class="predicate">${candidate.predicate}</span><span class="candidate-copy"><b></b><code></code></span><span class="confidence"></span>`;
+    $(".predicate", button).textContent = `${candidate.sectionHint} · ${candidate.predicate}`;
     $("b", button).textContent = candidate.assertion;
     $("code", button).textContent = `Hyperedge template · ${candidate.template}`;
     $(".confidence", button).textContent = `${Math.round(candidate.confidence * 100)}% · span ${candidate.span} · ${candidate.status}`;
@@ -706,6 +709,7 @@ function renderCandidates() {
     $("#candidate-quote").textContent = "Сначала запросите серверный preview документа.";
     $$(".check-list input").forEach((input) => { input.checked = false; });
     $("#binding-list").replaceChildren();
+    $("#candidate-section").disabled = true; $("#section-reason").textContent = "";
     $("#reject-candidate").disabled = true; $("#admit-candidate").disabled = true;
     return;
   }
@@ -714,6 +718,9 @@ function renderCandidates() {
   $("#candidate-span").textContent = `source span ${selected.span} · confidence ${selected.confidence.toFixed(2)}`;
   $("#candidate-quote").textContent = selected.sourceQuote;
   const pending = selected.status === "pending";
+  $("#candidate-section").value = selected.sectionHint;
+  $("#candidate-section").disabled = !pending;
+  $("#section-reason").textContent = `${Math.round(selected.sectionConfidence * 100)}% · ${selected.sectionReason}`;
   $("#reject-candidate").disabled = !pending; $("#admit-candidate").disabled = !pending;
   $("#binding-list").replaceChildren(...Object.entries(selected.bindings).map(([role, value]) => {
     const row = document.createElement("div"); row.className = "binding-row";
@@ -729,7 +736,7 @@ async function decideSelectedCandidate(decision, event) {
   if (!state.previewUid || !candidate || candidate.status !== "pending") return;
   const admit = $("#admit-candidate"); const reject = $("#reject-candidate"); admit.disabled = true; reject.disabled = true;
   try {
-    const result = await api("/api/v1/ingestions/decision", { method: "POST", body: JSON.stringify({ preview_uid: state.previewUid, candidate_uid: candidate.candidateUid, decision }) });
+    const result = await api("/api/v1/ingestions/decision", { method: "POST", body: JSON.stringify({ preview_uid: state.previewUid, candidate_uid: candidate.candidateUid, decision, section_override: candidate.sectionHint }) });
     candidate.status = result.status;
     const admitted = state.candidates.filter((item) => item.status === "admitted").length;
     const rejected = state.candidates.filter((item) => item.status === "rejected").length;
@@ -795,6 +802,12 @@ function bindEvents() {
   $("#drawer-backdrop").addEventListener("click", () => openParams(false));
   $("#profile").addEventListener("change", (event) => { $("#profile-label").textContent = event.target.value; });
   $("#preview-candidates").addEventListener("click", previewCandidates);
+  $("#candidate-section").addEventListener("change", (event) => {
+    const candidate = state.candidates[state.selectedCandidate];
+    if (!candidate || candidate.status !== "pending") return;
+    candidate.sectionHint = event.target.value; candidate.sectionConfidence = 1; candidate.sectionReason = "ручное исправление перед допуском";
+    renderCandidates();
+  });
   $("#ingestion-form").addEventListener("submit", (event) => decideSelectedCandidate("admit", event));
   $("#reject-candidate").addEventListener("click", (event) => decideSelectedCandidate("reject", event));
   $("#run-evaluation").addEventListener("click", runEvaluation);

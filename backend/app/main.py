@@ -19,7 +19,7 @@ from .answering import build_evidence_packet, generate_evidence_answer, select_l
 from .dsl import Interpreter, DSLParseError
 from .engine import IgnitionEngine, build_candidate_snapshot, gc_commit, gc_preview
 from .ingestion import Compiler, RuleBasedProvider, configured_provider, extract_candidates, ingest, segment_text
-from .evaluation import internal_m1, internal_m2, rabbit_fixture, rabbit_ingestion_v2, role_metrics
+from .evaluation import internal_m1, internal_m2, internal_m3, latest_corpus_report, rabbit_fixture, rabbit_ingestion_v2, role_metrics
 from .models import *
 
 
@@ -136,6 +136,11 @@ def decide_candidate(body: CandidateDecisionRequest):
     if previous:
         if previous["decision"] != body.decision: raise HTTPException(409, {"code": "decision_conflict", "message": "candidate already has another decision"})
         return {**previous, "reused": True}
+    if body.section_override:
+        candidate = candidate.model_copy(update={"section_hint": body.section_override, "section_confidence": 1, "section_reason": "ручное исправление перед допуском"})
+        preview["candidates"][body.candidate_uid] = candidate
+        item = next(item for item in preview["items"] if item["candidate_uid"] == body.candidate_uid)
+        item.update({"section_hint": body.section_override, "section_confidence": 1, "section_reason": candidate.section_reason})
     accepted: list[str] = []
     rejected: list[dict] = []
     if body.decision == "admit":
@@ -144,7 +149,7 @@ def decide_candidate(body: CandidateDecisionRequest):
     else:
         rejected = [{"candidate": candidate.model_dump(mode="json"), "reason": "user_rejected"}]
     status = "admitted" if accepted else "rejected"
-    result = {"preview_uid": body.preview_uid, "candidate_uid": body.candidate_uid, "decision": body.decision, "status": status, "accepted": accepted, "rejected": rejected, "memory_revision": memory.revision, "reused": False}
+    result = {"preview_uid": body.preview_uid, "candidate_uid": body.candidate_uid, "decision": body.decision, "status": status, "section": candidate.section_hint, "accepted": accepted, "rejected": rejected, "memory_revision": memory.revision, "reused": False}
     preview["decisions"][body.candidate_uid] = result
     next(item for item in preview["items"] if item["candidate_uid"] == body.candidate_uid)["status"] = status
     if accepted or preview["ingestion_uid"] in ingestions:
@@ -224,7 +229,7 @@ def query(body: QueryRequest):
             evidence.append(ev.model_dump(mode="json"))
     if not evidence and answer != "insufficient_evidence":
         answer = "insufficient_evidence"
-    answer_path = tuple(sorted({uid_ for item in selected_hypernodes for uid_ in (item.uid, *(binding.target_ref.target_uid for binding in item.role_bindings))}))
+    answer_path = tuple(dict.fromkeys(uid_ for item in selected_hypernodes for uid_ in (item.uid, *(binding.target_ref.target_uid for binding in item.role_bindings))))
     return {"status": "answered" if evidence else "insufficient_evidence", "answer": answer, "answer_mode": answer_mode, "answer_provider": answer_provider, "answer_warning": answer_warning, "grounded_fact_count": len(activated_evidence_packet), "answer_fact_count": len(evidence_packet), "seed_uids": seeds, "run_uid": result.run.run_uid, "working_memory": result.run.working_memory, "trace": [x.model_dump(mode="json") for x in result.run.ticks], "evidence": evidence, "profile": body.profile, "effective_config": result.run.effective_config.model_dump(mode="json"), "answer_path": answer_path, "minimal_path": result.run.minimal_path, "trace_complete": result.run.trace_complete}
 
 
@@ -299,12 +304,10 @@ def demo_seed(): return seed_demo()
 def evaluations(request: EvaluationRequest | None = None):
     start = time.perf_counter()
     memory.validate()
-    m1 = role_metrics(request.gold, request.predicted) if request and request.gold and request.predicted else internal_m1(); m2 = internal_m2()
-    fixture = AHMemory(); fixture.add_symbol(FirstOrderSymbol(uid="m3_seed", sensory_representations=(SensoryRepresentation(modality="text", value="seed"),)))
-    for i in range(200): fixture.add_element("P", MemoryElement(uid=f"m3_orphan_{i}", payload=SecondOrderSymbol(uid=f"m3_orphan_{i}", properties=(Property(name="label", value=str(i)),))))
-    protected = gc_preview(fixture, IgnitionConfig(initial_life_ticks=5)); fixture.advance_ticks(50); gc = gc_preview(fixture, IgnitionConfig(initial_life_ticks=5)); gc_commit(fixture, gc["preview_token"], gc["deletable_uids"])
-    m3_eff = len(gc["deletable_uids"]) / max(1, gc["orphan_count_before"])
-    return {"status": "computed", "fixtures": {"rabbit": rabbit_fixture()}, "metrics": {"M1": m1, "M2": m2, "M3": {"protected_before_grace": protected["orphan_count_before"] == 0, "preview_orphans": gc["orphan_count_before"], "deleted": len(gc["deletable_uids"]), "gc_efficiency": m3_eff, "false_deletions": 0}, "M4": {"status": "unavailable", "reason": "external LLM not configured"}, "M5": {"status": "unavailable", "reason": "SLM/frontier providers not configured"}}, "elapsed_ms": round((time.perf_counter() - start) * 1000, 3)}
+    corpus = latest_corpus_report()
+    m1 = role_metrics(request.gold, request.predicted) if request and request.gold and request.predicted else (corpus["M1"] if corpus else internal_m1())
+    m2 = corpus["M2"] if corpus else internal_m2()
+    return {"status": "computed", "fixtures": {"rabbit": rabbit_fixture()}, "benchmark": {"source": corpus["M1"]["benchmark"]["schema"], "provider": corpus["provider"]} if corpus else {"source": "internal-smoke"}, "metrics": {"M1": m1, "M2": m2, "M3": internal_m3(), "M4": {"status": "unavailable", "reason": "external LLM not configured"}, "M5": {"status": "unavailable", "reason": "SLM/frontier providers not configured"}}, "elapsed_ms": round((time.perf_counter() - start) * 1000, 3)}
 
 
 @app.post("/api/v1/evaluations/ingestion/rabbit")

@@ -159,3 +159,19 @@ _Avoid_: Fact, extracted sentence
 **Candidate Group**:
 The set of Candidate Facts supported by one Source Span, reviewed together but admitted independently.
 _Avoid_: Combined fact, paragraph
+
+**Action Fact**:
+An occurred act represented by an `ACTION` Control Template with a required actor and grounded action object; tool, location, time, purpose, and manner are optional roles from the monograph classifier.
+_Avoid_: OBSERVED fallback, generic event blob
+
+**Purpose Fact**:
+A stable intended function represented by a `PURPOSE` Control Template whose `PURPOSE` role states what the subject is for.
+_Avoid_: RUN, tool use, occurred action
+
+**FOLLOW Direction**:
+The temporal direction from an earlier event in `SUBJECT` to a later event in `OBJECT`.
+_Avoid_: Later-to-earlier, UI-only ordering
+
+**Memory Section Assignment**:
+The classification of an admitted Candidate Fact as Common Knowledge, Private Knowledge, or Personal History; First-order Symbols are grounded in `S` independently and are never a destination of this classification.
+_Avoid_: Privacy level, symbol type, document split

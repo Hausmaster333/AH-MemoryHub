@@ -1,0 +1,751 @@
+{
+  "provider": "nitro",
+  "providers": {
+    "wind-farm-borey": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 5: quote replaced by declared source span",
+        "fact 6: quote replaced by declared source span",
+        "fact 12: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "data-center-meridian": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 9: quote replaced by declared source span",
+        "fact 5: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_6fff838f2470c143",
+          "source_start": 358,
+          "source_end": 437,
+          "exact_text": "Потеря связи запустила миграцию виртуальных машин и уведомление дежурной смены.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    },
+    "museum-orion": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 2: quote replaced by declared source span",
+        "fact 5: repaired multi-operand scalar term",
+        "fact 7: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_3a1e5f3bdfc73e95",
+          "source_start": 326,
+          "source_end": 413,
+          "exact_text": "Рост влажности активировал сигнал климатического контроля и запись в журнале хранителя.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    }
+  },
+  "M1": {
+    "LOCATION": {
+      "precision": 0.8571428571428571,
+      "recall": 0.8571428571428571,
+      "f1": 0.8571428571428571,
+      "tp": 6,
+      "gold": 7,
+      "predicted": 7
+    },
+    "OBJECT": {
+      "precision": 0.631578947368421,
+      "recall": 1.0,
+      "f1": 0.7741935483870968,
+      "tp": 12,
+      "gold": 12,
+      "predicted": 19
+    },
+    "STATE": {
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571428571428571,
+      "tp": 6,
+      "gold": 8,
+      "predicted": 6
+    },
+    "SUBJECT": {
+      "precision": 0.6764705882352942,
+      "recall": 0.8518518518518519,
+      "f1": 0.7540983606557378,
+      "tp": 23,
+      "gold": 27,
+      "predicted": 34
+    },
+    "TIME": {
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571428571428571,
+      "tp": 3,
+      "gold": 4,
+      "predicted": 3
+    },
+    "TOOL": {
+      "precision": 1.0,
+      "recall": 0.8333333333333334,
+      "f1": 0.9090909090909091,
+      "tp": 5,
+      "gold": 6,
+      "predicted": 5
+    },
+    "weighted_f1": 0.8171379123256437,
+    "micro": {
+      "precision": 0.7432432432432432,
+      "recall": 0.859375,
+      "f1": 0.7971014492753623,
+      "tp": 55,
+      "gold": 64,
+      "predicted": 74
+    },
+    "benchmark": {
+      "schema": "ah-memoryhub-gold-v2",
+      "documents": 3,
+      "source_sentences": 30,
+      "labelled_facts": 24,
+      "role_assignments": 64
+    },
+    "errors": [
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "LOCATION",
+        "value": "внутри витрины"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "внутри витрины"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "серый корпус и повышенную чувствительность"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Турбина"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовал консоль управления и аппаратный токен"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Кластер"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "бронзовая рама"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "бронзовую раму и герметичный корпус"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Зал"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "бронзовая рама"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "герметичный корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ВБ-2"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "администратор Лебедев"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Витрина ВТ-7"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Витрина ВТ-7"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "Центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "Центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "Датчик ВБ-2"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "серый корпус"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "компании «СеверЭнерго» и включает генератор, редуктор и два датчика вибрации"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "администратор Лебедев"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "компании «Кварц» и объединяет восемь серверов приложений"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "витрина ВТ-7"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "витрина ВТ-7"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "SUBJECT",
+        "value": "рост влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "музею «Сфера» и содержит коллекцию деревянной скульптуры"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "TIME",
+        "value": "06:20"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "TOOL",
+        "value": "аппаратный токен"
+      }
+    ]
+  },
+  "M2": {
+    "correct": true,
+    "passed": 20,
+    "total": 20,
+    "required_total": 20,
+    "coverage": 1.0,
+    "trace_pass_rate": 1.0,
+    "max_depth": 6,
+    "explain_score": 0.6,
+    "available_cases_score": 0.6,
+    "provisional": false,
+    "cases": [
+      {
+        "id": "incident-1",
+        "depth": 1,
+        "question": "Что непосредственно вызвал перегрев датчика?",
+        "expected_answer": "аварийный сигнал",
+        "actual_answer": "аварийный сигнал",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_incident_l0",
+          "m2_incident_s0",
+          "m2_incident_s1"
+        ]
+      },
+      {
+        "id": "incident-2",
+        "depth": 2,
+        "question": "К чему через два шага привёл перегрев датчика?",
+        "expected_answer": "остановка компрессора",
+        "actual_answer": "остановка компрессора",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_incident_l0",
+          "m2_incident_l1",
+          "m2_incident_s0",
+          "m2_incident_s1",
+          "m2_incident_s2"
+        ]
+      },
+      {
+        "id": "incident-3",
+        "depth": 3,
+        "question": "Какое состояние достигнуто через три шага после перегрева датчика?",
+        "expected_answer": "снижение давления",
+        "actual_answer": "снижение давления",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_incident_l0",
+          "m2_incident_l1",
+          "m2_incident_l2",
+          "m2_incident_s0",
+          "m2_incident_s1",
+          "m2_incident_s2",
+          "m2_incident_s3"
+        ]
+      },
+      {
+        "id": "incident-4",
+        "depth": 4,
+        "question": "Какое действие достигнуто через четыре шага после перегрева датчика?",
+        "expected_answer": "открытие клапана",
+        "actual_answer": "открытие клапана",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_incident_l0",
+          "m2_incident_l1",
+          "m2_incident_l2",
+          "m2_incident_l3",
+          "m2_incident_s0",
+          "m2_incident_s1",
+          "m2_incident_s2",
+          "m2_incident_s3",
+          "m2_incident_s4"
+        ]
+      },
+      {
+        "id": "incident-5",
+        "depth": 5,
+        "question": "Какой результат достигнут через пять шагов после перегрева датчика?",
+        "expected_answer": "восстановление подачи",
+        "actual_answer": "восстановление подачи",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_incident_l0",
+          "m2_incident_l1",
+          "m2_incident_l2",
+          "m2_incident_l3",
+          "m2_incident_l4",
+          "m2_incident_s0",
+          "m2_incident_s1",
+          "m2_incident_s2",
+          "m2_incident_s3",
+          "m2_incident_s4",
+          "m2_incident_s5"
+        ]
+      },
+      {
+        "id": "hierarchy-2",
+        "depth": 2,
+        "question": "К какому классу второго уровня относится ВЭУ-14?",
+        "expected_answer": "энергетическая установка",
+        "actual_answer": "энергетическая установка",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_hierarchy_l0",
+          "m2_hierarchy_l1",
+          "m2_hierarchy_s0",
+          "m2_hierarchy_s1",
+          "m2_hierarchy_s2"
+        ]
+      },
+      {
+        "id": "hierarchy-3",
+        "depth": 3,
+        "question": "К какому классу третьего уровня относится ВЭУ-14?",
+        "expected_answer": "энергетическое оборудование",
+        "actual_answer": "энергетическое оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_hierarchy_l0",
+          "m2_hierarchy_l1",
+          "m2_hierarchy_l2",
+          "m2_hierarchy_s0",
+          "m2_hierarchy_s1",
+          "m2_hierarchy_s2",
+          "m2_hierarchy_s3"
+        ]
+      },
+      {
+        "id": "hierarchy-4",
+        "depth": 4,
+        "question": "К какому классу четвёртого уровня относится ВЭУ-14?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_hierarchy_l0",
+          "m2_hierarchy_l1",
+          "m2_hierarchy_l2",
+          "m2_hierarchy_l3",
+          "m2_hierarchy_s0",
+          "m2_hierarchy_s1",
+          "m2_hierarchy_s2",
+          "m2_hierarchy_s3",
+          "m2_hierarchy_s4"
+        ]
+      },
+      {
+        "id": "hierarchy-5",
+        "depth": 5,
+        "question": "К какому классу пятого уровня относится ВЭУ-14?",
+        "expected_answer": "промышленная система",
+        "actual_answer": "промышленная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_hierarchy_l0",
+          "m2_hierarchy_l1",
+          "m2_hierarchy_l2",
+          "m2_hierarchy_l3",
+          "m2_hierarchy_l4",
+          "m2_hierarchy_s0",
+          "m2_hierarchy_s1",
+          "m2_hierarchy_s2",
+          "m2_hierarchy_s3",
+          "m2_hierarchy_s4",
+          "m2_hierarchy_s5"
+        ]
+      },
+      {
+        "id": "hierarchy-6",
+        "depth": 6,
+        "question": "Какой наиболее общий класс достигается от ВЭУ-14?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_hierarchy_l0",
+          "m2_hierarchy_l1",
+          "m2_hierarchy_l2",
+          "m2_hierarchy_l3",
+          "m2_hierarchy_l4",
+          "m2_hierarchy_l5",
+          "m2_hierarchy_s0",
+          "m2_hierarchy_s1",
+          "m2_hierarchy_s2",
+          "m2_hierarchy_s3",
+          "m2_hierarchy_s4",
+          "m2_hierarchy_s5",
+          "m2_hierarchy_s6"
+        ]
+      },
+      {
+        "id": "chronology-1",
+        "depth": 1,
+        "question": "Что последовало сразу после обнаружения утечки?",
+        "expected_answer": "оповещение диспетчера",
+        "actual_answer": "оповещение диспетчера",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_chronology_l0",
+          "m2_chronology_s0",
+          "m2_chronology_s1"
+        ]
+      },
+      {
+        "id": "chronology-2",
+        "depth": 2,
+        "question": "Что произошло через два события после обнаружения утечки?",
+        "expected_answer": "направление дрона",
+        "actual_answer": "направление дрона",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_chronology_l0",
+          "m2_chronology_l1",
+          "m2_chronology_s0",
+          "m2_chronology_s1",
+          "m2_chronology_s2"
+        ]
+      },
+      {
+        "id": "chronology-4",
+        "depth": 4,
+        "question": "Что произошло через четыре события после обнаружения утечки?",
+        "expected_answer": "герметизация трубы",
+        "actual_answer": "герметизация трубы",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_chronology_l0",
+          "m2_chronology_l1",
+          "m2_chronology_l2",
+          "m2_chronology_l3",
+          "m2_chronology_s0",
+          "m2_chronology_s1",
+          "m2_chronology_s2",
+          "m2_chronology_s3",
+          "m2_chronology_s4"
+        ]
+      },
+      {
+        "id": "chronology-5",
+        "depth": 5,
+        "question": "Что произошло через пять событий после обнаружения утечки?",
+        "expected_answer": "остановка насоса",
+        "actual_answer": "остановка насоса",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_chronology_l0",
+          "m2_chronology_l1",
+          "m2_chronology_l2",
+          "m2_chronology_l3",
+          "m2_chronology_l4",
+          "m2_chronology_s0",
+          "m2_chronology_s1",
+          "m2_chronology_s2",
+          "m2_chronology_s3",
+          "m2_chronology_s4",
+          "m2_chronology_s5"
+        ]
+      },
+      {
+        "id": "chronology-6",
+        "depth": 6,
+        "question": "Чем завершилась цепочка после обнаружения утечки?",
+        "expected_answer": "запрет запуска реактора",
+        "actual_answer": "запрет запуска реактора",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_chronology_l0",
+          "m2_chronology_l1",
+          "m2_chronology_l2",
+          "m2_chronology_l3",
+          "m2_chronology_l4",
+          "m2_chronology_l5",
+          "m2_chronology_s0",
+          "m2_chronology_s1",
+          "m2_chronology_s2",
+          "m2_chronology_s3",
+          "m2_chronology_s4",
+          "m2_chronology_s5",
+          "m2_chronology_s6"
+        ]
+      },
+      {
+        "id": "data-center-1",
+        "depth": 1,
+        "question": "Что непосредственно вызвал сбой коммутатора?",
+        "expected_answer": "потеря связи",
+        "actual_answer": "потеря связи",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center_l0",
+          "m2_data-center_s0",
+          "m2_data-center_s1"
+        ]
+      },
+      {
+        "id": "data-center-3",
+        "depth": 3,
+        "question": "Какое действие достигнуто через три шага после сбоя коммутатора?",
+        "expected_answer": "переключение трафика",
+        "actual_answer": "переключение трафика",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center_l0",
+          "m2_data-center_l1",
+          "m2_data-center_l2",
+          "m2_data-center_s0",
+          "m2_data-center_s1",
+          "m2_data-center_s2",
+          "m2_data-center_s3"
+        ]
+      },
+      {
+        "id": "data-center-4",
+        "depth": 4,
+        "question": "Какой результат достигнут через четыре шага после сбоя коммутатора?",
+        "expected_answer": "восстановление сервисов",
+        "actual_answer": "восстановление сервисов",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center_l0",
+          "m2_data-center_l1",
+          "m2_data-center_l2",
+          "m2_data-center_l3",
+          "m2_data-center_s0",
+          "m2_data-center_s1",
+          "m2_data-center_s2",
+          "m2_data-center_s3",
+          "m2_data-center_s4"
+        ]
+      },
+      {
+        "id": "data-center-5",
+        "depth": 5,
+        "question": "Какое состояние достигнуто через пять шагов после сбоя коммутатора?",
+        "expected_answer": "усиленный мониторинг",
+        "actual_answer": "усиленный мониторинг",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center_l0",
+          "m2_data-center_l1",
+          "m2_data-center_l2",
+          "m2_data-center_l3",
+          "m2_data-center_l4",
+          "m2_data-center_s0",
+          "m2_data-center_s1",
+          "m2_data-center_s2",
+          "m2_data-center_s3",
+          "m2_data-center_s4",
+          "m2_data-center_s5"
+        ]
+      },
+      {
+        "id": "data-center-6",
+        "depth": 6,
+        "question": "Какое последнее событие достигается от сбоя коммутатора?",
+        "expected_answer": "завершение смены",
+        "actual_answer": "завершение смены",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center_l0",
+          "m2_data-center_l1",
+          "m2_data-center_l2",
+          "m2_data-center_l3",
+          "m2_data-center_l4",
+          "m2_data-center_l5",
+          "m2_data-center_s0",
+          "m2_data-center_s1",
+          "m2_data-center_s2",
+          "m2_data-center_s3",
+          "m2_data-center_s4",
+          "m2_data-center_s5",
+          "m2_data-center_s6"
+        ]
+      }
+    ]
+  }
+}

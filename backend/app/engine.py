@@ -14,7 +14,7 @@ class EngineResult:
     run: IgnitionRun
     element_excitation: dict[str, float]
 
-def build_candidate_snapshot(memory: AHMemory, seed_uids: list[str], max_nodes: int = 256, max_hops: int = 6) -> tuple[MemorySnapshot, list[str]]:
+def build_candidate_snapshot(memory: AHMemory, seed_uids: list[str], max_nodes: int = 256, max_hops: int = 12) -> tuple[MemorySnapshot, list[str]]:
     """Build a bounded relevance projection; only question-grounded items remain ignition seeds."""
     snap = memory.snapshot(); selected = set(seed_uids); frontier = set(seed_uids)
     hypernodes = sorted(memory.find_hypernodes(), key=lambda item: item.uid)
@@ -107,7 +107,9 @@ def gc_preview(memory: AHMemory, config: IgnitionConfig | None = None) -> dict:
     deletable = []
     for eid, e in elements.items():
         if eid in memory.templates: continue
-        incident = [l for l in memory.links.values() if l.source_ref.target_uid == eid or l.target_ref.target_uid == eid]; hyper_incident = [h for h in elements.values() if isinstance(h.payload, Hypernode) and any(b.target_ref.target_uid == eid for b in h.payload.role_bindings)]; age = memory.current_tick - getattr(e.payload, "created_tick", 0); orphan = eid not in connected or (eid not in connected and all(l.weight == 0 for l in incident) and all(h.payload.weight == 0 for h in hyper_incident))
+        incident = [l for l in memory.links.values() if l.source_ref.target_uid == eid or l.target_ref.target_uid == eid]; hyper_incident = [h for h in elements.values() if isinstance(h.payload, Hypernode) and any(b.target_ref.target_uid == eid for b in h.payload.role_bindings)]; age = memory.current_tick - getattr(e.payload, "created_tick", 0)
+        weights = [link.weight for link in incident] + [item.payload.weight for item in hyper_incident] + ([e.payload.weight] if isinstance(e.payload, Hypernode) else [])
+        orphan = eid not in connected or bool(weights) and all(weight == 0 for weight in weights)
         if age >= cfg.initial_life_ticks and orphan: deletable.append(eid)
     token = uid("gc"); memory._gc_previews[token] = {"revision": memory.revision, "uids": tuple(sorted(deletable))}; return {"preview_token": token, "deletable_uids": sorted(deletable), "orphan_count_before": len(deletable), "grace_ticks": cfg.initial_life_ticks, "memory_revision": memory.revision}
 

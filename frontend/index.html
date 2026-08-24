@@ -133,7 +133,7 @@
               <label for="ingestion-text">Исходный документ</label>
               <textarea id="ingestion-text" rows="4" required>Перегрев насоса вызвал остановку агрегата в насосном зале. Остановка агрегата привела к снижению давления. После этого оператор применил ручной ключ.</textarea>
               <div class="parser-controls">
-                <label>Модель<select id="parser-model"><option value="configured">Настроенная в .env</option><option value="stealth/ox-alpha">Ox Alpha · JSON mode</option><option value="deepseek/deepseek-v4-flash-0731:nitro">DeepSeek V4 Flash · Nitro</option><option value="~deepseek/deepseek-v4-flash-latest">DeepSeek V4 Flash · Latest</option></select></label>
+                <label>Модель<select id="parser-model"><option value="configured">Настроенная в .env</option><option value="stealth/ox-alpha">Ox Alpha · JSON mode</option><option value="deepseek/deepseek-v4-flash-0731:nitro" selected>DeepSeek V4 Flash · Nitro</option><option value="~deepseek/deepseek-v4-flash-latest">DeepSeek V4 Flash · Latest</option></select></label>
                 <button class="button button-secondary" type="button" id="preview-candidates">Собрать кандидатов</button>
                 <label class="auto-admit"><input id="auto-admit" type="checkbox">Автоприём</label>
                 <span id="parser-status">Preview выполнит серверный модуль восприятия</span>
@@ -146,6 +146,7 @@
             <span class="eyebrow">ADMISSION INSPECTOR</span>
             <h2 id="candidate-title">CAUSE · выбранный кандидат</h2>
             <code id="candidate-span">span 0:62</code>
+            <label class="section-assignment" for="candidate-section"><span>Секция памяти</span><select id="candidate-section"><option value="C">C · общие знания</option><option value="P">P · частная модель</option><option value="H">H · личная история</option></select><small id="section-reason"></small></label>
             <div class="binding-list" id="binding-list"></div>
             <div class="source-card"><span>SOURCE QUOTE</span><p id="candidate-quote">Перегрев насоса вызвал остановку агрегата в насосном зале.</p></div>
             <ul class="check-list">

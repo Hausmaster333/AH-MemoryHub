@@ -42,8 +42,8 @@ def select_local_answer(memory: AHMemory, question: str, candidate_uids: tuple[s
     specs = {
         "temporal": ({"HAS_STATE"}, "SUBJECT"), "location": ({"LOCATED_AT", "LIVE"}, "SUBJECT"),
         "responsibility": ({"HAS"}, "OBJECT"),
-        "ownership": ({"HAS"}, "OBJECT"), "purpose": ({"RUN"}, "SUBJECT"),
-        "tool": ({"USES_TOOL"}, "SUBJECT"), "follow": ({"FOLLOW"}, "OBJECT"),
+        "ownership": ({"HAS"}, "OBJECT"), "purpose": ({"PURPOSE"}, "SUBJECT"),
+        "tool": ({"USES_TOOL", "ACTION"}, "SUBJECT"), "follow": ({"FOLLOW"}, "SUBJECT"),
         "cause_result": ({"CAUSE"}, "SUBJECT"), "cause_reason": ({"CAUSE"}, "OBJECT"),
         "state": ({"HAS_STATE", "HAS"}, "SUBJECT"),
     }
@@ -65,6 +65,18 @@ def select_local_answer(memory: AHMemory, question: str, candidate_uids: tuple[s
     best = max(((focus_score if intent == "state" else score) for score, focus_score, _, _ in scored), default=0)
     selected = [(item, bindings) for score, focus_score, item, bindings in scored if best > 0 and (focus_score if intent == "state" else score) == best]
     if not selected: return "insufficient_evidence", []
+    if intent == "cause_reason" and "первоприч" in query:
+        immediate = max(scored, key=lambda row: (row[1], row[0]))
+        if immediate[1] <= 0: return "insufficient_evidence", []
+        item, bindings = immediate[2], immediate[3]
+        chain, visited = [item], {item.uid}
+        target, current = bindings.get("OBJECT", "событие"), bindings.get("SUBJECT", "")
+        while current:
+            previous = [row for row in scored if row[2].uid not in visited and lexical_score(current, row[3].get("OBJECT", "")) > 0]
+            if not previous: break
+            _, _, item, bindings = max(previous, key=lambda row: lexical_score(current, row[3].get("OBJECT", "")))
+            chain.append(item); visited.add(item.uid); current = bindings.get("SUBJECT", "")
+        return f"Первопричина события «{target}» — {current}.", chain
     if intent == "state":
         subject = selected[0][1].get("SUBJECT", "Объект")
         values = []
@@ -83,7 +95,7 @@ def select_local_answer(memory: AHMemory, question: str, candidate_uids: tuple[s
         return selected[0][0].evidence[0].exact_text, [selected[0][0]]
     if intent == "purpose":
         _, bindings = selected[0]
-        return f"{bindings.get('SUBJECT', 'Объект')}: {bindings.get('HOW-TO', 'назначение не указано')}.", [selected[0][0]]
+        return f"{bindings.get('SUBJECT', 'Объект')}: {bindings.get('PURPOSE', 'назначение не указано')}.", [selected[0][0]]
     if intent == "tool":
         return selected[0][0].evidence[0].exact_text, [selected[0][0]]
     if intent == "follow":

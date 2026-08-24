@@ -1,5 +1,6 @@
 import json
 import time
+from pathlib import Path
 from fastapi.testclient import TestClient
 import pytest
 import app.ingestion as ingestion_module
@@ -10,9 +11,11 @@ from app.dsl import Interpreter
 from app.engine import IgnitionEngine, build_candidate_snapshot, gc_commit, gc_preview
 from app.evaluation import rabbit_ingestion_v2
 from app.ingestion import ingest
-from app.ingestion import Compiler, OpenAICompatibleProvider, RuleBasedProvider, _coordinated_property_candidates, _explicit_follow_candidates, _temporal_state_candidates, canonicalize_candidates, extract_candidates, segment_text
+from app.ingestion import Compiler, OpenAICompatibleProvider, RuleBasedProvider, _coordinated_property_candidates, _declarative_recovery_candidates, _effect_candidates, _explicit_follow_candidates, _stable_fact_candidates, _temporal_state_candidates, _tool_use_candidates, canonicalize_candidates, extract_candidates, route_candidates, segment_text
 from app.main import app
 from app.models import *
+
+CORPUS_PATH = Path(__file__).resolve().parents[2] / "docs" / "testing" / "heterogeneous-corpus.json"
 
 def symbol(m, uid_, label):
     return m.add_symbol(FirstOrderSymbol(uid=uid_, sensory_representations=(SensoryRepresentation(modality="text", value=label), SensoryRepresentation(modality="text", value=label + "а"))))
@@ -30,6 +33,44 @@ def test_ingestion_templates_and_roundtrip():
     exported = m.export(); restored = AHMemory.from_export(exported)
     assert restored.stats() == m.stats() and restored.export()["dump"] == exported["dump"]
 
+def test_heterogeneous_long_form_corpus_contract():
+    corpus = json.loads(CORPUS_PATH.read_text(encoding="utf-8"))
+    documents = corpus["documents"]
+    assert corpus["schema"] == "ah-memoryhub-corpus-v1" and len(documents) >= 10
+    assert len({document["id"] for document in documents}) == len(documents)
+    assert len({document["domain"] for document in documents}) >= 8
+    for document in documents:
+        assert 10 <= len(segment_text(document["text"])) <= 15, document["id"]
+        assert len(document["required_claims"]) >= 5
+        assert len(document["questions"]) >= 5
+        assert {"CAUSE", "FOLLOW", "TOOL", "TIME"} <= set(document["expected_features"])
+
+
+def test_versioned_corpus_metrics_are_role_aware_and_trace_depth_six():
+    from app.evaluation import GOLD_PATH, corpus_m2, corpus_role_metrics, load_gold
+    gold = load_gold()
+    sources = {document["id"]: document["text"] for document in json.loads(CORPUS_PATH.read_text(encoding="utf-8"))["documents"]}
+    predictions = {}
+    for document in gold["documents"]:
+        candidates = []
+        text = sources[document["id"]]
+        for fact in document["facts"]:
+            start = text.index(fact["quote"])
+            candidates.append(CandidateFact(predicate=fact["predicate"], bindings=tuple(CandidateBinding(role_id=role, value=value) for role, values in fact["bindings"].items() for value in values), source_start=start, source_end=start + len(fact["quote"]), exact_text=fact["quote"], confidence=1))
+        predictions[document["id"]] = candidates
+    m1, m2 = corpus_role_metrics(predictions), corpus_m2()
+    assert m1["micro"]["f1"] == 1
+    assert m1["errors"] == []
+    assert m1["benchmark"] == {"schema": "ah-memoryhub-gold-v3", "documents": 10, "source_sentences": 100, "labelled_facts": 106, "role_assignments": 237}
+    assert m1["required_roles_weighted_f1"] == 5
+    assert m1["normalized_required_roles_weighted_f1"] == 1
+    assert len(m1["documents"]) == 10 and m1["document_macro_f1"] == m1["document_min_f1"] == m1["document_max_f1"] == 1
+    assert m2["passed"] == m2["total"] == 100 and m2["max_depth"] == 6
+    assert m2["trace_pass_rate"] == 1 and m2["explain_score"] == pytest.approx(8 / 15)
+    assert m2["fold_count"] == 5 and m2["fold_size"] == 20 and m2["fold_scores"] == pytest.approx([8 / 15] * 5)
+    assert m2["available_cases_score"] == pytest.approx(8 / 15) and m2["coverage"] == 1 and not m2["provisional"]
+
+
 def test_openai_compatible_provider_anchors_exact_source_spans():
     text = "Датчик обнаружил перегрев насоса. Перегрев насоса вызвал остановку агрегата."
     provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
@@ -37,6 +78,63 @@ def test_openai_compatible_provider_anchors_exact_source_spans():
     candidate = provider.extract(text)[0]
     assert text[candidate.source_start:candidate.source_end] == candidate.exact_text
     assert candidate.model_id == "test-model" and candidate.predicate == "CAUSE"
+
+
+def test_provider_conservatively_realigns_punctuation_and_repairs_or_term():
+    text = "Модуль находится в цехе А или в резервном зале."
+    provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
+    provider._completion = lambda _: {"choices": [{"message": {"content": json.dumps({"mentions": [{"id": "x", "span_index": 0, "text": "Модуль", "type": "entity", "canonical_label": "модуль", "coref_to": None}, {"id": "a", "span_index": 0, "text": "цехе А", "type": "location", "canonical_label": "цех А", "coref_to": None}, {"id": "b", "span_index": 0, "text": "резервном зале", "type": "location", "canonical_label": "резервный зал", "coref_to": None}], "facts": [{"span_index": 0, "predicate": "LOCATED_AT", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["x"]}}, {"role_id": "LOCATION", "term": {"operator": "ATOM", "mention_ids": ["a", "b"]}}], "quote": "Модуль совсем в другом месте.", "confidence": .9, "unresolved_entities": False, "section_hint": "P", "section_confidence": .8, "section_reason": "test"}]}, ensure_ascii=False)}}]}
+    candidate = provider.extract(text)[0]
+    assert candidate.exact_text == text
+    assert candidate.bindings[1].term.operator == "OR"
+
+
+def test_provider_grounds_inflected_mention_to_exact_source_tokens():
+    text = "Витрина ВТ-7 имеет бронзовую раму."
+    provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
+    provider._completion = lambda _: {"choices": [{"message": {"content": json.dumps({"mentions": [{"id": "x", "span_index": 0, "text": "Витрина ВТ-7", "type": "entity", "canonical_label": "витрина ВТ-7", "coref_to": None}, {"id": "p", "span_index": 0, "text": "бронзовая рама", "type": "state", "canonical_label": "бронзовая рама", "coref_to": None}], "facts": [{"span_index": 0, "predicate": "HAS_STATE", "bindings": [{"role_id": "SUBJECT", "term": {"operator": "ATOM", "mention_ids": ["x"]}}, {"role_id": "STATE", "term": {"operator": "ATOM", "mention_ids": ["p"]}}], "quote": text, "confidence": .9, "unresolved_entities": False, "section_hint": "P", "section_confidence": .8, "section_reason": "test"}]}, ensure_ascii=False)}}]}
+    candidate = provider.extract(text)[0]
+    mention = next(item for item in candidate.mentions if item.mention_id == "p")
+    assert mention.observed_text == "бронзовую раму"
+    accepted, rejected = canonicalize_candidates(text, [candidate])
+    assert accepted and not rejected
+
+
+def test_canonicalizer_splits_atomic_and_and_resolves_unique_short_entity():
+    text = "Инженер Орлова остановила турбину. Инженер использовала виброметр и ключ."
+    mentions = (
+        CandidateMention(mention_id="named", observed_text="Инженер Орлова", source_start=0, source_end=14, mention_type="entity", canonical_label="инженер Орлова"),
+        CandidateMention(mention_id="short", observed_text="Инженер", source_start=35, source_end=42, mention_type="entity", canonical_label="инженер"),
+        CandidateMention(mention_id="first", observed_text="виброметр", source_start=56, source_end=65, mention_type="entity", canonical_label="виброметр"),
+        CandidateMention(mention_id="second", observed_text="ключ", source_start=68, source_end=72, mention_type="entity", canonical_label="ключ"),
+    )
+    fact = CandidateFact(predicate="USES_TOOL", bindings=(CandidateBinding(role_id="SUBJECT", term=CandidateTerm(mention_ids=("short",))), CandidateBinding(role_id="TOOL", term=CandidateTerm(operator="AND", mention_ids=("first", "second")))), source_start=35, source_end=len(text), exact_text=text[35:], confidence=.9, mentions=mentions)
+    accepted, rejected = canonicalize_candidates(text, [fact])
+    assert not rejected and len(accepted) == 2
+    assert {next(binding.value for binding in item.bindings if binding.role_id == "SUBJECT") for item in accepted} == {"инженер Орлова"}
+    assert {next(binding.value for binding in item.bindings if binding.role_id == "TOOL") for item in accepted} == {"виброметр", "ключ"}
+
+
+def test_openai_compatible_provider_reports_truncated_structured_output():
+    provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
+    provider._completion = lambda _: {"choices": [{"finish_reason": "length", "message": {"content": '{"facts":['}}]}
+    with pytest.raises(ValueError, match="truncated at AH_LLM_MAX_TOKENS"):
+        provider.extract("Наблюдение")
+
+def test_openai_compatible_provider_chunks_long_documents_with_absolute_offsets():
+    text = " ".join(f"Событие {index} произошло." for index in range(9))
+    provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
+    calls = []
+    def completion(chunk):
+        calls.append(chunk)
+        quote = chunk.split(".", 1)[0] + "."
+        return {"choices": [{"message": {"content": json.dumps({"facts": [{"predicate": "HAS_STATE", "bindings": [{"role_id": "SUBJECT", "value": quote[:-1]}, {"role_id": "STATE", "value": "произошло"}], "quote": quote, "confidence": .9}]}, ensure_ascii=False)}}]}
+    provider._completion = completion
+    candidates = provider.extract(text)
+    assert len(calls) == 2 and len(candidates) == 2
+    assert candidates[0].source_start == 0
+    assert candidates[1].source_start == text.index("Событие 5")
+    assert provider.last_warnings[-1] == "document parsed in 2 overlapping chunks"
 
 def test_openai_compatible_provider_requests_strict_json_schema():
     provider = OpenAICompatibleProvider("http://local.test/v1", "test-model")
@@ -46,7 +144,9 @@ def test_openai_compatible_provider_requests_strict_json_schema():
     response_format = requests[0]["response_format"]
     assert response_format["type"] == "json_schema"
     assert response_format["json_schema"]["strict"] is True
-    assert requests[0]["max_tokens"] == 4096 and "reasoning" not in requests[0]
+    required_fact_fields = response_format["json_schema"]["schema"]["properties"]["facts"]["items"]["required"]
+    assert {"span_index", "section_hint", "section_confidence", "section_reason"} <= set(required_fact_fields)
+    assert requests[0]["max_tokens"] == 8192 and "reasoning" not in requests[0]
     deepseek = OpenAICompatibleProvider("http://local.test/v1", "deepseek/deepseek-v4-flash-0731:nitro")
     deepseek_requests = []
     deepseek._request_json = lambda payload: deepseek_requests.append(payload) or {"choices": [{"message": {"content": '{"facts":[]}'}}]}
@@ -87,8 +187,53 @@ def test_auto_admission_processes_only_pending_candidates(monkeypatch):
     result = admitted.json()
     assert result["processed"] == 1 and result["admitted"] == 1 and result["rejected"] == 1 and result["pending"] == 0
     assert next(item for item in result["candidates"] if item["candidate_uid"] == first)["status"] == "admitted"
+    dump = c.post("/api/v1/memory/export", json={}).json()["dump"]
+    assert any(item["uid"] in result["results"][0]["accepted"] for item in dump["H"])
     repeated = c.post("/api/v1/ingestions/auto-admit", json={"preview_uid": preview["preview_uid"]}).json()
     assert repeated["processed"] == 0 and repeated["reused"] is True
+
+def test_memory_router_classifies_mixed_document_without_splitting_it():
+    common = CandidateFact(predicate="IS-A", bindings=(CandidateBinding(role_id="SUBJECT", value="датчик температуры"), CandidateBinding(role_id="OBJECT", value="средство контроля")), source_start=0, source_end=52, exact_text="Датчик температуры относится к средствам контроля.", confidence=.9)
+    private = CandidateFact(predicate="HAS", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="OBJECT", value="датчик ДТ-4")), source_start=53, source_end=89, exact_text="Компрессор К-17 имеет датчик ДТ-4.", confidence=.9)
+    history = CandidateFact(predicate="CAUSE", bindings=(CandidateBinding(role_id="SUBJECT", value="перегрев ДТ-4"), CandidateBinding(role_id="OBJECT", value="аварийный сигнал")), source_start=90, source_end=133, exact_text="Перегрев ДТ-4 вызвал аварийный сигнал.", confidence=.9)
+    purpose = CandidateFact(predicate="PURPOSE", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="PURPOSE", value="подача воздуха")), source_start=134, source_end=170, exact_text="используется для подачи воздуха.", confidence=.9, section_hint="C")
+    transient = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="датчик ДТ-4"), CandidateBinding(role_id="STATE", value="горячее состояние")), source_start=171, source_end=201, exact_text="находится в горячем состоянии", confidence=.9, section_hint="P")
+    routed = route_candidates([common, private, history, purpose, transient])
+    assert [candidate.section_hint for candidate in routed] == ["C", "P", "H", "P", "H"]
+
+def test_compiler_populates_s_c_p_h_and_builds_episode_follow_dag():
+    parts = [
+        "Датчик температуры относится к средствам контроля.",
+        "Компрессор К-17 имеет датчик ДТ-4.",
+        "Перегрев ДТ-4 вызвал аварийный сигнал.",
+        "Аварийный сигнал вызвал остановку К-17.",
+    ]
+    text = " ".join(parts); starts = []; cursor = 0
+    for part in parts: starts.append(cursor); cursor += len(part) + 1
+    candidates = [
+        CandidateFact(predicate="IS-A", bindings=(CandidateBinding(role_id="SUBJECT", value="датчик температуры"), CandidateBinding(role_id="OBJECT", value="средство контроля")), source_start=starts[0], source_end=starts[0] + len(parts[0]), exact_text=parts[0], confidence=.9, section_hint="C"),
+        CandidateFact(predicate="HAS", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="OBJECT", value="датчик ДТ-4")), source_start=starts[1], source_end=starts[1] + len(parts[1]), exact_text=parts[1], confidence=.9, section_hint="P"),
+        CandidateFact(predicate="CAUSE", bindings=(CandidateBinding(role_id="SUBJECT", value="перегрев ДТ-4"), CandidateBinding(role_id="OBJECT", value="аварийный сигнал")), source_start=starts[2], source_end=starts[2] + len(parts[2]), exact_text=parts[2], confidence=.9, section_hint="H"),
+        CandidateFact(predicate="CAUSE", bindings=(CandidateBinding(role_id="SUBJECT", value="аварийный сигнал"), CandidateBinding(role_id="OBJECT", value="остановка К-17")), source_start=starts[3], source_end=starts[3] + len(parts[3]), exact_text=parts[3], confidence=.9, section_hint="H"),
+    ]
+    memory = AHMemory(); accepted, rejected = Compiler(memory).compile(candidates, text, "mixed_document")
+    assert len(accepted) == 4 and not rejected
+    assert memory.find_abstract_symbols("компрессор К-17")
+    assert sum(isinstance(element.payload, Hypernode) for element in memory.sections["C"].values()) == 1
+    assert sum(isinstance(element.payload, Hypernode) for element in memory.sections["P"].values()) == 1
+    history_facts = [element.payload for element in memory.sections["H"].values() if isinstance(element.payload, Hypernode)]
+    episodes = memory.find_lists(list_type="Episode")
+    assert len(history_facts) == 2 and len(episodes) == 1 and len(episodes[0].ordered_members) == 2
+    assert any(link.type_id == "FOLLOW" and link.source_ref.target_uid == history_facts[0].uid and link.target_ref.target_uid == history_facts[1].uid for link in memory.links.values())
+
+def test_manual_section_correction_is_applied_before_admission(monkeypatch):
+    monkeypatch.setenv("AH_PARSER_PROVIDER", "rule")
+    c = TestClient(app)
+    preview = c.post("/api/v1/ingestions/preview", json={"text": "Перегрев редуктора вызвал остановку стенда."}).json()
+    candidate = preview["candidates"][0]
+    result = c.post("/api/v1/ingestions/decision", json={"preview_uid": preview["preview_uid"], "candidate_uid": candidate["candidate_uid"], "decision": "admit", "section_override": "P"}).json()
+    dump = c.post("/api/v1/memory/export", json={}).json()["dump"]
+    assert result["section"] == "P" and any(item["uid"] in result["accepted"] for item in dump["P"])
 
 def test_preview_reports_source_spans_silently_missed_by_provider():
     text = "Насос вызвал остановку. Двигатель принадлежит компании Промтех."
@@ -207,6 +352,14 @@ def test_independent_three_hop_document_reaches_all_grounded_facts_from_final_ef
     assert sum(item["impulse_type"] == "role_to_hypernode" for item in result["trace"]) >= 3
 
 def test_m3_fixture_and_n1000_tick_benchmark():
+    from app.evaluation import internal_m3
+    m3 = internal_m3()
+    assert m3["case_count"] == 10 and m3["total_examined_nodes"] == 4930
+    assert m3["orphan_nodes_before_gc"] == m3["deleted"] == 4100
+    assert m3["orphan_nodes_after_gc"] == m3["false_deletions"] == 0
+    assert m3["gc_efficiency"] == m3["min_gc_efficiency"] == 1
+    assert m3["live_nodes_before"] == m3["live_nodes_after"] == 830
+    assert len(m3["official_200_cases"]) == 2 and m3["zero_weight_conformance"]["passed"]
     m = AHMemory()
     for i in range(1000): m.add_symbol(FirstOrderSymbol(uid=f"s{i}", sensory_representations=(SensoryRepresentation(modality="text", value=str(i)),)))
     for i in range(999): m.add_link(AssociativeLink(uid=f"l{i}", type_id="ASSOCIATES", weight=.5, source_ref=SReference(reference_uid=f"a{i}", target_uid=f"s{i}"), target_ref=SReference(reference_uid=f"b{i}", target_uid=f"s{i+1}")))
@@ -315,11 +468,13 @@ def test_v2_canonicalizes_provider_role_synonyms_before_template_validation():
     candidate = CandidateFact(predicate="RUN", bindings=(CandidateBinding(role_id="AGENT", value="Заяц"), CandidateBinding(role_id="HOW-TO", value="очень быстро")), source_start=0, source_end=len(text), exact_text=text, confidence=.9)
     accepted, rejected = canonicalize_candidates(text, [candidate])
     assert not rejected and [binding.role_id for binding in accepted[0].bindings] == ["SUBJECT", "HOW-TO"]
-    isa = CandidateFact(predicate="IS-A", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="зверёк")), source_start=0, source_end=len(text), exact_text=text, confidence=.8)
-    accepted, rejected = canonicalize_candidates(text, [isa])
+    isa_text = "Заяц — зверёк."
+    isa = CandidateFact(predicate="IS-A", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="зверёк")), source_start=0, source_end=len(isa_text), exact_text=isa_text, confidence=.8)
+    accepted, rejected = canonicalize_candidates(isa_text, [isa])
     assert not rejected and [binding.role_id for binding in accepted[0].bindings] == ["SUBJECT", "OBJECT"]
-    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="быстрый")), source_start=0, source_end=len(text), exact_text=text, confidence=.8)
-    accepted, rejected = canonicalize_candidates(text, [state])
+    state_text = "Заяц быстрый."
+    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="Заяц"), CandidateBinding(role_id="VALUE", value="быстрый")), source_start=0, source_end=len(state_text), exact_text=state_text, confidence=.8)
+    accepted, rejected = canonicalize_candidates(state_text, [state])
     assert not rejected and [binding.role_id for binding in accepted[0].bindings] == ["SUBJECT", "STATE"]
 
 def test_v2_parser_confidence_is_not_activation_weight(monkeypatch):
@@ -381,10 +536,10 @@ def test_ox_alpha_ui_preset_uses_openrouter_json_mode(monkeypatch):
 
 def test_semantic_canonicalization_repairs_function_follow_and_time():
     function_text = "Компрессор используется для подачи воздуха в производственную линию"
-    function = CandidateFact(predicate="USES_TOOL", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="OBJECT", value="подача воздуха"), CandidateBinding(role_id="TOOL", value="производственная линия")), source_start=0, source_end=len(function_text), exact_text=function_text, confidence=.9)
+    function = CandidateFact(predicate="USES_TOOL", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор"), CandidateBinding(role_id="OBJECT", value="подача воздуха"), CandidateBinding(role_id="TOOL", value="производственная линия")), source_start=0, source_end=len(function_text), exact_text=function_text, confidence=.9)
     accepted, rejected = canonicalize_candidates(function_text, [function])
-    assert not rejected and accepted[0].predicate == "RUN"
-    assert {binding.role_id: binding.value for binding in accepted[0].bindings}["HOW-TO"] == "подачи воздуха в производственную линию"
+    assert not rejected and accepted[0].predicate == "PURPOSE"
+    assert {binding.role_id: binding.value for binding in accepted[0].bindings}["PURPOSE"] == "подачи воздуха в производственную линию"
 
     follow_text = "После восстановления давления аварийный сигнал отключился"
     earlier, later = "восстановления давления", "аварийный сигнал"
@@ -393,12 +548,28 @@ def test_semantic_canonicalization_repairs_function_follow_and_time():
     follow = CandidateFact(predicate="FOLLOW", bindings=(CandidateBinding(role_id="SUBJECT", term=CandidateTerm(mention_ids=("after",))), CandidateBinding(role_id="OBJECT", term=CandidateTerm(mention_ids=("before",)))), source_start=0, source_end=len(follow_text), exact_text=follow_text, confidence=.9, mentions=mentions)
     accepted, rejected = canonicalize_candidates(follow_text, [follow])
     bindings = {binding.role_id: binding.value for binding in accepted[0].bindings}
-    assert not rejected and bindings == {"SUBJECT": "аварийный сигнал отключился", "OBJECT": "восстановление давления"}
+    assert not rejected and bindings == {"SUBJECT": "восстановления давления", "OBJECT": "аварийный сигнал отключился"}
 
     state_text = "компрессор остался остановлен до завершения проверки."
-    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор К-17"), CandidateBinding(role_id="STATE", value="остановленное состояние")), source_start=0, source_end=len(state_text), exact_text=state_text, confidence=.9)
+    state = CandidateFact(predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value="компрессор"), CandidateBinding(role_id="STATE", value="остановленное состояние")), source_start=0, source_end=len(state_text), exact_text=state_text, confidence=.9)
     accepted, rejected = canonicalize_candidates(state_text, [state])
     assert not rejected and {binding.role_id: binding.value for binding in accepted[0].bindings}["TIME"] == "до завершения проверки"
+
+def test_semantic_gate_uses_action_without_abusing_run_or_observed():
+    action_text = "Марина добавила ягодное пюре."
+    wrong_run = CandidateFact(predicate="RUN", bindings=(CandidateBinding(role_id="SUBJECT", value="Марина"), CandidateBinding(role_id="HOW-TO", value="ягодное пюре")), source_start=0, source_end=len(action_text), exact_text=action_text, confidence=.9)
+    accepted, rejected = canonicalize_candidates(action_text, [wrong_run])
+    assert not rejected and accepted[0].predicate == "ACTION"
+    assert {binding.role_id: binding.value for binding in accepted[0].bindings} == {"SUBJECT": "Марина", "OBJECT": "добавила ягодное пюре"}
+
+    observation_text = "За релиз отвечает команда Норд."
+    observation = CandidateFact(predicate="OBSERVED", bindings=(CandidateBinding(role_id="SUBJECT", value="команда Норд"), CandidateBinding(role_id="OBJECT", value="релиз")), source_start=0, source_end=len(observation_text), exact_text=observation_text, confidence=.8)
+    accepted, rejected = canonicalize_candidates(observation_text, [observation])
+    assert not accepted and rejected[0]["reason"] == "invalid_observation"
+
+    hallucinated = CandidateFact(predicate="CAUSE", bindings=(CandidateBinding(role_id="SUBJECT", value="откат"), CandidateBinding(role_id="OBJECT", value="падение интеграционных тестов")), source_start=0, source_end=len("Откат восстановил тесты."), exact_text="Откат восстановил тесты.", confidence=.9)
+    accepted, rejected = canonicalize_candidates("Откат восстановил тесты.", [hallucinated])
+    assert not accepted and rejected[0]["reason"] == "ungrounded_role"
 
 def test_identifier_grounding_and_local_property_answer():
     assert lexical_score("Какие свойства у датчика ДТ4?", "датчик температуры ДТ-4") == 2
@@ -483,11 +654,41 @@ def test_general_recovery_for_coordinated_state_and_explicit_follow():
         ("HAS", {"SUBJECT": "Этикетка E-9", "OBJECT": "синий фон"}),
         ("HAS_STATE", {"SUBJECT": "Этикетка E-9", "STATE": "повреждённом состоянии"}),
     ]
+    simple_states = _coordinated_property_candidates("Датчик двигателя красный и горячий.")
+    assert [{binding.role_id: binding.value for binding in item.bindings} for item in simple_states] == [
+        {"SUBJECT": "Датчик двигателя", "STATE": "красный"},
+        {"SUBJECT": "Датчик двигателя", "STATE": "горячий"},
+    ]
     follow = _explicit_follow_candidates("После падения тестов инженер Ли откатил изменение схемы.")
-    assert {binding.role_id: binding.value for binding in follow[0].bindings} == {"SUBJECT": "инженер Ли откатил изменение схемы", "OBJECT": "падения тестов"}
+    assert {binding.role_id: binding.value for binding in follow[0].bindings} == {"SUBJECT": "падения тестов", "OBJECT": "инженер Ли откатил изменение схемы"}
     assert not _explicit_follow_candidates("После этого инженер выполнил откат.")
     temporal = _temporal_state_candidates("Наблюдение оставалось приостановленным до следующего окна связи.")
     assert {binding.role_id: binding.value for binding in temporal[0].bindings} == {"SUBJECT": "Наблюдение", "STATE": "приостановленным", "TIME": "до следующего окна связи"}
+    locations = _stable_fact_candidates("Кластер СК-31 размещён в зале Б или в резервной зоне.")
+    assert {binding.role_id: binding.value for binding in locations[0].bindings} == {"SUBJECT": "Кластер СК-31", "LOCATION": "OR(зале Б, резервной зоне)"}
+
+def test_general_declarative_recovery_is_not_rabbit_lexicon_specific():
+    text = "Барсук — лесной зверь. У него мощные лапы, поэтому бегает он довольно быстро."
+    facts = _declarative_recovery_candidates(text)
+    assert [(fact.predicate, {binding.role_id: binding.value for binding in fact.bindings}) for fact in facts] == [
+        ("IS-A", {"SUBJECT": "Барсук", "OBJECT": "лесной зверь"}),
+        ("HAS", {"SUBJECT": "Барсук", "OBJECT": "мощные лапы"}),
+        ("RUN", {"SUBJECT": "Барсук", "HOW-TO": "довольно быстро"}),
+    ]
+    tool = _tool_use_candidates("Исследователь Ким использовал анализатор ZX-8 для измерения спектра.")
+    assert {binding.role_id: binding.value for binding in tool[0].bindings} == {"SUBJECT": "Исследователь Ким", "TOOL": "анализатор ZX-8"}
+
+    stable = _stable_fact_candidates("Модуль R-2 принадлежит лаборатории «Вега» и используется для очистки сигнала. У модуля R-2 есть фильтр F-1.")
+    assert [(fact.predicate, {binding.role_id: binding.value for binding in fact.bindings}) for fact in stable] == [
+        ("HAS", {"SUBJECT": "лаборатории «Вега»", "OBJECT": "Модуль R-2"}),
+        ("PURPOSE", {"SUBJECT": "Модуль R-2", "PURPOSE": "очистки сигнала"}),
+        ("HAS", {"SUBJECT": "модуля R-2", "OBJECT": "фильтр F-1"}),
+    ]
+    effects = _effect_candidates("Калибровка уменьшила шум и повысила точность спектра.")
+    assert [{binding.role_id: binding.value for binding in fact.bindings} for fact in effects] == [
+        {"SUBJECT": "Калибровка", "OBJECT": "уменьшила шум"},
+        {"SUBJECT": "Калибровка", "OBJECT": "повысила точность спектра"},
+    ]
 
 def test_functional_label_and_leading_citation_cleanup():
     memory = AHMemory()

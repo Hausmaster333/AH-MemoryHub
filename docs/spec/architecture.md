@@ -102,7 +102,11 @@ flowchart TB
     Ingestion <--> Source
 ```
 
-There is one Python backend process and one browser frontend. Neo4j is the only server-side datastore. The baseline vector search uses the same document chunks and embeddings without introducing a second database.
+There is one Python backend process and one browser frontend. In the
+demonstration release the authoritative `AHMemory` aggregate is process-local;
+Neo4j is an optional revision projection. The baseline vector search uses the
+same document chunks and embeddings without introducing another required
+database.
 
 ## 5. Executable AH profile
 
@@ -214,8 +218,9 @@ The primary parser returns Perception IR v3:
 - Role Bindings whose Candidate Terms reference Mention IDs;
 - `ATOM`, `AND`, `OR`, or `VERY` as explicit term operators;
 - an exact fact quote, parser confidence, and unresolved-entity flag.
+- a proposed `C/P/H` assignment with separate routing confidence and a short reason.
 
-It cannot assign final UIDs, choose `C/P/H` without a deterministic policy, create arbitrary link types, or execute DSL.
+It cannot assign final UIDs, make the final `C/P/H` decision, create arbitrary link types, or execute DSL.
 Flat string bindings remain accepted only for the deterministic offline fallback
 and compatibility with saved previews; external LLM prompts use IR v3.
 
@@ -239,11 +244,34 @@ candidate's exact offsets plus previous/next sentence context. Canonicalization
 resolves only unambiguous local pronouns, rejects unresolved references and
 `FOLLOW` inferred from a temporal marker alone, enforces required roles, and
 deduplicates canonical fact signatures. Rejections have stable reason codes.
-Semantic canonicalization treats “X используется для Y” as `RUN(X, Y)`, maps
-`RUN.OBJECT` to `HOW-TO`, preserves the complete later event in
-`FOLLOW.SUBJECT`, and restores explicit temporal bounds such as “до завершения
-проверки” into `TIME`. Independent states and effects remain separate atomic
-facts; `AND` and `OR` are reserved for composite values inside one role.
+Semantic canonicalization treats “X используется для Y” as
+`PURPOSE(SUBJECT=X, PURPOSE=Y)`. `RUN(SUBJECT, HOW-TO)` is reserved for observed
+behaviour or manner, while occurred acts use
+`ACTION(SUBJECT, OBJECT, TOOL?, LOCATION?, TIME?, PURPOSE?, HOW-TO?)` where `?`
+marks a role that is admitted only when source-grounded. `OBSERVED` requires an
+explicit observer and observation act and is never a parser fallback.
+`FOLLOW.SUBJECT` is always the earlier event and `FOLLOW.OBJECT` the complete
+later event. Explicit temporal bounds such as “до завершения проверки” are
+restored into `TIME`. Independent states and effects remain separate atomic
+facts inside one Candidate Group; `AND` and `OR` are reserved for composite
+values inside one role.
+
+### Current perception boundary
+
+The demonstration release supports affirmative source-grounded declaratives,
+atomic facts, composite `AND`/`OR` values, unambiguous local coreference, and
+explicit `CAUSE`/`FOLLOW` relations. It does not claim general logical-language
+understanding. Sentential negation, corrective contrast (`not X but Y`),
+exceptions and exclusions, cross-sentence confirmation or retraction of an
+alternative, and operators outside `ATOM`, `AND`, `OR`, and `VERY` remain a
+pre-defence extension. Such spans require review and are excluded from the
+automatic-admission demonstration corpus.
+
+The semantic gate rejects empty and duplicate roles, sentence-copy bindings,
+self-relations, source-ungrounded values, non-instrumental `USES_TOOL`, implicit
+or reversed `FOLLOW`, and `OBSERVED` without an observation predicate. Stable
+reason codes are returned to the admission inspector instead of silently
+repairing unsupported claims.
 When an OpenAI-compatible model covers a sentence but omits an explicit
 `После <event> <later event>` relation or the second half of
 `X имеет A и находится в B`, conservative source-anchored recovery adds the
@@ -253,6 +281,23 @@ meaningful tokens are grounded in the exact quote; generic words such as
 Successful candidates are compiled in isolated staging memories and committed
 to AH Core in one batch. Parser confidence is stored only in Source Evidence;
 the initial activation weight is an independent configuration value.
+
+Memory routing is fact-level and never targets `S`: grounding creates or reuses
+First-order Symbols for every admitted actant independently of the fact's
+section. General or class-level propositions enter `C`; stable propositions
+about a concrete named object enter `P`; occurred actions, events, and
+time-bounded states enter `H`. The parser proposal is overridden by explicit
+deterministic evidence such as a temporal role, an occurrence verb, a generic
+modal construction, or a concrete equipment identifier. A reviewer may correct
+one pending candidate before admission; automatic admission uses the same
+router result.
+
+Every admitted `H` fact is added to the document's addressable `Episode` list.
+Episode members are ordered by immutable source offsets. Every `FOLLOW` link is
+directed from the earlier fact to the later fact. A `FOLLOW` link between
+fact hypernodes is created only when supported by an explicit temporal marker,
+an explicit FOLLOW candidate, or a matching `CAUSE(A,B)` then `CAUSE(B,C)`
+chain. AH Core validates the resulting FOLLOW graph as a DAG.
 
 Extraction results are cached in memory by document SHA-256, model ID, and
 prompt version. The LLM never writes AH UIDs or mutates memory directly.
@@ -438,6 +483,14 @@ The M3 fixture inserts 200 isolated nodes, advances 50 ticks, expects all eligib
 
 Neo4j is a lossless projection, not the domain model.
 
+Current implementation status: successful mutations can be mirrored to Neo4j
+when `AH_STORAGE_MODE=neo4j`, and the adapter contains reconstruction logic,
+but application startup always creates a new in-memory aggregate. Therefore
+restart recovery, durable snapshots, and user-facing reset/restore are not
+part of the demonstration release and are scheduled for pre-defence
+hardening. The presentation must describe Neo4j as an optional projection, not
+as active durable storage.
+
 Suggested labels:
 
 - `FirstOrderSymbol`
@@ -481,13 +534,17 @@ Organiser-created nodes and links use the same mutation surface; no private main
 
 A labelled corpus stores expected template and Role Bindings. Evaluation computes per-role precision, recall, F1, and the required weighted F1. SUBJECT and OBJECT receive weight 2; LOCATION is always included.
 
+\`gold-v1\` and \`gold-v2\` preserve the early targeted runs. The primary \`gold-v3\` benchmark labels the same seven sentence positions in all ten domains: 100 source sentences, 106 grouped facts, and 237 role assignments. Unlabelled context is not silently treated as a negative example. Current DeepSeek Nitro result for prompt \`perception-ir-v3.23\`: micro-F1 0.771, weighted-F1 0.784 over every labelled role, and weighted-F1 0.772 over the mandatory SUBJECT / OBJECT / LOCATION roles. Document macro-F1 is 0.770, with per-domain F1 ranging from 0.622 to 0.939.
+
 ### M2 — explainable depth
 
 Each test question declares the expected answer and a gold UID/link path of depth 1–6 over FOLLOW, IS-A, or CAUSE. A result scores only when the answer is correct and the produced trace contains the complete used path.
 
+The versioned internal benchmark contains 100 explicit questions across 20 independent chains. It is reported as five folds of the organiser's 20-question size. All expected answers and complete UID/link paths are recovered; every fold has trace pass rate 1.0 and ExplainScore 0.533, with depths ranging from 1 to 6. This is an internal conformance benchmark built to the organiser's formula, not an organiser-provided test set.
+
 ### M3 — garbage collection
 
-The fixed orphan fixture measures efficiency and false deletion count after 50 ticks.
+The benchmark runs eight fixtures over 4,450 nodes: orphan sets of 100, 250, 500, and 1,000 in both isolated and disconnected-chain topologies. Every case advances 50 ticks before GC. The aggregate result is 3,700 → 0 orphan nodes, 750/750 live nodes preserved, mean and minimum GC efficiency 1.0, and zero false deletions. A second preview is empty in every case, proving each collection pass is idempotent.
 
 ### M4 — vanilla RAG baseline
 
@@ -530,7 +587,7 @@ The identical extraction schema and deterministic compiler are run with one loca
 1. **Conformance:** exact types, operations, invariants, rabbit fixture.
 2. **Domain:** compiler policies, Role Bindings, hierarchy and episode rules.
 3. **Engine:** deterministic ticks, directionality, profiles, threshold, decay, Hebbian clipping.
-4. **Persistence:** AH Core → Neo4j → AH Core equality.
+4. **Persistence target:** AH Core → Neo4j → AH Core equality after startup recovery is wired.
 5. **Application:** ingestion and query vertical slices with fake LLM responses.
 6. **Evaluation:** M1–M5 formulas on frozen fixtures.
 7. **Performance:** N=1000 tick benchmark with trace enabled.

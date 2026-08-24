@@ -222,6 +222,9 @@ class CandidateFact(Frozen):
     context_after: str = ""
     mentions: tuple[CandidateMention, ...] = ()
     group_uid: str | None = None
+    section_hint: Literal["C", "P", "H"] | None = None
+    section_confidence: float = Field(default=.5, ge=0, le=1)
+    section_reason: str = ""
 
     @model_validator(mode="after")
     def valid_span(self):
@@ -241,6 +244,7 @@ class CandidateDecisionRequest(BaseModel):
     preview_uid: str = Field(min_length=1)
     candidate_uid: str = Field(min_length=1)
     decision: Literal["admit", "reject"]
+    section_override: Literal["C", "P", "H"] | None = None
 
 
 class AutoAdmissionRequest(BaseModel):

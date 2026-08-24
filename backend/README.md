@@ -2,6 +2,13 @@
 
 Python 3.12+, FastAPI, Pydantic v2. The default mode is a deterministic in-memory AH core; Neo4j is an optional projection.
 
+For the demonstration release, `AHMemory` is intentionally process-local and
+is reset when the backend restarts. Neo4j can mirror a completed in-memory
+revision when `AH_STORAGE_MODE=neo4j`, but it is not wired as the startup source
+of truth and must not be presented as durable recovery. Snapshot persistence,
+reset/restore controls, and startup recovery are deferred to the pre-defence
+hardening stage.
+
 ```powershell
 uv sync --extra test
 uv run pytest -q
@@ -25,14 +32,14 @@ AH_LLM_API_KEY=your-key
 AH_INGESTION_INITIAL_WEIGHT=1.0
 ```
 
-The local `.env` is configured for OpenRouter Ox Alpha. Paste an OpenRouter key
+The local `.env` is configured for OpenRouter DeepSeek V4 Flash Nitro. Paste an OpenRouter key
 into `AH_LLM_API_KEY`; `json_object` is used because this model does not enforce
 JSON Schema. Server-side Pydantic and AH compiler validation remain mandatory.
 The Ingestion model selector can explicitly choose `stealth/ox-alpha` or
 `~deepseek/deepseek-v4-flash-latest`; both overrides reuse the server-side key.
 Ox Alpha uses JSON mode, while DeepSeek requests strict JSON Schema output.
 `deepseek/deepseek-v4-flash-0731:nitro` is the throughput-routed preset. Parser
-completions are capped by `AH_LLM_MAX_TOKENS` (4096 by default), and DeepSeek
+completions are capped by `AH_LLM_MAX_TOKENS` (8192 in the supplied configuration), and DeepSeek
 reasoning is disabled for extraction to prevent billed runaway output.
 
 Any Chat Completions compatible service can be used: Kimi, OpenRouter, OpenAI,
@@ -49,6 +56,14 @@ The external parser contract is Perception IR v3: exact Mentions, backward
 coreference, atomic facts, and explicit `ATOM/AND/OR/VERY` terms. The preview
 groups facts by source span and shows canonical Role Bindings; the original
 quote remains immutable evidence.
+
+Current demonstration scope deliberately covers affirmative, source-grounded
+facts, composite `AND`/`OR` role values, local coreference, and explicit causal
+or temporal relations. Full sentential negation, corrective contrasts such as
+"not X but Y", exceptions/exclusions, cross-sentence branch retraction, and
+operators beyond `ATOM/AND/OR/VERY` are not auto-admitted in the demonstration
+release. They are the next perception milestone before the final defence and
+must not be presented as already solved.
 
 Queries remain local by default. When a user explicitly selects an external
 answer model, only the question, activated typed AH facts, and their exact
