@@ -1,0 +1,355 @@
+{
+  "scope": "end-to-end regression corpus; not official M2 or held-out accuracy",
+  "provider": "rule",
+  "profile": "directed_v1",
+  "total": 30,
+  "passed": 30,
+  "cases": [
+    {
+      "id": "immediate-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Перегрев двигателя вызвал остановку насоса."
+    },
+    {
+      "id": "cause-result",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Перегрев двигателя вызвал остановку насоса."
+    },
+    {
+      "id": "root-chain",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Первопричина события «остановку насоса» — Отказ вентилятора."
+    },
+    {
+      "id": "root-ambiguous",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "root-immediate-ambiguous",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "root-cycle",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "multiple-causes",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Перегрев двигателя вызвал остановку насоса. Сбой питания вызвал остановку насоса."
+    },
+    {
+      "id": "negated-active",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "negated-led",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "negated-because",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "negated-tool",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Инженер Ли использовал ручной ключ."
+    },
+    {
+      "id": "time-оставался",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Насос оставался остановлен до завершения проверки."
+    },
+    {
+      "id": "time-остался",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Насос остался остановлен до завершения проверки."
+    },
+    {
+      "id": "time-остаётся",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Насос остаётся остановлен до завершения проверки."
+    },
+    {
+      "id": "false-time-pressure",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "false-time-space",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown-id",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "known-id",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Сбой вызвал остановку насоса НС-12345."
+    },
+    {
+      "id": "two-identities",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Перегрев вызвал остановку насоса НС-12346."
+    },
+    {
+      "id": "irrelevant-subject",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "why-unrelated",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "why-known",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Перегрев двигателя вызвал остановку насоса."
+    },
+    {
+      "id": "time-next-window",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Наблюдение оставалось приостановленным до следующего окна связи."
+    },
+    {
+      "id": "time-next-equipment",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "root-repeated-evidence",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Первопричина события «остановку насоса» — Отказ вентилятора."
+    },
+    {
+      "id": "never-used-tool",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "time-receipt",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Конвейер оставался остановлен до получения разрешения диспетчера."
+    },
+    {
+      "id": "time-restoration",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true
+      },
+      "status": "answered",
+      "answer": "Клапан оставался закрыт до восстановления питания."
+    }
+  ],
+  "corpus_sha256": "d890983cb7c65d7fd3ba924636c68da00e5014c29931258178d3c0c0512d8e53",
+  "code_sha256": {
+    "__init__.py": "7e76526f6cc9428f120dfefb55744b081980f26df7d0fc3a93eb2b0bd9729abc",
+    "answering.py": "620866a8b54822896d4f54e338b9fb50f7f0bff8d1f3d0fdd2681b182a6d2532",
+    "benchmark_recording.py": "0e87e019edddd7f06a73d5aaece27d150bebac26b7919d7516873bb335f4e87c",
+    "conformance.py": "463395440a40854c5591856433310c8448c82528215a4b46e18c03c00a85c1ea",
+    "core.py": "b2bbac8c1c33d118a747174f755ec90445d5942fac65dbb2a1d5f56943e3e595",
+    "dsl.py": "f2bd2206993a65e63f29548ab3829411f8ba17eb657355033269d2e5803521a2",
+    "engine.py": "5e513c9a5028122568ba74d68c2d7d17571c66b166f22f831aefc11026612e9d",
+    "evaluation.py": "3abbe441ebd4f1dafe3d13b57d8cf3b8b98702010ca4ae899e2f1a261106ff9c",
+    "ingestion.py": "53c0354905797c46b041341333e21d69aa2ec6c9c957b6109c00ce76a3767a12",
+    "main.py": "8d1c9c540801c38be7dcfed563d5bf698ea403fc3e1813646adf85a28e0495c2",
+    "models.py": "5fcd5ea86aed4abb4461be8d98eba8ebc082f51650bac1d3c16f40c19f1a3673",
+    "persistence.py": "cd30c4b75eb1c3cd133bd2df8b58d1bfc89f98e7ebe6f1ebf2c0c0a810f6d4f4",
+    "senior_conformance.py": "0181c0f29493910cd8d50953a85b7442e6ae122227d9571fa8324bb5db62d0ef"
+  }
+}

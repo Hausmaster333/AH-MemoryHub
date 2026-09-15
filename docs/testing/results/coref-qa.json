@@ -1,0 +1,545 @@
+{
+  "scope": "QA on one shared memory compiled from recorded model predictions; no fresh extraction or model answer",
+  "provider": "recorded_predictions",
+  "profile": "directed_v1",
+  "records_sha256": {
+    "wind-farm-borey": "704ba7cdc467012a0805f4d505e9cafd54f1b5b1206d70d0988820410883dda5",
+    "cold-chain-polaris": "5b73287d3da039829a569a224bac0300de7f014b736eb230c31e634e1e82ba60",
+    "data-center-meridian": "dad456f068a14685a0b08db7b0a781d7a03f6f11d88b39919af752af25ec1431",
+    "greenhouse-lotus": "4e79bee11a3aef0b234201145aa3a30d0f258dec8f745ce6a4da91ae0735d29d",
+    "rail-terminal-vega": "e319e5b60b990e0110d73d3b5b3d9f7188135162c75134957ff13819add3e3a0",
+    "museum-orion": "e13057b24c8756c6357c459a30879cab0864101069676bd3c376f5f1ed1e42e4",
+    "water-plant-river": "1cac80b322ceb896dc234e5a991a421e6c65b063c583e401f70eb73459688ca1",
+    "ocean-lab-pelican": "73cfbddaa850923fe6740a5019ce033c264e1c73c2c68cecb0f089dfaff98362",
+    "printing-house-atlas": "ad5544b818423273f416559d4082a8df70ce4f46bb363a5c02fc465b1fe81d16",
+    "concert-hall-resonance": "1da2e2eeb3a1dee0167e8f751aca1d7fbf2d4436e841c4738808c799f2d23670"
+  },
+  "prediction_code_sha256": {
+    "backend\\app\\__init__.py": "7e76526f6cc9428f120dfefb55744b081980f26df7d0fc3a93eb2b0bd9729abc",
+    "backend\\app\\answering.py": "486259880440191433e0c7d9b901704da2358995eb2b7ecc53c262e6bbd01fda",
+    "backend\\app\\benchmark_recording.py": "0e87e019edddd7f06a73d5aaece27d150bebac26b7919d7516873bb335f4e87c",
+    "backend\\app\\conformance.py": "463395440a40854c5591856433310c8448c82528215a4b46e18c03c00a85c1ea",
+    "backend\\app\\core.py": "b2bbac8c1c33d118a747174f755ec90445d5942fac65dbb2a1d5f56943e3e595",
+    "backend\\app\\dsl.py": "f2bd2206993a65e63f29548ab3829411f8ba17eb657355033269d2e5803521a2",
+    "backend\\app\\engine.py": "5e513c9a5028122568ba74d68c2d7d17571c66b166f22f831aefc11026612e9d",
+    "backend\\app\\evaluation.py": "3abbe441ebd4f1dafe3d13b57d8cf3b8b98702010ca4ae899e2f1a261106ff9c",
+    "backend\\app\\ingestion.py": "99a90c2f06be8ba981e8ee8e430a1eb04b22e2fac10a969918271f73588241a2",
+    "backend\\app\\main.py": "8d1c9c540801c38be7dcfed563d5bf698ea403fc3e1813646adf85a28e0495c2",
+    "backend\\app\\models.py": "5fcd5ea86aed4abb4461be8d98eba8ebc082f51650bac1d3c16f40c19f1a3673",
+    "backend\\app\\persistence.py": "cd30c4b75eb1c3cd133bd2df8b58d1bfc89f98e7ebe6f1ebf2c0c0a810f6d4f4",
+    "backend\\app\\senior_conformance.py": "0181c0f29493910cd8d50953a85b7442e6ae122227d9571fa8324bb5db62d0ef",
+    "backend\\scripts\\evaluate_corpus.py": "53af0145c026bd6513354944348d551fd062efb9cfea12b2714b65dd073392d4"
+  },
+  "ingestions": [
+    {
+      "document_id": "wind-farm-borey",
+      "accepted": 20,
+      "rejected": []
+    },
+    {
+      "document_id": "cold-chain-polaris",
+      "accepted": 18,
+      "rejected": []
+    },
+    {
+      "document_id": "data-center-meridian",
+      "accepted": 15,
+      "rejected": []
+    },
+    {
+      "document_id": "greenhouse-lotus",
+      "accepted": 21,
+      "rejected": []
+    },
+    {
+      "document_id": "rail-terminal-vega",
+      "accepted": 17,
+      "rejected": []
+    },
+    {
+      "document_id": "museum-orion",
+      "accepted": 18,
+      "rejected": []
+    },
+    {
+      "document_id": "water-plant-river",
+      "accepted": 19,
+      "rejected": []
+    },
+    {
+      "document_id": "ocean-lab-pelican",
+      "accepted": 19,
+      "rejected": []
+    },
+    {
+      "document_id": "printing-house-atlas",
+      "accepted": 18,
+      "rejected": []
+    },
+    {
+      "document_id": "concert-hall-resonance",
+      "accepted": 16,
+      "rejected": []
+    }
+  ],
+  "total": 35,
+  "passed": 35,
+  "cases": [
+    {
+      "id": "wind-farm-borey-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "В 06:20 усиление ветра вызвало рост вибрации редуктора."
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Во время осмотра инженер использовала виброметр и набор шестигранных ключей."
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Турбина оставалась в сервисном режиме до завершения контрольного замера."
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Повреждение уплотнителя вызвало рост температуры внутри камеры."
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Для переноса диспетчер использовал электрическую тележку и термочехлы."
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Контейнеры оставались на резервном стеллаже до получения результатов повторной проверки."
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Сбой коммутатора вызвал потерю связи с сервером АР-4."
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Администратор использовал консоль управления и аппаратный токен."
+    },
+    {
+      "id": "data-center-meridian-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Сервер АР-4 оставался под усиленным мониторингом до окончания вечерней смены."
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Засорение форсунки вызвало снижение влажности в центральной грядке."
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Ботаник использовала ручной вентиль и переносной влагомер."
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Секция оставалась под наблюдением до утреннего обхода агронома."
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Обледенение привода вызвало задержку перевода стрелки."
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Техник использовал газовую горелку и диагностический тестер."
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Пост оставался в режиме ручного контроля до прибытия ремонтной бригады."
+    },
+    {
+      "id": "museum-orion-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Отказ осушителя вызвал рост влажности внутри витрины."
+    },
+    {
+      "id": "museum-orion-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Для переноса хранитель использовала подъёмную платформу и защитный чехол."
+    },
+    {
+      "id": "museum-orion-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Экспонат оставался в резервной витрине до заключения реставратора."
+    },
+    {
+      "id": "water-plant-river-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Засорение первого фильтра вызвало повышение давления на входе модуля."
+    },
+    {
+      "id": "water-plant-river-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Оператор использовал ручной ключ и переносной манометр."
+    },
+    {
+      "id": "water-plant-river-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Модуль оставался на пониженной производительности до завершения лабораторного анализа."
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Попадание пузырьков воздуха вызвало искажение показаний солёности."
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Исследователь использовал зажим и комплект стерильных соединителей."
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Анализатор оставался в режиме проверки до возвращения платформы в порт."
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Смещение стопки бумаги вызвало блокировку резака."
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Мастер использовала направляющую линейку и защитные перчатки."
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Линия оставалась на сниженной скорости до завершения пробного тиража."
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Перегрев блока питания вызвал мерцание прожекторов."
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Инженер использовал диагностический планшет и изолированный кабель."
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "passed": true,
+      "checks": {
+        "answer": true,
+        "proof": true,
+        "quotes": true,
+        "expected_quotes": true,
+        "source_scope": true
+      },
+      "status": "answered",
+      "answer": "Основной пульт оставался отключённым до завершения проверки электриком."
+    },
+    {
+      "id": "unknown-0",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown-1",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown-2",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown-3",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    },
+    {
+      "id": "unknown-4",
+      "passed": true,
+      "checks": {
+        "refusal": true,
+        "no_evidence": true
+      },
+      "status": "insufficient_evidence",
+      "answer": "insufficient_evidence"
+    }
+  ],
+  "corpus_sha256": "f7864ce1e376c9864f8b33ffba1fd9677026ac7835ab87a073e1fbc21d6a3ae5",
+  "code_sha256": {
+    "__init__.py": "7e76526f6cc9428f120dfefb55744b081980f26df7d0fc3a93eb2b0bd9729abc",
+    "answering.py": "486259880440191433e0c7d9b901704da2358995eb2b7ecc53c262e6bbd01fda",
+    "benchmark_recording.py": "0e87e019edddd7f06a73d5aaece27d150bebac26b7919d7516873bb335f4e87c",
+    "conformance.py": "463395440a40854c5591856433310c8448c82528215a4b46e18c03c00a85c1ea",
+    "core.py": "b2bbac8c1c33d118a747174f755ec90445d5942fac65dbb2a1d5f56943e3e595",
+    "dsl.py": "f2bd2206993a65e63f29548ab3829411f8ba17eb657355033269d2e5803521a2",
+    "engine.py": "5e513c9a5028122568ba74d68c2d7d17571c66b166f22f831aefc11026612e9d",
+    "evaluation.py": "3abbe441ebd4f1dafe3d13b57d8cf3b8b98702010ca4ae899e2f1a261106ff9c",
+    "ingestion.py": "99a90c2f06be8ba981e8ee8e430a1eb04b22e2fac10a969918271f73588241a2",
+    "main.py": "8d1c9c540801c38be7dcfed563d5bf698ea403fc3e1813646adf85a28e0495c2",
+    "models.py": "5fcd5ea86aed4abb4461be8d98eba8ebc082f51650bac1d3c16f40c19f1a3673",
+    "persistence.py": "cd30c4b75eb1c3cd133bd2df8b58d1bfc89f98e7ebe6f1ebf2c0c0a810f6d4f4",
+    "senior_conformance.py": "0181c0f29493910cd8d50953a85b7442e6ae122227d9571fa8324bb5db62d0ef"
+  }
+}

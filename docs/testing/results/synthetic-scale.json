@@ -1,0 +1,31 @@
+{
+  "synthetic": true,
+  "official_acceptance": false,
+  "words": 15050,
+  "documents": 175,
+  "accepted": 175,
+  "rejected": 0,
+  "counts_after_gc": {
+    "C": 1601,
+    "P": 0,
+    "H": 350,
+    "S": 538,
+    "L": 1750,
+    "CPH": 1951
+  },
+  "ingestion_seconds": 231.69575020001503,
+  "snapshot_ms": 70.79899997916073,
+  "dense_single_tick_ms": [
+    26.5087999869138,
+    26.07909997459501,
+    50.18289998406544,
+    26.395599998068064,
+    27.110799972433597
+  ],
+  "max_tick_ms": 50.18289998406544,
+  "gc_deleted": 0,
+  "lost_live": [],
+  "python": "3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "size_latency_checks": true
+}

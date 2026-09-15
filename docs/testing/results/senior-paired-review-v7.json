@@ -1,0 +1,582 @@
+{
+  "scope": "Assistant post-hoc semantic review against frozen sources/questions; not blind independent evaluation or official M4/M5. First 12 questions are regression.",
+  "paired_sha256": "6b0dbdf9dc6393a30d07d10a51aa27707fc1a2f221daeb626a58e2cc5f5c6e9d",
+  "summary": {
+    "ah": {
+      "correct_answer": 6,
+      "missed_answer": 13,
+      "correct_refusal": 16,
+      "incomplete_answer": 1,
+      "incorrect_answer": 4
+    },
+    "rag": {
+      "correct_answer": 18,
+      "correct_refusal": 16,
+      "incorrect_answer": 1,
+      "missed_answer": 4,
+      "incomplete_answer": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "water-night-0",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Смирнов использовал контрольный манометр КМ-4 [E1]."
+    },
+    {
+      "id": "water-night-0",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Смирнов повторил измерения контрольным манометром КМ-4 [E1]."
+    },
+    {
+      "id": "water-night-1",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-night-1",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Насос НБ-32 является резервным на водозаборе «Берег» [E1]."
+    },
+    {
+      "id": "water-night-2",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "КМ-4 вернули в шкаф приборов в 04:40 [E1]."
+    },
+    {
+      "id": "water-night-2",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "КМ-4 вернули в шкаф приборов в 04:40 [E1]."
+    },
+    {
+      "id": "water-night-3",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-night-3",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cold-transfer-0",
+      "arm": "ah",
+      "verdict": "incomplete_answer",
+      "note": "does not identify ТС-8; only repeats the chamber",
+      "answer": "Датчик установлен в камере КС-41 [E1]."
+    },
+    {
+      "id": "cold-transfer-0",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Датчик ТС-8 установлен в КС-41 [E1]. Датчик ТС-9 установлен в КС-42 [E1]."
+    },
+    {
+      "id": "cold-transfer-1",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cold-transfer-1",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Разница между ТС-8 и контрольным термометром составила плюс два градуса [E2]."
+    },
+    {
+      "id": "cold-transfer-2",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cold-transfer-2",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Завершилась сверка грузовых записей в 00:10 [E1]."
+    },
+    {
+      "id": "cold-transfer-3",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cold-transfer-3",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-0",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-0",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "В узле СЛ-11 входит электромеханический привод ПЛ-7 [E3]."
+    },
+    {
+      "id": "rail-investigation-1",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-1",
+      "arm": "rag",
+      "verdict": "incorrect_answer",
+      "note": "invented 16:59; cited fragment cuts off before the time, source answer is 09:20",
+      "answer": "Повторная команда перевода завершилась подтверждением в 16:59 [E1]."
+    },
+    {
+      "id": "rail-investigation-2",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-2",
+      "arm": "rag",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-3",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "rail-investigation-3",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "telecom-inventory-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "telecom-inventory-new",
+      "arm": "rag",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "telecom-inventory-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "telecom-inventory-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "irrigation-comparison-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "irrigation-comparison-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Предупреждение о перепаде давления на ЛИ-10 не работало из-за отключения системы после замены фильтра [E1][E3]."
+    },
+    {
+      "id": "irrigation-comparison-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "irrigation-comparison-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "packaging-microstop-new",
+      "arm": "ah",
+      "verdict": "incorrect_answer",
+      "note": "85% instead of the requested 00:57 value 90%",
+      "answer": "частота равна 85% контрольного значения [E1]."
+    },
+    {
+      "id": "packaging-microstop-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Частота ДК-22 после повторного считывания в 00:57 равна 90% контрольного значения [E2]."
+    },
+    {
+      "id": "packaging-microstop-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "packaging-microstop-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "tram-maintenance-new",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "предыдущий наряд был закрыт 19 марта [E1]."
+    },
+    {
+      "id": "tram-maintenance-new",
+      "arm": "rag",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "tram-maintenance-unknown",
+      "arm": "ah",
+      "verdict": "incorrect_answer",
+      "note": "invented a confirmed bearing defect although the source is unknown",
+      "answer": "Деталь, признанная источником масляного следа, — это подшипник [E1]."
+    },
+    {
+      "id": "tram-maintenance-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "truthfully says source unknown, but uses status answered: semantic abstention, protocol mismatch",
+      "answer": "Масляный след возле подшипникового узла привода ПЛ-25; источник не установлен [E1][E4]."
+    },
+    {
+      "id": "weather-station-new",
+      "arm": "ah",
+      "verdict": "incorrect_answer",
+      "note": "12:00 inspection confused with 13:00 removal",
+      "answer": "Время снятия для анализа — 12:00 [E1]."
+    },
+    {
+      "id": "weather-station-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Датчик ДС-62 был временно снят для дальнейшего анализа и ремонта в 13:00 [E1]."
+    },
+    {
+      "id": "weather-station-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "weather-station-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-sampling-new",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Номер запуска — АП8-022 [E1]."
+    },
+    {
+      "id": "water-sampling-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Номер запуска для неподтверждённого результата второго контейнера — АП8-022 [E2]."
+    },
+    {
+      "id": "water-sampling-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-sampling-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "warehouse-version-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "warehouse-version-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Ворота ВВ-70 не испытывались в описанном эпизоде [E1]."
+    },
+    {
+      "id": "warehouse-version-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "warehouse-version-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "robot-safety-new",
+      "arm": "ah",
+      "verdict": "incorrect_answer",
+      "note": "cell name Шаг substituted for the operator",
+      "answer": "Шаг выполнял проверку роботизированной ячейки [E1]."
+    },
+    {
+      "id": "robot-safety-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Иван Смирнов выполнял проверку [E1][E4]."
+    },
+    {
+      "id": "robot-safety-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "robot-safety-unknown",
+      "arm": "rag",
+      "verdict": "incomplete_answer",
+      "note": "generic special tool does not answer the requested model; no explicit abstention",
+      "answer": "Иван Смирнов использовал специальный инструмент для удаления небольшой частицы с поверхности манипулятора МШ-4 [E1]."
+    },
+    {
+      "id": "pump-ownership-new",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "переносной манометр МР-9 принадлежит муниципальному оператору [E1]."
+    },
+    {
+      "id": "pump-ownership-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Переносной манометр МР-9 принадлежит муниципальному оператору [E1][E2][E3]."
+    },
+    {
+      "id": "pump-ownership-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "pump-ownership-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "optics-quality-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "optics-quality-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Первые 20 контрольных изображений КФ-10 после обслуживания были проверены на блик [E1]."
+    },
+    {
+      "id": "optics-quality-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "optics-quality-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "textile-shift-new",
+      "arm": "ah",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Правильное время инцидента — 14:00 [E1]."
+    },
+    {
+      "id": "textile-shift-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Время инцидента участка Нить указано как 14:00 [E2][E3]."
+    },
+    {
+      "id": "textile-shift-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "textile-shift-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-reserve-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-reserve-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Указатель ЕП-1 достиг нулевой отметки в 19:48 [E1]."
+    },
+    {
+      "id": "water-reserve-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "water-reserve-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cooling-ambiguity-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cooling-ambiguity-new",
+      "arm": "rag",
+      "verdict": "correct_answer",
+      "note": "",
+      "answer": "Уровень указателя контура Грань при повторной ночной проверке 30 января составлял 78% [E2]."
+    },
+    {
+      "id": "cooling-ambiguity-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "cooling-ambiguity-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "dispatch-summary-new",
+      "arm": "ah",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "dispatch-summary-new",
+      "arm": "rag",
+      "verdict": "missed_answer",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "dispatch-summary-unknown",
+      "arm": "ah",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    },
+    {
+      "id": "dispatch-summary-unknown",
+      "arm": "rag",
+      "verdict": "correct_refusal",
+      "note": "",
+      "answer": ""
+    }
+  ]
+}

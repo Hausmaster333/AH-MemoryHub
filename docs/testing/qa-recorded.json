@@ -1,0 +1,372 @@
+{
+  "version": 1,
+  "source_sha256": {
+    "wind-farm-borey": "ee73bbba5c7438902c3987327b615a3b0a699427a224058125ec8c582abbb65d",
+    "cold-chain-polaris": "c3c4d3abf07e9b48a22984da054ab44da1eadc526a037e3beca3d4b6ca6c6365",
+    "data-center-meridian": "5be1e2893a6e641bc2f583a2b9918a46de015154d2651fd8921f750302a88849",
+    "greenhouse-lotus": "48bf9762537303c84f3b6c2891565ab7242fbd9831a8111c49e6cefe34325038",
+    "rail-terminal-vega": "52001997e4e051bd6a6f9c58c10be9ae5dee00d1313666a5d058088e35aa0ba3",
+    "museum-orion": "0835350ff88dc73ce228339ab9ddb99da72626b12bb76cd220ef15874155c60c",
+    "water-plant-river": "0cd4b31bbb3a0974c5bc9fb32c828f4663087c89122b8cdbc4c076737df4ee90",
+    "ocean-lab-pelican": "4a7a12350a290ac54b29d155c5134e90d90b13d6229a28db1e0e89e4505a58af",
+    "printing-house-atlas": "9f0a32d6be578560168ad6bc3be5edfe49738311aa8f82cc591cb36eeee8e6b3",
+    "concert-hall-resonance": "1cb753f46861d631ec5be8261ebb031766fabee8a0aee411a6fcd9666774a90e"
+  },
+  "cases": [
+    {
+      "id": "wind-farm-borey-cause",
+      "document_id": "wind-farm-borey",
+      "question": "Что вызвало рост вибрации редуктора?",
+      "quotes": [
+        "В 06:20 усиление ветра вызвало рост вибрации редуктора."
+      ],
+      "answer_contains": [
+        "В 06:20 усиление ветра"
+      ]
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "document_id": "wind-farm-borey",
+      "question": "Какие инструменты использовала инженер Орлова?",
+      "quotes": [
+        "Во время осмотра инженер использовала виброметр и набор шестигранных ключей."
+      ],
+      "answer_contains": [
+        "виброметр и набор шестигранных ключей"
+      ]
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "document_id": "wind-farm-borey",
+      "question": "До какого момента турбина ВЭУ-14 оставалась в сервисном режиме?",
+      "quotes": [
+        "Турбина оставалась в сервисном режиме до завершения контрольного замера."
+      ],
+      "answer_contains": [
+        "завершения контрольного замера"
+      ]
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "document_id": "cold-chain-polaris",
+      "question": "Что вызвало рост температуры?",
+      "quotes": [
+        "Повреждение уплотнителя вызвало рост температуры внутри камеры."
+      ],
+      "answer_contains": [
+        "Повреждение уплотнителя"
+      ]
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "document_id": "cold-chain-polaris",
+      "question": "Какие инструменты использовал диспетчер Ким?",
+      "quotes": [
+        "Для переноса диспетчер использовал электрическую тележку и термочехлы."
+      ],
+      "answer_contains": [
+        "электрическую тележку и термочехлы"
+      ]
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "document_id": "cold-chain-polaris",
+      "question": "До какого момента контейнеры оставались на резервном стеллаже?",
+      "quotes": [
+        "Контейнеры оставались на резервном стеллаже до получения результатов повторной проверки."
+      ],
+      "answer_contains": [
+        "получения результатов повторной проверки"
+      ]
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "document_id": "data-center-meridian",
+      "question": "Что вызвало потерю связи с сервером АР-4?",
+      "quotes": [
+        "Сбой коммутатора вызвал потерю связи с сервером АР-4."
+      ],
+      "answer_contains": [
+        "Сбой коммутатора"
+      ]
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "document_id": "data-center-meridian",
+      "question": "Какие инструменты использовал администратор Лебедев?",
+      "quotes": [
+        "Администратор использовал консоль управления и аппаратный токен."
+      ],
+      "answer_contains": [
+        "консоль управления и аппаратный токен"
+      ]
+    },
+    {
+      "id": "data-center-meridian-time",
+      "document_id": "data-center-meridian",
+      "question": "До какого момента сервер АР-4 оставался под усиленным мониторингом?",
+      "quotes": [
+        "Сервер АР-4 оставался под усиленным мониторингом до окончания вечерней смены."
+      ],
+      "answer_contains": [
+        "окончания вечерней смены"
+      ]
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "document_id": "greenhouse-lotus",
+      "question": "Что вызвало снижение влажности?",
+      "quotes": [
+        "Засорение форсунки вызвало снижение влажности в центральной грядке."
+      ],
+      "answer_contains": [
+        "Засорение форсунки"
+      ]
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "document_id": "greenhouse-lotus",
+      "question": "Какие инструменты использовала ботаник Соколова?",
+      "quotes": [
+        "Ботаник использовала ручной вентиль и переносной влагомер."
+      ],
+      "answer_contains": [
+        "ручной вентиль и переносной влагомер"
+      ]
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "document_id": "greenhouse-lotus",
+      "question": "До какого момента секция ОР-5 оставалась под наблюдением?",
+      "quotes": [
+        "Секция оставалась под наблюдением до утреннего обхода агронома."
+      ],
+      "answer_contains": [
+        "утреннего обхода агронома"
+      ]
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "document_id": "rail-terminal-vega",
+      "question": "Что вызвало задержку перевода стрелки?",
+      "quotes": [
+        "Обледенение привода вызвало задержку перевода стрелки."
+      ],
+      "answer_contains": [
+        "Обледенение привода"
+      ]
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "document_id": "rail-terminal-vega",
+      "question": "Какие инструменты использовал техник?",
+      "quotes": [
+        "Техник использовал газовую горелку и диагностический тестер."
+      ],
+      "answer_contains": [
+        "газовую горелку и диагностический тестер"
+      ]
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "document_id": "rail-terminal-vega",
+      "question": "До какого момента пост СП-6 оставался в режиме ручного контроля?",
+      "quotes": [
+        "Пост оставался в режиме ручного контроля до прибытия ремонтной бригады."
+      ],
+      "answer_contains": [
+        "прибытия ремонтной бригады"
+      ]
+    },
+    {
+      "id": "museum-orion-cause",
+      "document_id": "museum-orion",
+      "question": "Что вызвало рост влажности?",
+      "quotes": [
+        "Отказ осушителя вызвал рост влажности внутри витрины."
+      ],
+      "answer_contains": [
+        "Отказ осушителя"
+      ]
+    },
+    {
+      "id": "museum-orion-tool",
+      "document_id": "museum-orion",
+      "question": "Какие инструменты использовала хранитель Белова?",
+      "quotes": [
+        "Для переноса хранитель использовала подъёмную платформу и защитный чехол."
+      ],
+      "answer_contains": [
+        "подъёмную платформу и защитный чехол"
+      ]
+    },
+    {
+      "id": "museum-orion-time",
+      "document_id": "museum-orion",
+      "question": "До какого момента экспонат оставался в резервной витрине?",
+      "quotes": [
+        "Экспонат оставался в резервной витрине до заключения реставратора."
+      ],
+      "answer_contains": [
+        "заключения реставратора"
+      ]
+    },
+    {
+      "id": "water-plant-river-cause",
+      "document_id": "water-plant-river",
+      "question": "Что вызвало повышение давления?",
+      "quotes": [
+        "Засорение первого фильтра вызвало повышение давления на входе модуля."
+      ],
+      "answer_contains": [
+        "Засорение первого фильтра"
+      ]
+    },
+    {
+      "id": "water-plant-river-tool",
+      "document_id": "water-plant-river",
+      "question": "Какие инструменты использовал оператор Панов?",
+      "quotes": [
+        "Оператор использовал ручной ключ и переносной манометр."
+      ],
+      "answer_contains": [
+        "ручной ключ и переносной манометр"
+      ]
+    },
+    {
+      "id": "water-plant-river-time",
+      "document_id": "water-plant-river",
+      "question": "До какого момента модуль ФМ-10 оставался на пониженной производительности?",
+      "quotes": [
+        "Модуль оставался на пониженной производительности до завершения лабораторного анализа."
+      ],
+      "answer_contains": [
+        "завершения лабораторного анализа"
+      ]
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "document_id": "ocean-lab-pelican",
+      "question": "Что вызвало искажение показаний солёности?",
+      "quotes": [
+        "Попадание пузырьков воздуха вызвало искажение показаний солёности."
+      ],
+      "answer_contains": [
+        "Попадание пузырьков воздуха"
+      ]
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "document_id": "ocean-lab-pelican",
+      "question": "Какие инструменты использовал исследователь Нгуен?",
+      "quotes": [
+        "Исследователь использовал зажим и комплект стерильных соединителей."
+      ],
+      "answer_contains": [
+        "зажим и комплект стерильных соединителей"
+      ]
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "document_id": "ocean-lab-pelican",
+      "question": "До какого момента анализатор АС-9 оставался в режиме проверки?",
+      "quotes": [
+        "Анализатор оставался в режиме проверки до возвращения платформы в порт."
+      ],
+      "answer_contains": [
+        "возвращения платформы в порт"
+      ]
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "document_id": "printing-house-atlas",
+      "question": "Что вызвало блокировку резака?",
+      "quotes": [
+        "Смещение стопки бумаги вызвало блокировку резака."
+      ],
+      "answer_contains": [
+        "Смещение стопки бумаги"
+      ]
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "document_id": "printing-house-atlas",
+      "question": "Какие инструменты использовала мастер Романова?",
+      "quotes": [
+        "Мастер использовала направляющую линейку и защитные перчатки."
+      ],
+      "answer_contains": [
+        "направляющую линейку и защитные перчатки"
+      ]
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "document_id": "printing-house-atlas",
+      "question": "До какого момента линия ПЛ-22 оставалась на сниженной скорости?",
+      "quotes": [
+        "Линия оставалась на сниженной скорости до завершения пробного тиража."
+      ],
+      "answer_contains": [
+        "завершения пробного тиража"
+      ]
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "document_id": "concert-hall-resonance",
+      "question": "Что вызвало мерцание прожекторов?",
+      "quotes": [
+        "Перегрев блока питания вызвал мерцание прожекторов."
+      ],
+      "answer_contains": [
+        "Перегрев блока питания"
+      ]
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "document_id": "concert-hall-resonance",
+      "question": "Какие инструменты использовал инженер Васильев?",
+      "quotes": [
+        "Инженер использовал диагностический планшет и изолированный кабель."
+      ],
+      "answer_contains": [
+        "диагностический планшет и изолированный кабель"
+      ]
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "document_id": "concert-hall-resonance",
+      "question": "До какого момента пульт ЗП-8 оставался отключённым?",
+      "quotes": [
+        "Основной пульт оставался отключённым до завершения проверки электриком."
+      ],
+      "answer_contains": [
+        "завершения проверки электриком"
+      ]
+    },
+    {
+      "id": "unknown-0",
+      "question": "Что вызвало потерю связи с сервером АР-999?",
+      "answer": null
+    },
+    {
+      "id": "unknown-1",
+      "question": "До какого момента турбина ВЭУ-999 оставалась в сервисном режиме?",
+      "answer": null
+    },
+    {
+      "id": "unknown-2",
+      "question": "Какие свойства имеет датчик ДМ-999?",
+      "answer": null
+    },
+    {
+      "id": "unknown-3",
+      "question": "Где находится модуль ФМ-999?",
+      "answer": null
+    },
+    {
+      "id": "unknown-4",
+      "question": "Что вызвало блокировку резака РЗ-999?",
+      "answer": null
+    }
+  ]
+}

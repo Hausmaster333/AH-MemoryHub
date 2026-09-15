@@ -1,0 +1,510 @@
+{
+  "scope": "Post-hoc assistant review of 70 raw answers against questions and retrieved source texts. Not official M4/M5. Name-form defect noted separately; evidence-ID membership does not prove entailment.",
+  "run_sha256": "51ad9811a8cbdd0d5d875fdba9b1571f79815eff2d260828a9ac4ce51026d897",
+  "saved_graph_fact_membership_verified": true,
+  "cases": [
+    {
+      "id": "wind-farm-borey-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-cause",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "arm": "rag",
+      "content_verdict": "incorrect",
+      "note": "Added unsupported claim that a salinity event did not affect temperature; also unrelated events and invalid multi-sentence claim.",
+      "format_valid": false
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "arm": "ah",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "arm": "rag",
+      "content_verdict": "incorrect",
+      "note": "Answered about a museum exhibit instead of vaccine containers.",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "data-center-meridian-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "arm": "ah",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "arm": "rag",
+      "content_verdict": "incorrect",
+      "note": "Attributed other workers tools to the requested technician.",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-cause",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "Correct tools, but name form Беловым is grammatically wrong for Белова; retained as a separate attribution-form defect.",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-tool",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-time",
+      "arm": "ah",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "museum-orion-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-cause",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-tool",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "water-plant-river-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "arm": "rag",
+      "content_verdict": "missed_answer",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "arm": "ah",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "arm": "rag",
+      "content_verdict": "correct_content",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-0",
+      "arm": "ah",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-0",
+      "arm": "rag",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-1",
+      "arm": "ah",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-1",
+      "arm": "rag",
+      "content_verdict": "incorrect",
+      "note": "Answered about an unspecified turbine using ВЭУ-14 evidence for question ВЭУ-999.",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-2",
+      "arm": "ah",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-2",
+      "arm": "rag",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-3",
+      "arm": "ah",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-3",
+      "arm": "rag",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-4",
+      "arm": "ah",
+      "content_verdict": "correct_refusal",
+      "note": "",
+      "format_valid": true
+    },
+    {
+      "id": "unknown-4",
+      "arm": "rag",
+      "content_verdict": "incorrect",
+      "note": "Invented identifier РЗ-999 while source describes another cutter.",
+      "format_valid": true
+    }
+  ],
+  "summary": {
+    "ah": {
+      "correct_content": 27,
+      "missed_answer": 3,
+      "correct_refusal": 5
+    },
+    "rag": {
+      "correct_content": 17,
+      "incorrect": 5,
+      "missed_answer": 10,
+      "correct_refusal": 3
+    }
+  }
+}

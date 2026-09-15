@@ -1,0 +1,3482 @@
+{
+  "provider": "nitro",
+  "providers": {
+    "wind-farm-borey": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 5: quote replaced by declared source span",
+        "fact 6: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
+        "fact 11: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "cold-chain-polaris": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 4: repaired multi-operand scalar term",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_4e6cb36e5191ac1d",
+          "source_start": 379,
+          "source_end": 459,
+          "exact_text": "Рост температуры активировал звуковой сигнал и аварийную запись в журнале смены.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    },
+    "data-center-meridian": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_6fff838f2470c143",
+          "source_start": 358,
+          "source_end": 437,
+          "exact_text": "Потеря связи запустила миграцию виртуальных машин и уведомление дежурной смены.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    },
+    "greenhouse-lotus": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 5: quote replaced by declared source span",
+        "fact 7: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "rail-terminal-vega": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 5: quote replaced by declared source span",
+        "fact 7: quote replaced by declared source span",
+        "fact 2: quote replaced by declared source span",
+        "fact 4: repaired multi-operand scalar term",
+        "fact 6: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "museum-orion": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 2: quote replaced by declared source span",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 7: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_3a1e5f3bdfc73e95",
+          "source_start": 326,
+          "source_end": 413,
+          "exact_text": "Рост влажности активировал сигнал климатического контроля и запись в журнале хранителя.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    },
+    "water-plant-river": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 2: quote replaced by declared source span",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 5: quote replaced by declared source span",
+        "fact 7: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "ocean-lab-pelican": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 7: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": [
+        {
+          "group_uid": "span_a9f22b927cba3642",
+          "source_start": 412,
+          "source_end": 472,
+          "exact_text": "Искажение показаний активировало повторный цикл отбора проб.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
+    },
+    "printing-house-atlas": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 5: quote replaced by declared source span",
+        "fact 2: quote replaced by declared source span",
+        "fact 4: repaired multi-operand scalar term",
+        "fact 6: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    },
+    "concert-hall-resonance": {
+      "active": "openai_compatible",
+      "model_id": "deepseek/deepseek-v4-flash-0731:nitro",
+      "prompt_version": "perception-ir-v3.23",
+      "cached": false,
+      "warnings": [
+        "fact 2: quote replaced by declared source span",
+        "document parsed in 2 overlapping chunks"
+      ],
+      "coverage_warnings": []
+    }
+  },
+  "M1": {
+    "LOCATION": {
+      "precision": 0.8636363636363636,
+      "recall": 0.7916666666666666,
+      "f1": 0.8260869565217391,
+      "tp": 19,
+      "gold": 24,
+      "predicted": 22
+    },
+    "OBJECT": {
+      "precision": 0.609375,
+      "recall": 0.8478260869565217,
+      "f1": 0.709090909090909,
+      "tp": 39,
+      "gold": 46,
+      "predicted": 64
+    },
+    "STATE": {
+      "precision": 0.7727272727272727,
+      "recall": 0.5666666666666667,
+      "f1": 0.6538461538461539,
+      "tp": 17,
+      "gold": 30,
+      "predicted": 22
+    },
+    "SUBJECT": {
+      "precision": 0.6410256410256411,
+      "recall": 0.7075471698113207,
+      "f1": 0.6726457399103138,
+      "tp": 75,
+      "gold": 106,
+      "predicted": 117
+    },
+    "TIME": {
+      "precision": 0.7692307692307693,
+      "recall": 0.9090909090909091,
+      "f1": 0.8333333333333333,
+      "tp": 10,
+      "gold": 11,
+      "predicted": 13
+    },
+    "TOOL": {
+      "precision": 0.9473684210526315,
+      "recall": 0.9,
+      "f1": 0.9230769230769231,
+      "tp": 18,
+      "gold": 20,
+      "predicted": 19
+    },
+    "weighted_f1": 5.999816664780595,
+    "normalized_weighted_f1": 0.7499770830975744,
+    "required_roles_weighted_f1": 3.589560254524185,
+    "normalized_required_roles_weighted_f1": 0.717912050904837,
+    "micro": {
+      "precision": 0.6926070038910506,
+      "recall": 0.7510548523206751,
+      "f1": 0.7206477732793523,
+      "tp": 178,
+      "gold": 237,
+      "predicted": 257
+    },
+    "documents": {
+      "wind-farm-borey": {
+        "precision": 0.75,
+        "recall": 0.7777777777777778,
+        "f1": 0.7636363636363638,
+        "tp": 21,
+        "gold": 27,
+        "predicted": 28
+      },
+      "cold-chain-polaris": {
+        "precision": 0.625,
+        "recall": 0.6521739130434783,
+        "f1": 0.6382978723404256,
+        "tp": 15,
+        "gold": 23,
+        "predicted": 24
+      },
+      "data-center-meridian": {
+        "precision": 0.8333333333333334,
+        "recall": 0.9090909090909091,
+        "f1": 0.8695652173913043,
+        "tp": 20,
+        "gold": 22,
+        "predicted": 24
+      },
+      "greenhouse-lotus": {
+        "precision": 0.7142857142857143,
+        "recall": 0.8,
+        "f1": 0.7547169811320756,
+        "tp": 20,
+        "gold": 25,
+        "predicted": 28
+      },
+      "rail-terminal-vega": {
+        "precision": 0.8846153846153846,
+        "recall": 0.9583333333333334,
+        "f1": 0.9199999999999999,
+        "tp": 23,
+        "gold": 24,
+        "predicted": 26
+      },
+      "museum-orion": {
+        "precision": 0.625,
+        "recall": 0.6521739130434783,
+        "f1": 0.6382978723404256,
+        "tp": 15,
+        "gold": 23,
+        "predicted": 24
+      },
+      "water-plant-river": {
+        "precision": 0.5862068965517241,
+        "recall": 0.7391304347826086,
+        "f1": 0.6538461538461539,
+        "tp": 17,
+        "gold": 23,
+        "predicted": 29
+      },
+      "ocean-lab-pelican": {
+        "precision": 0.5357142857142857,
+        "recall": 0.625,
+        "f1": 0.576923076923077,
+        "tp": 15,
+        "gold": 24,
+        "predicted": 28
+      },
+      "printing-house-atlas": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "tp": 18,
+        "gold": 24,
+        "predicted": 24
+      },
+      "concert-hall-resonance": {
+        "precision": 0.6363636363636364,
+        "recall": 0.6363636363636364,
+        "f1": 0.6363636363636364,
+        "tp": 14,
+        "gold": 22,
+        "predicted": 22
+      }
+    },
+    "document_macro_f1": 0.7201647173973462,
+    "document_min_f1": 0.576923076923077,
+    "document_max_f1": 0.9199999999999999,
+    "benchmark": {
+      "schema": "ah-memoryhub-gold-v3",
+      "documents": 10,
+      "source_sentences": 100,
+      "labelled_facts": 106,
+      "role_assignments": 237
+    },
+    "errors": [
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "LOCATION",
+        "value": "внутри камеры"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "LOCATION",
+        "value": "в центральной грядке"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "LOCATION",
+        "value": "внутри витрины"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "LOCATION",
+        "value": "на входе модуля"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "основной цех"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "центральной грядке"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "внутри витрины"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "основном цехе"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "камера КХ-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "три стеллажа с контейнерами вакцин"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "OBJECT",
+        "value": "снижение влажности в центральной грядке"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "часть городского музея"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "OBJECT",
+        "value": "рост влажности внутри витрины"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "городской концертный зал"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "система сценического освещения"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "серый корпус и повышенную чувствительность"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "синий индикатор и рабочий порог минус восемнадцать градусов"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Камера"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "два сетевых интерфейса и активный профиль высокой доступности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Кластер"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "зелёный корпус и высокую точность измерения влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "OBJECT",
+        "value": "снижение влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Секция"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Пост"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 0,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Фондохранилище «Орион»"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "бронзовую раму и герметичный корпус"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "OBJECT",
+        "value": "рост влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Зал"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "белый корпус и рабочий диапазон до шести бар"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Модуль"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "титановый корпус и калибровочный профиль глубоководного режима"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовал зажим и комплект стерильных соединителей"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Модуль"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "оранжевое ограждение и датчик положения ножа"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Линия"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "городским концертным залом"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "принадлежит филармонии «Новая сцена» и управляет системой сценического освещения"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "сенсорный экран и резервный канал связи"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "Пульт"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "серый корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "рабочий порог минус восемнадцать градусов"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "два сетевых интерфейса"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "зелёный корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "бронзовая рама"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "герметичный корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "титановый корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "калибровочный профиль глубоководного режима"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "оранжевое ограждение"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "датчик положения ножа"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "сенсорный экран"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "резервный канал связи"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "отключённое состояние"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 7,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "тележку"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 7,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "термочехлы"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "солёности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "пробоотборник"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "отключённым"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ВБ-2"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "оператор «ФростЛог»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "камера КХ-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ТМ-8"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ТМ-8"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Сервер АР-4"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ВЛ-3"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "секция ОР-5"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "стрелочный пост СП-6"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "SUBJECT",
+        "value": "Фондохранилище «Орион»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Витрина ВТ-7"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Витрина ВТ-7"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ДМ-5"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ДМ-5"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "оператор Панов"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "оператор Панов"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "фильтровальный модуль ФМ-10"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "исследователь Нгуен"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "исследователь Нгуен"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Резак РЗ-3"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Резак РЗ-3"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Линия ПЛ-22"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "пульт ЗП-8"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Контроллер КС-6"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Контроллер КС-6"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "датчик ВБ-2"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "компании «СеверЭнерго» и включает генератор, редуктор и два датчика вибрации"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "датчик ТМ-8"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "синий индикатор"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 7,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Для переноса диспетчер использовал электрическую"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 7,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Для переноса диспетчер использовал электрическую"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "оператору «ФростЛог» и содержит три стеллажа с контейнерами вакцин"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "сервер АР-4"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "компании «Кварц» и объединяет восемь серверов приложений"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "датчик ВЛ-3"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "SUBJECT",
+        "value": "снижение влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "секция"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "университету «Гелиос» и содержит коллекцию орхидей и автоматическую систему полива"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "стрелочному посту"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "компании «ТрансКонтур» и включает привод стрелки и два контрольных реле"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 0,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "городского музея"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "витрина ВТ-7"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "SUBJECT",
+        "value": "рост влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "музею «Сфера» и содержит коллекцию деревянной скульптуры"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "датчик ДМ-5"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "белый корпус"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "рабочий диапазон до шести бар"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "оператора"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "оператора"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "модуль"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "предприятию «Водоканал-Сервис» и содержит два угольных фильтра"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "исследователь Нгуен"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "анализатор"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Модуль принадлежит институту «Акватория» и включает анализатор"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Модуль принадлежит институту «Акватория» и включает анализатор"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "Исследователь"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "институту «Акватория» и включает анализатор солёности и пробоотборник"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "резак РЗ-3"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "линия"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "издательству «Контур» и включает печатную машину и автоматический резак"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "Пульт ЗП-8"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "Контроллер КС-6"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "филармонии «Новая сцена» и управляет системой сценического освещения"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 4,
+        "predicate": "CAUSE",
+        "role": "TIME",
+        "value": "06:20"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS",
+        "role": "TIME",
+        "value": "до шести бар"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "TIME",
+        "value": "до шести бар"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "water-plant-river",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "TIME",
+        "value": "до шести бар"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "TOOL",
+        "value": "зажим"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "TOOL",
+        "value": "комплект стерильных соединителей"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "TOOL",
+        "value": "зажим и комплект стерильных соединителей"
+      }
+    ],
+    "matcher": "morph_v1"
+  },
+  "M2": {
+    "correct": true,
+    "passed": 100,
+    "total": 100,
+    "required_total": 100,
+    "coverage": 1.0,
+    "trace_pass_rate": 1.0,
+    "max_depth": 6,
+    "explain_score": 0.5333333333333333,
+    "available_cases_score": 0.5333333333333333,
+    "fold_size": 20,
+    "fold_count": 5,
+    "fold_scores": [
+      0.5333333333333333,
+      0.5333333333333333,
+      0.5333333333333333,
+      0.5333333333333333,
+      0.5333333333333333
+    ],
+    "provisional": false,
+    "cases": [
+      {
+        "id": "wind-farm-borey-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «усиление ветра» через 1 рёбер?",
+        "expected_answer": "рост вибрации редуктора",
+        "actual_answer": "рост вибрации редуктора",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-events_l0",
+          "m2_wind-farm-borey-events_s0",
+          "m2_wind-farm-borey-events_s1"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «усиление ветра» через 2 рёбер?",
+        "expected_answer": "предупредительный сигнал",
+        "actual_answer": "предупредительный сигнал",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-events_l0",
+          "m2_wind-farm-borey-events_l1",
+          "m2_wind-farm-borey-events_s0",
+          "m2_wind-farm-borey-events_s1",
+          "m2_wind-farm-borey-events_s2"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «усиление ветра» через 3 рёбер?",
+        "expected_answer": "остановка турбины",
+        "actual_answer": "остановка турбины",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-events_l0",
+          "m2_wind-farm-borey-events_l1",
+          "m2_wind-farm-borey-events_l2",
+          "m2_wind-farm-borey-events_s0",
+          "m2_wind-farm-borey-events_s1",
+          "m2_wind-farm-borey-events_s2",
+          "m2_wind-farm-borey-events_s3"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «усиление ветра» через 4 рёбер?",
+        "expected_answer": "осмотр гондолы",
+        "actual_answer": "осмотр гондолы",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-events_l0",
+          "m2_wind-farm-borey-events_l1",
+          "m2_wind-farm-borey-events_l2",
+          "m2_wind-farm-borey-events_l3",
+          "m2_wind-farm-borey-events_s0",
+          "m2_wind-farm-borey-events_s1",
+          "m2_wind-farm-borey-events_s2",
+          "m2_wind-farm-borey-events_s3",
+          "m2_wind-farm-borey-events_s4"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «усиление ветра» через 6 рёбер?",
+        "expected_answer": "номинальная мощность",
+        "actual_answer": "номинальная мощность",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-events_l0",
+          "m2_wind-farm-borey-events_l1",
+          "m2_wind-farm-borey-events_l2",
+          "m2_wind-farm-borey-events_l3",
+          "m2_wind-farm-borey-events_l4",
+          "m2_wind-farm-borey-events_l5",
+          "m2_wind-farm-borey-events_s0",
+          "m2_wind-farm-borey-events_s1",
+          "m2_wind-farm-borey-events_s2",
+          "m2_wind-farm-borey-events_s3",
+          "m2_wind-farm-borey-events_s4",
+          "m2_wind-farm-borey-events_s5",
+          "m2_wind-farm-borey-events_s6"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ВЭУ-14» через 1 рёбер?",
+        "expected_answer": "ветровая турбина",
+        "actual_answer": "ветровая турбина",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-hierarchy_l0",
+          "m2_wind-farm-borey-hierarchy_s0",
+          "m2_wind-farm-borey-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ВЭУ-14» через 2 рёбер?",
+        "expected_answer": "энергетическая установка",
+        "actual_answer": "энергетическая установка",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-hierarchy_l0",
+          "m2_wind-farm-borey-hierarchy_l1",
+          "m2_wind-farm-borey-hierarchy_s0",
+          "m2_wind-farm-borey-hierarchy_s1",
+          "m2_wind-farm-borey-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ВЭУ-14» через 3 рёбер?",
+        "expected_answer": "энергетическое оборудование",
+        "actual_answer": "энергетическое оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-hierarchy_l0",
+          "m2_wind-farm-borey-hierarchy_l1",
+          "m2_wind-farm-borey-hierarchy_l2",
+          "m2_wind-farm-borey-hierarchy_s0",
+          "m2_wind-farm-borey-hierarchy_s1",
+          "m2_wind-farm-borey-hierarchy_s2",
+          "m2_wind-farm-borey-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ВЭУ-14» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-hierarchy_l0",
+          "m2_wind-farm-borey-hierarchy_l1",
+          "m2_wind-farm-borey-hierarchy_l2",
+          "m2_wind-farm-borey-hierarchy_l3",
+          "m2_wind-farm-borey-hierarchy_s0",
+          "m2_wind-farm-borey-hierarchy_s1",
+          "m2_wind-farm-borey-hierarchy_s2",
+          "m2_wind-farm-borey-hierarchy_s3",
+          "m2_wind-farm-borey-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "wind-farm-borey-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ВЭУ-14» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_wind-farm-borey-hierarchy_l0",
+          "m2_wind-farm-borey-hierarchy_l1",
+          "m2_wind-farm-borey-hierarchy_l2",
+          "m2_wind-farm-borey-hierarchy_l3",
+          "m2_wind-farm-borey-hierarchy_l4",
+          "m2_wind-farm-borey-hierarchy_l5",
+          "m2_wind-farm-borey-hierarchy_s0",
+          "m2_wind-farm-borey-hierarchy_s1",
+          "m2_wind-farm-borey-hierarchy_s2",
+          "m2_wind-farm-borey-hierarchy_s3",
+          "m2_wind-farm-borey-hierarchy_s4",
+          "m2_wind-farm-borey-hierarchy_s5",
+          "m2_wind-farm-borey-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «повреждение уплотнителя» через 1 рёбер?",
+        "expected_answer": "рост температуры",
+        "actual_answer": "рост температуры",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-events_l0",
+          "m2_cold-chain-polaris-events_s0",
+          "m2_cold-chain-polaris-events_s1"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «повреждение уплотнителя» через 2 рёбер?",
+        "expected_answer": "звуковой сигнал",
+        "actual_answer": "звуковой сигнал",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-events_l0",
+          "m2_cold-chain-polaris-events_l1",
+          "m2_cold-chain-polaris-events_s0",
+          "m2_cold-chain-polaris-events_s1",
+          "m2_cold-chain-polaris-events_s2"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «повреждение уплотнителя» через 3 рёбер?",
+        "expected_answer": "перенос контейнеров",
+        "actual_answer": "перенос контейнеров",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-events_l0",
+          "m2_cold-chain-polaris-events_l1",
+          "m2_cold-chain-polaris-events_l2",
+          "m2_cold-chain-polaris-events_s0",
+          "m2_cold-chain-polaris-events_s1",
+          "m2_cold-chain-polaris-events_s2",
+          "m2_cold-chain-polaris-events_s3"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «повреждение уплотнителя» через 4 рёбер?",
+        "expected_answer": "замена уплотнителя",
+        "actual_answer": "замена уплотнителя",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-events_l0",
+          "m2_cold-chain-polaris-events_l1",
+          "m2_cold-chain-polaris-events_l2",
+          "m2_cold-chain-polaris-events_l3",
+          "m2_cold-chain-polaris-events_s0",
+          "m2_cold-chain-polaris-events_s1",
+          "m2_cold-chain-polaris-events_s2",
+          "m2_cold-chain-polaris-events_s3",
+          "m2_cold-chain-polaris-events_s4"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «повреждение уплотнителя» через 6 рёбер?",
+        "expected_answer": "отключение сигнала",
+        "actual_answer": "отключение сигнала",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-events_l0",
+          "m2_cold-chain-polaris-events_l1",
+          "m2_cold-chain-polaris-events_l2",
+          "m2_cold-chain-polaris-events_l3",
+          "m2_cold-chain-polaris-events_l4",
+          "m2_cold-chain-polaris-events_l5",
+          "m2_cold-chain-polaris-events_s0",
+          "m2_cold-chain-polaris-events_s1",
+          "m2_cold-chain-polaris-events_s2",
+          "m2_cold-chain-polaris-events_s3",
+          "m2_cold-chain-polaris-events_s4",
+          "m2_cold-chain-polaris-events_s5",
+          "m2_cold-chain-polaris-events_s6"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «КХ-9» через 1 рёбер?",
+        "expected_answer": "холодильная камера",
+        "actual_answer": "холодильная камера",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-hierarchy_l0",
+          "m2_cold-chain-polaris-hierarchy_s0",
+          "m2_cold-chain-polaris-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «КХ-9» через 2 рёбер?",
+        "expected_answer": "складское оборудование",
+        "actual_answer": "складское оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-hierarchy_l0",
+          "m2_cold-chain-polaris-hierarchy_l1",
+          "m2_cold-chain-polaris-hierarchy_s0",
+          "m2_cold-chain-polaris-hierarchy_s1",
+          "m2_cold-chain-polaris-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «КХ-9» через 3 рёбер?",
+        "expected_answer": "логистическая система",
+        "actual_answer": "логистическая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-hierarchy_l0",
+          "m2_cold-chain-polaris-hierarchy_l1",
+          "m2_cold-chain-polaris-hierarchy_l2",
+          "m2_cold-chain-polaris-hierarchy_s0",
+          "m2_cold-chain-polaris-hierarchy_s1",
+          "m2_cold-chain-polaris-hierarchy_s2",
+          "m2_cold-chain-polaris-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «КХ-9» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-hierarchy_l0",
+          "m2_cold-chain-polaris-hierarchy_l1",
+          "m2_cold-chain-polaris-hierarchy_l2",
+          "m2_cold-chain-polaris-hierarchy_l3",
+          "m2_cold-chain-polaris-hierarchy_s0",
+          "m2_cold-chain-polaris-hierarchy_s1",
+          "m2_cold-chain-polaris-hierarchy_s2",
+          "m2_cold-chain-polaris-hierarchy_s3",
+          "m2_cold-chain-polaris-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "cold-chain-polaris-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «КХ-9» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_cold-chain-polaris-hierarchy_l0",
+          "m2_cold-chain-polaris-hierarchy_l1",
+          "m2_cold-chain-polaris-hierarchy_l2",
+          "m2_cold-chain-polaris-hierarchy_l3",
+          "m2_cold-chain-polaris-hierarchy_l4",
+          "m2_cold-chain-polaris-hierarchy_l5",
+          "m2_cold-chain-polaris-hierarchy_s0",
+          "m2_cold-chain-polaris-hierarchy_s1",
+          "m2_cold-chain-polaris-hierarchy_s2",
+          "m2_cold-chain-polaris-hierarchy_s3",
+          "m2_cold-chain-polaris-hierarchy_s4",
+          "m2_cold-chain-polaris-hierarchy_s5",
+          "m2_cold-chain-polaris-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "data-center-meridian-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «сбой коммутатора» через 1 рёбер?",
+        "expected_answer": "потеря связи",
+        "actual_answer": "потеря связи",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-events_l0",
+          "m2_data-center-meridian-events_s0",
+          "m2_data-center-meridian-events_s1"
+        ]
+      },
+      {
+        "id": "data-center-meridian-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «сбой коммутатора» через 2 рёбер?",
+        "expected_answer": "миграция виртуальных машин",
+        "actual_answer": "миграция виртуальных машин",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-events_l0",
+          "m2_data-center-meridian-events_l1",
+          "m2_data-center-meridian-events_s0",
+          "m2_data-center-meridian-events_s1",
+          "m2_data-center-meridian-events_s2"
+        ]
+      },
+      {
+        "id": "data-center-meridian-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «сбой коммутатора» через 3 рёбер?",
+        "expected_answer": "переключение трафика",
+        "actual_answer": "переключение трафика",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-events_l0",
+          "m2_data-center-meridian-events_l1",
+          "m2_data-center-meridian-events_l2",
+          "m2_data-center-meridian-events_s0",
+          "m2_data-center-meridian-events_s1",
+          "m2_data-center-meridian-events_s2",
+          "m2_data-center-meridian-events_s3"
+        ]
+      },
+      {
+        "id": "data-center-meridian-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «сбой коммутатора» через 4 рёбер?",
+        "expected_answer": "восстановление сервисов",
+        "actual_answer": "восстановление сервисов",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-events_l0",
+          "m2_data-center-meridian-events_l1",
+          "m2_data-center-meridian-events_l2",
+          "m2_data-center-meridian-events_l3",
+          "m2_data-center-meridian-events_s0",
+          "m2_data-center-meridian-events_s1",
+          "m2_data-center-meridian-events_s2",
+          "m2_data-center-meridian-events_s3",
+          "m2_data-center-meridian-events_s4"
+        ]
+      },
+      {
+        "id": "data-center-meridian-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «сбой коммутатора» через 6 рёбер?",
+        "expected_answer": "завершение смены",
+        "actual_answer": "завершение смены",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-events_l0",
+          "m2_data-center-meridian-events_l1",
+          "m2_data-center-meridian-events_l2",
+          "m2_data-center-meridian-events_l3",
+          "m2_data-center-meridian-events_l4",
+          "m2_data-center-meridian-events_l5",
+          "m2_data-center-meridian-events_s0",
+          "m2_data-center-meridian-events_s1",
+          "m2_data-center-meridian-events_s2",
+          "m2_data-center-meridian-events_s3",
+          "m2_data-center-meridian-events_s4",
+          "m2_data-center-meridian-events_s5",
+          "m2_data-center-meridian-events_s6"
+        ]
+      },
+      {
+        "id": "data-center-meridian-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «СК-31» через 1 рёбер?",
+        "expected_answer": "вычислительный кластер",
+        "actual_answer": "вычислительный кластер",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-hierarchy_l0",
+          "m2_data-center-meridian-hierarchy_s0",
+          "m2_data-center-meridian-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "data-center-meridian-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «СК-31» через 2 рёбер?",
+        "expected_answer": "серверная система",
+        "actual_answer": "серверная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-hierarchy_l0",
+          "m2_data-center-meridian-hierarchy_l1",
+          "m2_data-center-meridian-hierarchy_s0",
+          "m2_data-center-meridian-hierarchy_s1",
+          "m2_data-center-meridian-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "data-center-meridian-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «СК-31» через 3 рёбер?",
+        "expected_answer": "вычислительная инфраструктура",
+        "actual_answer": "вычислительная инфраструктура",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-hierarchy_l0",
+          "m2_data-center-meridian-hierarchy_l1",
+          "m2_data-center-meridian-hierarchy_l2",
+          "m2_data-center-meridian-hierarchy_s0",
+          "m2_data-center-meridian-hierarchy_s1",
+          "m2_data-center-meridian-hierarchy_s2",
+          "m2_data-center-meridian-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "data-center-meridian-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «СК-31» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-hierarchy_l0",
+          "m2_data-center-meridian-hierarchy_l1",
+          "m2_data-center-meridian-hierarchy_l2",
+          "m2_data-center-meridian-hierarchy_l3",
+          "m2_data-center-meridian-hierarchy_s0",
+          "m2_data-center-meridian-hierarchy_s1",
+          "m2_data-center-meridian-hierarchy_s2",
+          "m2_data-center-meridian-hierarchy_s3",
+          "m2_data-center-meridian-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "data-center-meridian-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «СК-31» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_data-center-meridian-hierarchy_l0",
+          "m2_data-center-meridian-hierarchy_l1",
+          "m2_data-center-meridian-hierarchy_l2",
+          "m2_data-center-meridian-hierarchy_l3",
+          "m2_data-center-meridian-hierarchy_l4",
+          "m2_data-center-meridian-hierarchy_l5",
+          "m2_data-center-meridian-hierarchy_s0",
+          "m2_data-center-meridian-hierarchy_s1",
+          "m2_data-center-meridian-hierarchy_s2",
+          "m2_data-center-meridian-hierarchy_s3",
+          "m2_data-center-meridian-hierarchy_s4",
+          "m2_data-center-meridian-hierarchy_s5",
+          "m2_data-center-meridian-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «засорение форсунки» через 1 рёбер?",
+        "expected_answer": "снижение влажности",
+        "actual_answer": "снижение влажности",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-events_l0",
+          "m2_greenhouse-lotus-events_s0",
+          "m2_greenhouse-lotus-events_s1"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «засорение форсунки» через 2 рёбер?",
+        "expected_answer": "жёлтый индикатор",
+        "actual_answer": "жёлтый индикатор",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-events_l0",
+          "m2_greenhouse-lotus-events_l1",
+          "m2_greenhouse-lotus-events_s0",
+          "m2_greenhouse-lotus-events_s1",
+          "m2_greenhouse-lotus-events_s2"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «засорение форсунки» через 3 рёбер?",
+        "expected_answer": "открытие резервной линии",
+        "actual_answer": "открытие резервной линии",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-events_l0",
+          "m2_greenhouse-lotus-events_l1",
+          "m2_greenhouse-lotus-events_l2",
+          "m2_greenhouse-lotus-events_s0",
+          "m2_greenhouse-lotus-events_s1",
+          "m2_greenhouse-lotus-events_s2",
+          "m2_greenhouse-lotus-events_s3"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «засорение форсунки» через 4 рёбер?",
+        "expected_answer": "подача воды",
+        "actual_answer": "подача воды",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-events_l0",
+          "m2_greenhouse-lotus-events_l1",
+          "m2_greenhouse-lotus-events_l2",
+          "m2_greenhouse-lotus-events_l3",
+          "m2_greenhouse-lotus-events_s0",
+          "m2_greenhouse-lotus-events_s1",
+          "m2_greenhouse-lotus-events_s2",
+          "m2_greenhouse-lotus-events_s3",
+          "m2_greenhouse-lotus-events_s4"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «засорение форсунки» через 6 рёбер?",
+        "expected_answer": "нормальное состояние листьев",
+        "actual_answer": "нормальное состояние листьев",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-events_l0",
+          "m2_greenhouse-lotus-events_l1",
+          "m2_greenhouse-lotus-events_l2",
+          "m2_greenhouse-lotus-events_l3",
+          "m2_greenhouse-lotus-events_l4",
+          "m2_greenhouse-lotus-events_l5",
+          "m2_greenhouse-lotus-events_s0",
+          "m2_greenhouse-lotus-events_s1",
+          "m2_greenhouse-lotus-events_s2",
+          "m2_greenhouse-lotus-events_s3",
+          "m2_greenhouse-lotus-events_s4",
+          "m2_greenhouse-lotus-events_s5",
+          "m2_greenhouse-lotus-events_s6"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ОР-5» через 1 рёбер?",
+        "expected_answer": "секция оранжереи",
+        "actual_answer": "секция оранжереи",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-hierarchy_l0",
+          "m2_greenhouse-lotus-hierarchy_s0",
+          "m2_greenhouse-lotus-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ОР-5» через 2 рёбер?",
+        "expected_answer": "растениеводческий объект",
+        "actual_answer": "растениеводческий объект",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-hierarchy_l0",
+          "m2_greenhouse-lotus-hierarchy_l1",
+          "m2_greenhouse-lotus-hierarchy_s0",
+          "m2_greenhouse-lotus-hierarchy_s1",
+          "m2_greenhouse-lotus-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ОР-5» через 3 рёбер?",
+        "expected_answer": "исследовательский комплекс",
+        "actual_answer": "исследовательский комплекс",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-hierarchy_l0",
+          "m2_greenhouse-lotus-hierarchy_l1",
+          "m2_greenhouse-lotus-hierarchy_l2",
+          "m2_greenhouse-lotus-hierarchy_s0",
+          "m2_greenhouse-lotus-hierarchy_s1",
+          "m2_greenhouse-lotus-hierarchy_s2",
+          "m2_greenhouse-lotus-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ОР-5» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-hierarchy_l0",
+          "m2_greenhouse-lotus-hierarchy_l1",
+          "m2_greenhouse-lotus-hierarchy_l2",
+          "m2_greenhouse-lotus-hierarchy_l3",
+          "m2_greenhouse-lotus-hierarchy_s0",
+          "m2_greenhouse-lotus-hierarchy_s1",
+          "m2_greenhouse-lotus-hierarchy_s2",
+          "m2_greenhouse-lotus-hierarchy_s3",
+          "m2_greenhouse-lotus-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "greenhouse-lotus-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ОР-5» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_greenhouse-lotus-hierarchy_l0",
+          "m2_greenhouse-lotus-hierarchy_l1",
+          "m2_greenhouse-lotus-hierarchy_l2",
+          "m2_greenhouse-lotus-hierarchy_l3",
+          "m2_greenhouse-lotus-hierarchy_l4",
+          "m2_greenhouse-lotus-hierarchy_l5",
+          "m2_greenhouse-lotus-hierarchy_s0",
+          "m2_greenhouse-lotus-hierarchy_s1",
+          "m2_greenhouse-lotus-hierarchy_s2",
+          "m2_greenhouse-lotus-hierarchy_s3",
+          "m2_greenhouse-lotus-hierarchy_s4",
+          "m2_greenhouse-lotus-hierarchy_s5",
+          "m2_greenhouse-lotus-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «обледенение привода» через 1 рёбер?",
+        "expected_answer": "задержка перевода",
+        "actual_answer": "задержка перевода",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-events_l0",
+          "m2_rail-terminal-vega-events_s0",
+          "m2_rail-terminal-vega-events_s1"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «обледенение привода» через 2 рёбер?",
+        "expected_answer": "запрещающий сигнал",
+        "actual_answer": "запрещающий сигнал",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-events_l0",
+          "m2_rail-terminal-vega-events_l1",
+          "m2_rail-terminal-vega-events_s0",
+          "m2_rail-terminal-vega-events_s1",
+          "m2_rail-terminal-vega-events_s2"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «обледенение привода» через 3 рёбер?",
+        "expected_answer": "остановка состава",
+        "actual_answer": "остановка состава",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-events_l0",
+          "m2_rail-terminal-vega-events_l1",
+          "m2_rail-terminal-vega-events_l2",
+          "m2_rail-terminal-vega-events_s0",
+          "m2_rail-terminal-vega-events_s1",
+          "m2_rail-terminal-vega-events_s2",
+          "m2_rail-terminal-vega-events_s3"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «обледенение привода» через 4 рёбер?",
+        "expected_answer": "прогрев привода",
+        "actual_answer": "прогрев привода",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-events_l0",
+          "m2_rail-terminal-vega-events_l1",
+          "m2_rail-terminal-vega-events_l2",
+          "m2_rail-terminal-vega-events_l3",
+          "m2_rail-terminal-vega-events_s0",
+          "m2_rail-terminal-vega-events_s1",
+          "m2_rail-terminal-vega-events_s2",
+          "m2_rail-terminal-vega-events_s3",
+          "m2_rail-terminal-vega-events_s4"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «обледенение привода» через 6 рёбер?",
+        "expected_answer": "движение состава",
+        "actual_answer": "движение состава",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-events_l0",
+          "m2_rail-terminal-vega-events_l1",
+          "m2_rail-terminal-vega-events_l2",
+          "m2_rail-terminal-vega-events_l3",
+          "m2_rail-terminal-vega-events_l4",
+          "m2_rail-terminal-vega-events_l5",
+          "m2_rail-terminal-vega-events_s0",
+          "m2_rail-terminal-vega-events_s1",
+          "m2_rail-terminal-vega-events_s2",
+          "m2_rail-terminal-vega-events_s3",
+          "m2_rail-terminal-vega-events_s4",
+          "m2_rail-terminal-vega-events_s5",
+          "m2_rail-terminal-vega-events_s6"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «СП-6» через 1 рёбер?",
+        "expected_answer": "стрелочный пост",
+        "actual_answer": "стрелочный пост",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-hierarchy_l0",
+          "m2_rail-terminal-vega-hierarchy_s0",
+          "m2_rail-terminal-vega-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «СП-6» через 2 рёбер?",
+        "expected_answer": "железнодорожный объект",
+        "actual_answer": "железнодорожный объект",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-hierarchy_l0",
+          "m2_rail-terminal-vega-hierarchy_l1",
+          "m2_rail-terminal-vega-hierarchy_s0",
+          "m2_rail-terminal-vega-hierarchy_s1",
+          "m2_rail-terminal-vega-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «СП-6» через 3 рёбер?",
+        "expected_answer": "транспортная инфраструктура",
+        "actual_answer": "транспортная инфраструктура",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-hierarchy_l0",
+          "m2_rail-terminal-vega-hierarchy_l1",
+          "m2_rail-terminal-vega-hierarchy_l2",
+          "m2_rail-terminal-vega-hierarchy_s0",
+          "m2_rail-terminal-vega-hierarchy_s1",
+          "m2_rail-terminal-vega-hierarchy_s2",
+          "m2_rail-terminal-vega-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «СП-6» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-hierarchy_l0",
+          "m2_rail-terminal-vega-hierarchy_l1",
+          "m2_rail-terminal-vega-hierarchy_l2",
+          "m2_rail-terminal-vega-hierarchy_l3",
+          "m2_rail-terminal-vega-hierarchy_s0",
+          "m2_rail-terminal-vega-hierarchy_s1",
+          "m2_rail-terminal-vega-hierarchy_s2",
+          "m2_rail-terminal-vega-hierarchy_s3",
+          "m2_rail-terminal-vega-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "rail-terminal-vega-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «СП-6» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_rail-terminal-vega-hierarchy_l0",
+          "m2_rail-terminal-vega-hierarchy_l1",
+          "m2_rail-terminal-vega-hierarchy_l2",
+          "m2_rail-terminal-vega-hierarchy_l3",
+          "m2_rail-terminal-vega-hierarchy_l4",
+          "m2_rail-terminal-vega-hierarchy_l5",
+          "m2_rail-terminal-vega-hierarchy_s0",
+          "m2_rail-terminal-vega-hierarchy_s1",
+          "m2_rail-terminal-vega-hierarchy_s2",
+          "m2_rail-terminal-vega-hierarchy_s3",
+          "m2_rail-terminal-vega-hierarchy_s4",
+          "m2_rail-terminal-vega-hierarchy_s5",
+          "m2_rail-terminal-vega-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "museum-orion-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «отказ осушителя» через 1 рёбер?",
+        "expected_answer": "рост влажности",
+        "actual_answer": "рост влажности",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-events_l0",
+          "m2_museum-orion-events_s0",
+          "m2_museum-orion-events_s1"
+        ]
+      },
+      {
+        "id": "museum-orion-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «отказ осушителя» через 2 рёбер?",
+        "expected_answer": "сигнал климатического контроля",
+        "actual_answer": "сигнал климатического контроля",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-events_l0",
+          "m2_museum-orion-events_l1",
+          "m2_museum-orion-events_s0",
+          "m2_museum-orion-events_s1",
+          "m2_museum-orion-events_s2"
+        ]
+      },
+      {
+        "id": "museum-orion-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «отказ осушителя» через 3 рёбер?",
+        "expected_answer": "перенос экспоната",
+        "actual_answer": "перенос экспоната",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-events_l0",
+          "m2_museum-orion-events_l1",
+          "m2_museum-orion-events_l2",
+          "m2_museum-orion-events_s0",
+          "m2_museum-orion-events_s1",
+          "m2_museum-orion-events_s2",
+          "m2_museum-orion-events_s3"
+        ]
+      },
+      {
+        "id": "museum-orion-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «отказ осушителя» через 4 рёбер?",
+        "expected_answer": "запуск мобильного осушителя",
+        "actual_answer": "запуск мобильного осушителя",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-events_l0",
+          "m2_museum-orion-events_l1",
+          "m2_museum-orion-events_l2",
+          "m2_museum-orion-events_l3",
+          "m2_museum-orion-events_s0",
+          "m2_museum-orion-events_s1",
+          "m2_museum-orion-events_s2",
+          "m2_museum-orion-events_s3",
+          "m2_museum-orion-events_s4"
+        ]
+      },
+      {
+        "id": "museum-orion-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «отказ осушителя» через 6 рёбер?",
+        "expected_answer": "заключение реставратора",
+        "actual_answer": "заключение реставратора",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-events_l0",
+          "m2_museum-orion-events_l1",
+          "m2_museum-orion-events_l2",
+          "m2_museum-orion-events_l3",
+          "m2_museum-orion-events_l4",
+          "m2_museum-orion-events_l5",
+          "m2_museum-orion-events_s0",
+          "m2_museum-orion-events_s1",
+          "m2_museum-orion-events_s2",
+          "m2_museum-orion-events_s3",
+          "m2_museum-orion-events_s4",
+          "m2_museum-orion-events_s5",
+          "m2_museum-orion-events_s6"
+        ]
+      },
+      {
+        "id": "museum-orion-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ВТ-7» через 1 рёбер?",
+        "expected_answer": "музейная витрина",
+        "actual_answer": "музейная витрина",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-hierarchy_l0",
+          "m2_museum-orion-hierarchy_s0",
+          "m2_museum-orion-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "museum-orion-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ВТ-7» через 2 рёбер?",
+        "expected_answer": "музейное оборудование",
+        "actual_answer": "музейное оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-hierarchy_l0",
+          "m2_museum-orion-hierarchy_l1",
+          "m2_museum-orion-hierarchy_s0",
+          "m2_museum-orion-hierarchy_s1",
+          "m2_museum-orion-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "museum-orion-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ВТ-7» через 3 рёбер?",
+        "expected_answer": "система хранения",
+        "actual_answer": "система хранения",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-hierarchy_l0",
+          "m2_museum-orion-hierarchy_l1",
+          "m2_museum-orion-hierarchy_l2",
+          "m2_museum-orion-hierarchy_s0",
+          "m2_museum-orion-hierarchy_s1",
+          "m2_museum-orion-hierarchy_s2",
+          "m2_museum-orion-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "museum-orion-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ВТ-7» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-hierarchy_l0",
+          "m2_museum-orion-hierarchy_l1",
+          "m2_museum-orion-hierarchy_l2",
+          "m2_museum-orion-hierarchy_l3",
+          "m2_museum-orion-hierarchy_s0",
+          "m2_museum-orion-hierarchy_s1",
+          "m2_museum-orion-hierarchy_s2",
+          "m2_museum-orion-hierarchy_s3",
+          "m2_museum-orion-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "museum-orion-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ВТ-7» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_museum-orion-hierarchy_l0",
+          "m2_museum-orion-hierarchy_l1",
+          "m2_museum-orion-hierarchy_l2",
+          "m2_museum-orion-hierarchy_l3",
+          "m2_museum-orion-hierarchy_l4",
+          "m2_museum-orion-hierarchy_l5",
+          "m2_museum-orion-hierarchy_s0",
+          "m2_museum-orion-hierarchy_s1",
+          "m2_museum-orion-hierarchy_s2",
+          "m2_museum-orion-hierarchy_s3",
+          "m2_museum-orion-hierarchy_s4",
+          "m2_museum-orion-hierarchy_s5",
+          "m2_museum-orion-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "water-plant-river-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «засорение фильтра» через 1 рёбер?",
+        "expected_answer": "повышение давления",
+        "actual_answer": "повышение давления",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-events_l0",
+          "m2_water-plant-river-events_s0",
+          "m2_water-plant-river-events_s1"
+        ]
+      },
+      {
+        "id": "water-plant-river-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «засорение фильтра» через 2 рёбер?",
+        "expected_answer": "запуск байпаса",
+        "actual_answer": "запуск байпаса",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-events_l0",
+          "m2_water-plant-river-events_l1",
+          "m2_water-plant-river-events_s0",
+          "m2_water-plant-river-events_s1",
+          "m2_water-plant-river-events_s2"
+        ]
+      },
+      {
+        "id": "water-plant-river-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «засорение фильтра» через 3 рёбер?",
+        "expected_answer": "перекрытие подачи",
+        "actual_answer": "перекрытие подачи",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-events_l0",
+          "m2_water-plant-river-events_l1",
+          "m2_water-plant-river-events_l2",
+          "m2_water-plant-river-events_s0",
+          "m2_water-plant-river-events_s1",
+          "m2_water-plant-river-events_s2",
+          "m2_water-plant-river-events_s3"
+        ]
+      },
+      {
+        "id": "water-plant-river-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «засорение фильтра» через 4 рёбер?",
+        "expected_answer": "промывка фильтра",
+        "actual_answer": "промывка фильтра",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-events_l0",
+          "m2_water-plant-river-events_l1",
+          "m2_water-plant-river-events_l2",
+          "m2_water-plant-river-events_l3",
+          "m2_water-plant-river-events_s0",
+          "m2_water-plant-river-events_s1",
+          "m2_water-plant-river-events_s2",
+          "m2_water-plant-river-events_s3",
+          "m2_water-plant-river-events_s4"
+        ]
+      },
+      {
+        "id": "water-plant-river-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «засорение фильтра» через 6 рёбер?",
+        "expected_answer": "основной поток воды",
+        "actual_answer": "основной поток воды",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-events_l0",
+          "m2_water-plant-river-events_l1",
+          "m2_water-plant-river-events_l2",
+          "m2_water-plant-river-events_l3",
+          "m2_water-plant-river-events_l4",
+          "m2_water-plant-river-events_l5",
+          "m2_water-plant-river-events_s0",
+          "m2_water-plant-river-events_s1",
+          "m2_water-plant-river-events_s2",
+          "m2_water-plant-river-events_s3",
+          "m2_water-plant-river-events_s4",
+          "m2_water-plant-river-events_s5",
+          "m2_water-plant-river-events_s6"
+        ]
+      },
+      {
+        "id": "water-plant-river-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ФМ-10» через 1 рёбер?",
+        "expected_answer": "фильтровальный модуль",
+        "actual_answer": "фильтровальный модуль",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-hierarchy_l0",
+          "m2_water-plant-river-hierarchy_s0",
+          "m2_water-plant-river-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "water-plant-river-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ФМ-10» через 2 рёбер?",
+        "expected_answer": "водоочистное оборудование",
+        "actual_answer": "водоочистное оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-hierarchy_l0",
+          "m2_water-plant-river-hierarchy_l1",
+          "m2_water-plant-river-hierarchy_s0",
+          "m2_water-plant-river-hierarchy_s1",
+          "m2_water-plant-river-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "water-plant-river-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ФМ-10» через 3 рёбер?",
+        "expected_answer": "комплекс водоподготовки",
+        "actual_answer": "комплекс водоподготовки",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-hierarchy_l0",
+          "m2_water-plant-river-hierarchy_l1",
+          "m2_water-plant-river-hierarchy_l2",
+          "m2_water-plant-river-hierarchy_s0",
+          "m2_water-plant-river-hierarchy_s1",
+          "m2_water-plant-river-hierarchy_s2",
+          "m2_water-plant-river-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "water-plant-river-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ФМ-10» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-hierarchy_l0",
+          "m2_water-plant-river-hierarchy_l1",
+          "m2_water-plant-river-hierarchy_l2",
+          "m2_water-plant-river-hierarchy_l3",
+          "m2_water-plant-river-hierarchy_s0",
+          "m2_water-plant-river-hierarchy_s1",
+          "m2_water-plant-river-hierarchy_s2",
+          "m2_water-plant-river-hierarchy_s3",
+          "m2_water-plant-river-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "water-plant-river-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ФМ-10» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_water-plant-river-hierarchy_l0",
+          "m2_water-plant-river-hierarchy_l1",
+          "m2_water-plant-river-hierarchy_l2",
+          "m2_water-plant-river-hierarchy_l3",
+          "m2_water-plant-river-hierarchy_l4",
+          "m2_water-plant-river-hierarchy_l5",
+          "m2_water-plant-river-hierarchy_s0",
+          "m2_water-plant-river-hierarchy_s1",
+          "m2_water-plant-river-hierarchy_s2",
+          "m2_water-plant-river-hierarchy_s3",
+          "m2_water-plant-river-hierarchy_s4",
+          "m2_water-plant-river-hierarchy_s5",
+          "m2_water-plant-river-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «попадание пузырьков воздуха» через 1 рёбер?",
+        "expected_answer": "искажение показаний",
+        "actual_answer": "искажение показаний",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-events_l0",
+          "m2_ocean-lab-pelican-events_s0",
+          "m2_ocean-lab-pelican-events_s1"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «попадание пузырьков воздуха» через 2 рёбер?",
+        "expected_answer": "повторный цикл",
+        "actual_answer": "повторный цикл",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-events_l0",
+          "m2_ocean-lab-pelican-events_l1",
+          "m2_ocean-lab-pelican-events_s0",
+          "m2_ocean-lab-pelican-events_s1",
+          "m2_ocean-lab-pelican-events_s2"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «попадание пузырьков воздуха» через 3 рёбер?",
+        "expected_answer": "замена шланга",
+        "actual_answer": "замена шланга",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-events_l0",
+          "m2_ocean-lab-pelican-events_l1",
+          "m2_ocean-lab-pelican-events_l2",
+          "m2_ocean-lab-pelican-events_s0",
+          "m2_ocean-lab-pelican-events_s1",
+          "m2_ocean-lab-pelican-events_s2",
+          "m2_ocean-lab-pelican-events_s3"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «попадание пузырьков воздуха» через 4 рёбер?",
+        "expected_answer": "стабильность показаний",
+        "actual_answer": "стабильность показаний",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-events_l0",
+          "m2_ocean-lab-pelican-events_l1",
+          "m2_ocean-lab-pelican-events_l2",
+          "m2_ocean-lab-pelican-events_l3",
+          "m2_ocean-lab-pelican-events_s0",
+          "m2_ocean-lab-pelican-events_s1",
+          "m2_ocean-lab-pelican-events_s2",
+          "m2_ocean-lab-pelican-events_s3",
+          "m2_ocean-lab-pelican-events_s4"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «попадание пузырьков воздуха» через 6 рёбер?",
+        "expected_answer": "возвращение в порт",
+        "actual_answer": "возвращение в порт",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-events_l0",
+          "m2_ocean-lab-pelican-events_l1",
+          "m2_ocean-lab-pelican-events_l2",
+          "m2_ocean-lab-pelican-events_l3",
+          "m2_ocean-lab-pelican-events_l4",
+          "m2_ocean-lab-pelican-events_l5",
+          "m2_ocean-lab-pelican-events_s0",
+          "m2_ocean-lab-pelican-events_s1",
+          "m2_ocean-lab-pelican-events_s2",
+          "m2_ocean-lab-pelican-events_s3",
+          "m2_ocean-lab-pelican-events_s4",
+          "m2_ocean-lab-pelican-events_s5",
+          "m2_ocean-lab-pelican-events_s6"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «АС-9» через 1 рёбер?",
+        "expected_answer": "анализатор солёности",
+        "actual_answer": "анализатор солёности",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-hierarchy_l0",
+          "m2_ocean-lab-pelican-hierarchy_s0",
+          "m2_ocean-lab-pelican-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «АС-9» через 2 рёбер?",
+        "expected_answer": "лабораторный прибор",
+        "actual_answer": "лабораторный прибор",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-hierarchy_l0",
+          "m2_ocean-lab-pelican-hierarchy_l1",
+          "m2_ocean-lab-pelican-hierarchy_s0",
+          "m2_ocean-lab-pelican-hierarchy_s1",
+          "m2_ocean-lab-pelican-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «АС-9» через 3 рёбер?",
+        "expected_answer": "океанографическое оборудование",
+        "actual_answer": "океанографическое оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-hierarchy_l0",
+          "m2_ocean-lab-pelican-hierarchy_l1",
+          "m2_ocean-lab-pelican-hierarchy_l2",
+          "m2_ocean-lab-pelican-hierarchy_s0",
+          "m2_ocean-lab-pelican-hierarchy_s1",
+          "m2_ocean-lab-pelican-hierarchy_s2",
+          "m2_ocean-lab-pelican-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «АС-9» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-hierarchy_l0",
+          "m2_ocean-lab-pelican-hierarchy_l1",
+          "m2_ocean-lab-pelican-hierarchy_l2",
+          "m2_ocean-lab-pelican-hierarchy_l3",
+          "m2_ocean-lab-pelican-hierarchy_s0",
+          "m2_ocean-lab-pelican-hierarchy_s1",
+          "m2_ocean-lab-pelican-hierarchy_s2",
+          "m2_ocean-lab-pelican-hierarchy_s3",
+          "m2_ocean-lab-pelican-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "ocean-lab-pelican-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «АС-9» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_ocean-lab-pelican-hierarchy_l0",
+          "m2_ocean-lab-pelican-hierarchy_l1",
+          "m2_ocean-lab-pelican-hierarchy_l2",
+          "m2_ocean-lab-pelican-hierarchy_l3",
+          "m2_ocean-lab-pelican-hierarchy_l4",
+          "m2_ocean-lab-pelican-hierarchy_l5",
+          "m2_ocean-lab-pelican-hierarchy_s0",
+          "m2_ocean-lab-pelican-hierarchy_s1",
+          "m2_ocean-lab-pelican-hierarchy_s2",
+          "m2_ocean-lab-pelican-hierarchy_s3",
+          "m2_ocean-lab-pelican-hierarchy_s4",
+          "m2_ocean-lab-pelican-hierarchy_s5",
+          "m2_ocean-lab-pelican-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «смещение стопки» через 1 рёбер?",
+        "expected_answer": "блокировка резака",
+        "actual_answer": "блокировка резака",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-events_l0",
+          "m2_printing-house-atlas-events_s0",
+          "m2_printing-house-atlas-events_s1"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «смещение стопки» через 2 рёбер?",
+        "expected_answer": "остановка конвейера",
+        "actual_answer": "остановка конвейера",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-events_l0",
+          "m2_printing-house-atlas-events_l1",
+          "m2_printing-house-atlas-events_s0",
+          "m2_printing-house-atlas-events_s1",
+          "m2_printing-house-atlas-events_s2"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «смещение стопки» через 3 рёбер?",
+        "expected_answer": "выравнивание стопки",
+        "actual_answer": "выравнивание стопки",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-events_l0",
+          "m2_printing-house-atlas-events_l1",
+          "m2_printing-house-atlas-events_l2",
+          "m2_printing-house-atlas-events_s0",
+          "m2_printing-house-atlas-events_s1",
+          "m2_printing-house-atlas-events_s2",
+          "m2_printing-house-atlas-events_s3"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «смещение стопки» через 4 рёбер?",
+        "expected_answer": "повторная калибровка",
+        "actual_answer": "повторная калибровка",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-events_l0",
+          "m2_printing-house-atlas-events_l1",
+          "m2_printing-house-atlas-events_l2",
+          "m2_printing-house-atlas-events_l3",
+          "m2_printing-house-atlas-events_s0",
+          "m2_printing-house-atlas-events_s1",
+          "m2_printing-house-atlas-events_s2",
+          "m2_printing-house-atlas-events_s3",
+          "m2_printing-house-atlas-events_s4"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «смещение стопки» через 6 рёбер?",
+        "expected_answer": "работа конвейера",
+        "actual_answer": "работа конвейера",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-events_l0",
+          "m2_printing-house-atlas-events_l1",
+          "m2_printing-house-atlas-events_l2",
+          "m2_printing-house-atlas-events_l3",
+          "m2_printing-house-atlas-events_l4",
+          "m2_printing-house-atlas-events_l5",
+          "m2_printing-house-atlas-events_s0",
+          "m2_printing-house-atlas-events_s1",
+          "m2_printing-house-atlas-events_s2",
+          "m2_printing-house-atlas-events_s3",
+          "m2_printing-house-atlas-events_s4",
+          "m2_printing-house-atlas-events_s5",
+          "m2_printing-house-atlas-events_s6"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ПЛ-22» через 1 рёбер?",
+        "expected_answer": "печатная линия",
+        "actual_answer": "печатная линия",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-hierarchy_l0",
+          "m2_printing-house-atlas-hierarchy_s0",
+          "m2_printing-house-atlas-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ПЛ-22» через 2 рёбер?",
+        "expected_answer": "полиграфическое оборудование",
+        "actual_answer": "полиграфическое оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-hierarchy_l0",
+          "m2_printing-house-atlas-hierarchy_l1",
+          "m2_printing-house-atlas-hierarchy_s0",
+          "m2_printing-house-atlas-hierarchy_s1",
+          "m2_printing-house-atlas-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ПЛ-22» через 3 рёбер?",
+        "expected_answer": "производственная линия",
+        "actual_answer": "производственная линия",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-hierarchy_l0",
+          "m2_printing-house-atlas-hierarchy_l1",
+          "m2_printing-house-atlas-hierarchy_l2",
+          "m2_printing-house-atlas-hierarchy_s0",
+          "m2_printing-house-atlas-hierarchy_s1",
+          "m2_printing-house-atlas-hierarchy_s2",
+          "m2_printing-house-atlas-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ПЛ-22» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-hierarchy_l0",
+          "m2_printing-house-atlas-hierarchy_l1",
+          "m2_printing-house-atlas-hierarchy_l2",
+          "m2_printing-house-atlas-hierarchy_l3",
+          "m2_printing-house-atlas-hierarchy_s0",
+          "m2_printing-house-atlas-hierarchy_s1",
+          "m2_printing-house-atlas-hierarchy_s2",
+          "m2_printing-house-atlas-hierarchy_s3",
+          "m2_printing-house-atlas-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "printing-house-atlas-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ПЛ-22» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_printing-house-atlas-hierarchy_l0",
+          "m2_printing-house-atlas-hierarchy_l1",
+          "m2_printing-house-atlas-hierarchy_l2",
+          "m2_printing-house-atlas-hierarchy_l3",
+          "m2_printing-house-atlas-hierarchy_l4",
+          "m2_printing-house-atlas-hierarchy_l5",
+          "m2_printing-house-atlas-hierarchy_s0",
+          "m2_printing-house-atlas-hierarchy_s1",
+          "m2_printing-house-atlas-hierarchy_s2",
+          "m2_printing-house-atlas-hierarchy_s3",
+          "m2_printing-house-atlas-hierarchy_s4",
+          "m2_printing-house-atlas-hierarchy_s5",
+          "m2_printing-house-atlas-hierarchy_s6"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-events-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «перегрев блока питания» через 1 рёбер?",
+        "expected_answer": "мерцание прожекторов",
+        "actual_answer": "мерцание прожекторов",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-events_l0",
+          "m2_concert-hall-resonance-events_s0",
+          "m2_concert-hall-resonance-events_s1"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-events-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «перегрев блока питания» через 2 рёбер?",
+        "expected_answer": "техническая пауза",
+        "actual_answer": "техническая пауза",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-events_l0",
+          "m2_concert-hall-resonance-events_l1",
+          "m2_concert-hall-resonance-events_s0",
+          "m2_concert-hall-resonance-events_s1",
+          "m2_concert-hall-resonance-events_s2"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-events-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «перегрев блока питания» через 3 рёбер?",
+        "expected_answer": "переключение освещения",
+        "actual_answer": "переключение освещения",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-events_l0",
+          "m2_concert-hall-resonance-events_l1",
+          "m2_concert-hall-resonance-events_l2",
+          "m2_concert-hall-resonance-events_s0",
+          "m2_concert-hall-resonance-events_s1",
+          "m2_concert-hall-resonance-events_s2",
+          "m2_concert-hall-resonance-events_s3"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-events-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «перегрев блока питания» через 4 рёбер?",
+        "expected_answer": "стабильное освещение",
+        "actual_answer": "стабильное освещение",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-events_l0",
+          "m2_concert-hall-resonance-events_l1",
+          "m2_concert-hall-resonance-events_l2",
+          "m2_concert-hall-resonance-events_l3",
+          "m2_concert-hall-resonance-events_s0",
+          "m2_concert-hall-resonance-events_s1",
+          "m2_concert-hall-resonance-events_s2",
+          "m2_concert-hall-resonance-events_s3",
+          "m2_concert-hall-resonance-events_s4"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-events-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «перегрев блока питания» через 6 рёбер?",
+        "expected_answer": "проверка электриком",
+        "actual_answer": "проверка электриком",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-events_l0",
+          "m2_concert-hall-resonance-events_l1",
+          "m2_concert-hall-resonance-events_l2",
+          "m2_concert-hall-resonance-events_l3",
+          "m2_concert-hall-resonance-events_l4",
+          "m2_concert-hall-resonance-events_l5",
+          "m2_concert-hall-resonance-events_s0",
+          "m2_concert-hall-resonance-events_s1",
+          "m2_concert-hall-resonance-events_s2",
+          "m2_concert-hall-resonance-events_s3",
+          "m2_concert-hall-resonance-events_s4",
+          "m2_concert-hall-resonance-events_s5",
+          "m2_concert-hall-resonance-events_s6"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-hierarchy-1",
+        "depth": 1,
+        "question": "Какой узел достигается из «ЗП-8» через 1 рёбер?",
+        "expected_answer": "световой пульт",
+        "actual_answer": "световой пульт",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-hierarchy_l0",
+          "m2_concert-hall-resonance-hierarchy_s0",
+          "m2_concert-hall-resonance-hierarchy_s1"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-hierarchy-2",
+        "depth": 2,
+        "question": "Какой узел достигается из «ЗП-8» через 2 рёбер?",
+        "expected_answer": "сценическое оборудование",
+        "actual_answer": "сценическое оборудование",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-hierarchy_l0",
+          "m2_concert-hall-resonance-hierarchy_l1",
+          "m2_concert-hall-resonance-hierarchy_s0",
+          "m2_concert-hall-resonance-hierarchy_s1",
+          "m2_concert-hall-resonance-hierarchy_s2"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-hierarchy-3",
+        "depth": 3,
+        "question": "Какой узел достигается из «ЗП-8» через 3 рёбер?",
+        "expected_answer": "концертная инфраструктура",
+        "actual_answer": "концертная инфраструктура",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-hierarchy_l0",
+          "m2_concert-hall-resonance-hierarchy_l1",
+          "m2_concert-hall-resonance-hierarchy_l2",
+          "m2_concert-hall-resonance-hierarchy_s0",
+          "m2_concert-hall-resonance-hierarchy_s1",
+          "m2_concert-hall-resonance-hierarchy_s2",
+          "m2_concert-hall-resonance-hierarchy_s3"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-hierarchy-4",
+        "depth": 4,
+        "question": "Какой узел достигается из «ЗП-8» через 4 рёбер?",
+        "expected_answer": "техническая система",
+        "actual_answer": "техническая система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-hierarchy_l0",
+          "m2_concert-hall-resonance-hierarchy_l1",
+          "m2_concert-hall-resonance-hierarchy_l2",
+          "m2_concert-hall-resonance-hierarchy_l3",
+          "m2_concert-hall-resonance-hierarchy_s0",
+          "m2_concert-hall-resonance-hierarchy_s1",
+          "m2_concert-hall-resonance-hierarchy_s2",
+          "m2_concert-hall-resonance-hierarchy_s3",
+          "m2_concert-hall-resonance-hierarchy_s4"
+        ]
+      },
+      {
+        "id": "concert-hall-resonance-hierarchy-6",
+        "depth": 6,
+        "question": "Какой узел достигается из «ЗП-8» через 6 рёбер?",
+        "expected_answer": "искусственная система",
+        "actual_answer": "искусственная система",
+        "answer_correct": true,
+        "trace_complete": true,
+        "gold_path": [
+          "m2_concert-hall-resonance-hierarchy_l0",
+          "m2_concert-hall-resonance-hierarchy_l1",
+          "m2_concert-hall-resonance-hierarchy_l2",
+          "m2_concert-hall-resonance-hierarchy_l3",
+          "m2_concert-hall-resonance-hierarchy_l4",
+          "m2_concert-hall-resonance-hierarchy_l5",
+          "m2_concert-hall-resonance-hierarchy_s0",
+          "m2_concert-hall-resonance-hierarchy_s1",
+          "m2_concert-hall-resonance-hierarchy_s2",
+          "m2_concert-hall-resonance-hierarchy_s3",
+          "m2_concert-hall-resonance-hierarchy_s4",
+          "m2_concert-hall-resonance-hierarchy_s5",
+          "m2_concert-hall-resonance-hierarchy_s6"
+        ]
+      }
+    ]
+  },
+  "M3": {
+    "case_count": 10,
+    "topologies": [
+      "chain",
+      "star"
+    ],
+    "protected_before_grace": true,
+    "ticks": 50,
+    "orphan_nodes_before_gc": 4100,
+    "orphan_nodes_after_gc": 0,
+    "deleted": 4100,
+    "gc_efficiency": 1.0,
+    "mean_gc_efficiency": 1.0,
+    "min_gc_efficiency": 1.0,
+    "live_nodes_before": 830,
+    "live_nodes_after": 830,
+    "false_deletions": 0,
+    "total_examined_nodes": 4930,
+    "elapsed_ms": 331.876,
+    "official_200_cases": [
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 3.166
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 10.047
+      }
+    ],
+    "zero_weight_conformance": {
+      "deletable_uids": [
+        "m3_zero_hypernode"
+      ],
+      "passed": true
+    },
+    "cases": [
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 100,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 100,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 25,
+        "live_nodes_after": 25,
+        "false_deletions": 0,
+        "elapsed_ms": 1.648
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 100,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 100,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 25,
+        "live_nodes_after": 25,
+        "false_deletions": 0,
+        "elapsed_ms": 3.749
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 3.166
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 10.047
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 250,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 250,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 50,
+        "live_nodes_after": 50,
+        "false_deletions": 0,
+        "elapsed_ms": 4.351
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 250,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 250,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 50,
+        "live_nodes_after": 50,
+        "false_deletions": 0,
+        "elapsed_ms": 14.413
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 500,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 500,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 100,
+        "live_nodes_after": 100,
+        "false_deletions": 0,
+        "elapsed_ms": 11.487
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 500,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 500,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 100,
+        "live_nodes_after": 100,
+        "false_deletions": 0,
+        "elapsed_ms": 51.397
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 1000,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 1000,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 200,
+        "live_nodes_after": 200,
+        "false_deletions": 0,
+        "elapsed_ms": 35.588
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 1000,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 1000,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 200,
+        "live_nodes_after": 200,
+        "false_deletions": 0,
+        "elapsed_ms": 196.03
+      }
+    ]
+  },
+  "recording": {
+    "directory": "C:\\Users\\Main\\Documents\\some_things\\outputs\\ah-review\\m1-morph-replayed.records",
+    "mode": "replay"
+  }
+}

@@ -10,7 +10,7 @@ from difflib import SequenceMatcher
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from .core import AHMemory, ROLE_IDS, lexical_key, norm
+from .core import memory_locked, AHMemory, ROLE_IDS, lexical_key, norm, _morph_analyzer, _lemma
 from .models import *
 
 
@@ -28,6 +28,7 @@ TEMPLATE_ROLES = {
     "LIVE": ("SUBJECT", "LOCATION"),
     "ACTION": ("SUBJECT", "OBJECT", "TOOL", "LOCATION", "TIME", "PURPOSE", "HOW-TO"),
     "PURPOSE": ("SUBJECT", "PURPOSE"),
+    "IN_SCOPE": ("SUBJECT", "OBJECT"),
 }
 
 TEMPLATE_REQUIRED = {
@@ -38,8 +39,10 @@ TEMPLATE_REQUIRED = {
     "HAS": ("SUBJECT", "OBJECT"), "RUN": ("SUBJECT", "HOW-TO"),
     "LIVE": ("SUBJECT", "LOCATION"),
     "ACTION": ("SUBJECT", "OBJECT"), "PURPOSE": ("SUBJECT", "PURPOSE"),
+    "IN_SCOPE": ("SUBJECT", "OBJECT"),
 }
-PROMPT_VERSION = "perception-ir-v3.23"
+PROMPT_VERSION = "perception-ir-v3.23"  # The model request is unchanged; IN_SCOPE is deterministic only.
+MODEL_TEMPLATE_ROLES = {name: roles for name, roles in TEMPLATE_ROLES.items() if name != "IN_SCOPE"}
 _CANDIDATE_CACHE: dict[str, tuple[tuple[CandidateFact, ...], tuple[dict, ...]]] = {}
 ROLE_CANONICALIZATION = {
     ("CAUSE", "RESULT"): "OBJECT",
@@ -132,6 +135,12 @@ def _locate_mention(text: str, observed: str, canonical: str | None = None) -> t
     return matches[0] if len(matches) == 1 else None
 
 
+def _passive_cause(text: str) -> tuple[str, str] | None:
+    match = re.fullmatch(r"(.+?)\s+(?:был[аои]?\s+)?вызван[аоы]?\s+(?:не\s+[^,.;]+,\s*а\s+)?([^,.;]+)[.]?", text, re.I)
+    if not match or re.match(r"не\b", match[2], re.I): return None
+    return match[2].strip(), match[1].strip()
+
+
 class RuleBasedProvider(Provider):
     model_id = "rule-based-offline"
 
@@ -142,7 +151,7 @@ class RuleBasedProvider(Provider):
             low = norm(s)
             predicate = "OBSERVED"
             explicit_follow = re.match(r"после того как\s+(.+?)[,;]\s*(.+)$", s, re.I)
-            if re.search(r"(?:вызвал\w*|прив\w*\s+к|из-за|потому что|обусловил\w*)", low): predicate = "CAUSE"
+            if _passive_cause(s) or re.search(r"(?:вызвал\w*|прив\w*\s+к|из-за|потому что|обусловил\w*)", low): predicate = "CAUSE"
             elif any(x in low for x in ("использовал", "применил", "инструмент", "ключ")): predicate = "USES_TOOL"
             elif explicit_follow: predicate = "FOLLOW"
             elif any(x in low for x in ("это", "является", "относится к")): predicate = "IS-A"
@@ -160,6 +169,7 @@ class RuleBasedProvider(Provider):
             parts = list(explicit_follow.groups()) if predicate == "FOLLOW" and explicit_follow else re.split(r"\s+" + separator + r"\s+", s, maxsplit=1, flags=re.I)
             subj = parts[0].strip(" ,:")
             obj = parts[-1].strip(" ,:") if len(parts) > 1 else s
+            if predicate == "CAUSE" and _passive_cause(s): subj, obj = _passive_cause(s)
             subj = re.sub(r"^(?:после этого|затем|далее|сначала)\s+", "", subj, flags=re.I).strip()
             bindings = [CandidateBinding(role_id="SUBJECT", value=subj), CandidateBinding(role_id="OBJECT", value=obj)]
             loc = re.search(r"(?<!\w)(?:в|на)\s+([А-Яа-яЁёA-Za-z0-9 _-]+?)(?:,|\s+(?:и|после|затем)|$)", s)
@@ -174,13 +184,14 @@ class RuleBasedProvider(Provider):
                 model_id=self.model_id, span_uid=span.uid, sentence_index=span.index,
                 context_before=span.context_before, context_after=span.context_after,
             ))
-        return candidates
+        tools = {candidate.span_uid: candidate for candidate in _tool_use_candidates(text)}
+        return [tools.get(candidate.span_uid, candidate) if candidate.predicate == "USES_TOOL" else candidate for candidate in candidates] + _temporal_state_candidates(text)
 
 
 class OpenAICompatibleProvider(Provider):
     """Structured text perception for any Chat Completions compatible endpoint."""
 
-    def __init__(self, base_url: str, model: str, api_key: str = "", timeout_seconds: float = 45.0, response_format: str = "json_schema"):
+    def __init__(self, base_url: str, model: str, api_key: str = "", timeout_seconds: float = 45.0, response_format: str = "json_schema", perception_format: str = "ir"):
         if not base_url.strip(): raise ValueError("AH_LLM_BASE_URL is required")
         if not model.strip(): raise ValueError("AH_LLM_MODEL is required")
         if response_format not in {"json_schema", "json_object"}: raise ValueError("AH_LLM_RESPONSE_FORMAT must be json_schema or json_object")
@@ -190,6 +201,8 @@ class OpenAICompatibleProvider(Provider):
         self.api_key = api_key.strip()
         self.timeout_seconds = timeout_seconds
         self.response_format = response_format
+        if perception_format not in {"ir", "roles"}: raise ValueError("perception_format must be ir or roles")
+        self.perception_format = perception_format
         self.model_id = self.model
         self.last_warnings: list[str] = []
 
@@ -258,7 +271,7 @@ class OpenAICompatibleProvider(Provider):
                         "additionalProperties": False,
                         "properties": {
                             "span_index": {"type": "integer", "minimum": 0},
-                            "predicate": {"type": "string", "enum": sorted(TEMPLATE_ROLES)},
+                            "predicate": {"type": "string", "enum": sorted(MODEL_TEMPLATE_ROLES)},
                             "bindings": {
                                 "type": "array",
                                 "minItems": 1,
@@ -294,7 +307,7 @@ class OpenAICompatibleProvider(Provider):
         }
         system = (
             "Ты модуль восприятия AH-памяти. Верни Perception IR, не отвечай на документ и не добавляй внешние знания. "
-            f"Допустимые предикаты: {', '.join(TEMPLATE_ROLES)}. Допустимые роли: {', '.join(roles)}. "
+            f"Допустимые предикаты: {', '.join(MODEL_TEMPLATE_ROLES)}. Допустимые роли: {', '.join(roles)}. "
             "Каждому mention и fact назначь span_index из SPANS. Сначала перечисли все упоминания: text — точная подстрока указанного SPAN, canonical_label — краткая нормальная форма, coref_to — id более раннего однозначного упоминания. "
             "Каждый facts[] содержит ровно один атомарный предикат. Не пропускай декларативные предложения: каждое должно дать хотя бы один факт либо unresolved_entities=true. "
             "Разложи владение и свойство на HAS(owner, part) и HAS_STATE(part, state). Для «X принадлежит Y» верни HAS(Y, X); "
@@ -313,6 +326,26 @@ class OpenAICompatibleProvider(Provider):
             f"Верни только JSON вида {json.dumps(example, ensure_ascii=False)}"
         )
         spans = segment_text(text)
+        if self.perception_format == "roles":
+            # ponytail: scalar role values reuse the existing compiler; explicit logical terms require IR.
+            output_schema["properties"].pop("mentions")
+            output_schema["required"] = ["facts"]
+            binding_schema = output_schema["properties"]["facts"]["items"]["properties"]["bindings"]["items"]
+            binding_schema["properties"].pop("term")
+            binding_schema["properties"]["value"] = {"type": "string", "minLength": 1}
+            binding_schema["required"] = ["role_id", "value"]
+            system = (
+                "Извлеки из документа атомарные факты без внешних знаний. Верни JSON facts по схеме. "
+                f"Предикаты и разрешённые роли: {json.dumps(MODEL_TEMPLATE_ROLES, ensure_ascii=False)}. "
+                "Каждый факт: span_index — index предложения из SPANS, quote — полный text этого SPAN. "
+                "bindings содержат role_id и value — точную фразу из цитаты; не используй ссылки на упоминания. "
+                "Сохраняй идентификаторы объектов, время, инструменты. Не пропускай предложения. "
+                "CAUSE: SUBJECT причина, OBJECT следствие. HAS: SUBJECT владелец, OBJECT часть. "
+                "USES_TOOL: SUBJECT исполнитель, TOOL инструмент. HAS_STATE: SUBJECT объект, STATE состояние, TIME временная граница если указана. "
+                "FOLLOW: SUBJECT предыдущее событие, OBJECT последующее. ACTION: SUBJECT исполнитель, OBJECT действие. "
+                "Не утверждай отрицательные, условные и предположительные события. Не разрешай неоднозначные местоимения: unresolved_entities=true. "
+                "section_hint: C общие знания о классе, P устойчивые свойства именованного объекта, H события и временные состояния."
+            )
         span_index = [{"index": span.index, "start": span.start, "end": span.end, "text": span.text} for span in spans]
         payload = {
             "model": self.model,
@@ -450,28 +483,43 @@ class OpenAICompatibleProvider(Provider):
     def extract(self, text: str) -> list[CandidateFact]:
         self.last_warnings = []
         spans = segment_text(text)
+        if not spans: return []
+        def extract_range(start, end):
+            left, right = spans[start].start, spans[end - 1].end
+            for attempt in range(2):
+                try:
+                    return self._extract_single(text[left:right], left, spans)
+                except ValueError as exc:
+                    if attempt == 0:
+                        self.last_warnings.append(f"structured output failed; retried once: {exc}")
+                        continue
+                    if "structured output was truncated" not in str(exc) or end - start <= 1:
+                        raise
+                    middle = (start + end) // 2
+                    self.last_warnings.append(f"truncated span range {start}:{end}; split at {middle}")
+                    return extract_range(start, middle) + extract_range(middle, end)
         if len(spans) <= 8:
-            return self._extract_single(text, 0, spans)
-        candidates: list[CandidateFact] = []
-        start = 0
-        chunk_count = 0
+            return extract_range(0, len(spans))
+        candidates = []
+        start, chunk_count = 0, 0
         while start < len(spans):
             end = min(start + 6, len(spans))
-            chunk_start, chunk_end = spans[start].start, spans[end - 1].end
             chunk_count += 1
-            try:
-                candidates.extend(self._extract_single(text[chunk_start:chunk_end], chunk_start, spans))
-            except ValueError as exc:
-                self.last_warnings.append(f"chunk {chunk_count} structured output failed; retried once: {exc}")
-                candidates.extend(self._extract_single(text[chunk_start:chunk_end], chunk_start, spans))
-            if end == len(spans):
-                break
+            candidates.extend(extract_range(start, end))
+            if end == len(spans): break
             start = end - 1
         self.last_warnings.append(f"document parsed in {chunk_count} overlapping chunks")
         return candidates
 
 
 _ANAPHORA = {"он", "она", "оно", "они", "его", "её", "ее", "их", "это", "этот", "эта", "эти"}
+
+
+def _canonical_mention_label(mention: CandidateMention) -> str:
+    observed = mention.observed_text.strip()
+    canonical = (mention.canonical_label or observed).strip()
+    # ponytail: case/spacing normalization only; reviewed aliases can enable semantic renaming later.
+    return canonical if norm(canonical) == norm(observed) else observed
 
 
 def _resolved_mention_label(mention_id: str, mentions: dict[str, CandidateMention], trail: tuple[str, ...] = ()) -> str:
@@ -483,13 +531,13 @@ def _resolved_mention_label(mention_id: str, mentions: dict[str, CandidateMentio
         if target is None: raise ValueError(f"unknown_coreference|unknown coreference target: {mention.coref_to}")
         if target.source_start > mention.source_start: raise ValueError("forward_coreference|coreference must point to an earlier mention")
         return _resolved_mention_label(mention.coref_to, mentions, trail + (mention_id,))
-    label = (mention.canonical_label or mention.observed_text).strip()
+    label = _canonical_mention_label(mention)
     short = set(lexical_key(label))
     if short and len(short) <= 2:
         candidates = []
         for earlier in mentions.values():
             if earlier.source_start >= mention.source_start: continue
-            earlier_label = (earlier.canonical_label or earlier.observed_text).strip()
+            earlier_label = _canonical_mention_label(earlier)
             words = re.findall(r"[\w-]+", earlier.observed_text)
             named = any(char.isdigit() for char in earlier.observed_text) or any(word[:1].isupper() for word in words[1:])
             if named and short < set(lexical_key(earlier_label)): candidates.append(earlier_label)
@@ -538,9 +586,9 @@ def _candidate_log(candidate: CandidateFact) -> dict:
 def _grounded_value(value: str, quote: str) -> bool:
     """Require every meaningful value token to have a conservative source match."""
     ignored = {"and", "or", "very", "состояние", "статус"}
-    left = [token for token in re.findall(r"[\w-]+", norm(value)) if len(token) > 2 and token not in ignored]
-    right = [token for token in re.findall(r"[\w-]+", norm(quote)) if len(token) > 2]
-    similar = lambda a, b: a == b or (min(len(a), len(b)) >= 3 and a[:3] == b[:3]) or (min(len(a), len(b)) >= 4 and SequenceMatcher(None, a, b).ratio() >= .66)
+    left = [token for token in re.findall(r"[\w-]+", norm(value)) if (len(token) > 2 or any(char.isdigit() for char in token)) and token not in ignored]
+    right = [token for token in re.findall(r"[\w-]+", norm(quote)) if len(token) > 2 or any(char.isdigit() for char in token)]
+    similar = lambda a, b: a == b or (not any(char.isdigit() for char in a + b) and ((min(len(a), len(b)) >= 3 and a[:3] == b[:3]) or (min(len(a), len(b)) >= 4 and SequenceMatcher(None, a, b).ratio() >= .66)))
     return bool(left) and all(any(similar(a, b) for b in right) for a in left)
 
 
@@ -550,9 +598,15 @@ _CONCRETE_OBJECT = re.compile(r"(?:\b[А-ЯA-ZА-ЯЁ]{1,8}[-‑–]?\d+[\w.-]*\
 _TRANSIENT_STATE = re.compile(r"\b(?:горяч|перегрет|остановлен|поврежд|приостановлен|заблокирован|охлажд[её]н|отключ[её]н|низк\w*\s+достоверност)\w*\b", re.I)
 _RUN_BEHAVIOUR = re.compile(r"\b(?:беж|бега|движ|лет|плыв|полз|скач|работа)\w*\b", re.I)
 _OBSERVATION = re.compile(r"\b(?:наблюда|зафиксир|обнаруж|зарегистрир|увид|замет)\w*\b", re.I)
-_EFFECT_VERB_PATTERN = r"(?:восстановил\w*|повысил\w*|снизил\w*|уменьшил\w*|сократил\w*|изменил\w*|смягчил\w*|улучшил\w*)"
+_EFFECT_VERB_PATTERN = r"(?:восстановил|повысил|снизил|уменьшил|сократил|изменил|смягчил|улучшил)(?:а|о|и)?\b"
 _CAUSE_MARKER = re.compile(rf"\b(?:вызвал|вызвала|вызвало|вызвали|прив[её]л\w*\s+к|из-за|поэтому|обусловил\w*|{_EFFECT_VERB_PATTERN})\b", re.I)
-_FINITE_ACTION = re.compile(r"\b[А-Яа-яЁёA-Za-z-]+(?:л|ла|ло|ли|лся|лась|лось|лись|ет|ёт|ит|ют|ут|ат|ят|ется|ётся|ится)\b.*", re.I)
+def _finite_action(text: str):
+    """Locate a finite verb, not a noun which happens to share its ending."""
+    for token in re.finditer(r"\b[А-Яа-яЁё-]+\b", text):
+        parsed = _morph_analyzer().parse(token.group())[0]
+        if parsed.tag.POS == "VERB":
+            return re.compile(r".+", re.S).match(text, token.start())
+    return None
 
 
 def route_candidates(candidates: list[CandidateFact]) -> list[CandidateFact]:
@@ -568,7 +622,7 @@ def route_candidates(candidates: list[CandidateFact]) -> list[CandidateFact]:
         roles = {binding.role_id for binding in candidate.bindings}
         inherited = group_hints.get(candidate.group_uid or candidate.span_uid or "", [])
         proposed = candidate.section_hint or (max(set(inherited), key=inherited.count) if inherited else None)
-        if candidate.predicate in {"ACTION", "FOLLOW", "OBSERVED"} or "TIME" in roles or _EVENT_OCCURRENCE.search(quote):
+        if candidate.predicate in {"ACTION", "FOLLOW", "OBSERVED", "IN_SCOPE"} or "TIME" in roles or _EVENT_OCCURRENCE.search(quote):
             section, confidence, reason = "H", .98, "событие, действие или временно ограниченный факт"
         elif candidate.predicate == "HAS_STATE" and _TRANSIENT_STATE.search(quote):
             section, confidence, reason = "H", .92, "временное состояние конкретного объекта"
@@ -632,6 +686,38 @@ def _explicit_follow_candidates(text: str) -> list[CandidateFact]:
     return recovered
 
 
+def _named_scope_declarations(text: str) -> list[tuple[CandidateFact, int, int]]:
+    """Only a source-anchored declaration about a named section can scope its events."""
+    spans = segment_text(text)
+    headings = [span for span in spans if len(span.text) <= 120 and not re.search(r"[.!?]$", span.text)
+                and text[span.end:span.end + 2] == "\n\n"]
+    declarations = []
+    for index, heading in enumerate(headings):
+        region_end = headings[index + 1].start if index + 1 < len(headings) else len(text)
+        title_nouns = {_lemma(word) for word in re.findall(r"[а-яё]+", norm(heading.text))
+                       if _morph_analyzer().parse(word)[0].tag.POS == "NOUN"}
+        if not title_nouns: continue
+        for span in spans:
+            if not heading.end < span.start < region_end: continue
+            match = re.fullmatch(r"\s*(.+?)\s+относится\s+к\s+([^.!?]+)[.]?\s*", span.text, re.I)
+            if not match or re.search(r"\b(?:не|если|возможно|предположительно|планируется)\b", span.text, re.I): continue
+            subject, scope = match.group(1).strip(), match.group(2).strip()
+            subject_nouns = {_lemma(word) for word in re.findall(r"[а-яё]+", norm(subject))
+                             if _morph_analyzer().parse(word)[0].tag.POS == "NOUN"}
+            ids = [word for word in re.findall(r"[\w-]+", scope) if any(c.isalpha() for c in word) and any(c.isdigit() for c in word)]
+            if not subject_nouns or not subject_nouns <= title_nouns or len(ids) != 1: continue
+            candidate = CandidateFact(
+                predicate="IN_SCOPE", bindings=(CandidateBinding(role_id="SUBJECT", value=subject),
+                                                 CandidateBinding(role_id="OBJECT", value=scope)),
+                source_start=span.start, source_end=span.end, exact_text=span.text, confidence=.9,
+                model_id="deterministic-explicit-scope", span_uid=span.uid, sentence_index=span.index,
+                context_before=span.context_before, context_after=span.context_after, group_uid=span.uid,
+                section_hint="H",
+            )
+            declarations.append((candidate, heading.end, region_end))
+    return declarations
+
+
 def _coordinated_property_candidates(text: str) -> list[CandidateFact]:
     recovered = []
     for span in segment_text(text):
@@ -644,7 +730,10 @@ def _coordinated_property_candidates(text: str) -> list[CandidateFact]:
             states = re.match(r"(.+?)\s+[—-]?\s*([А-Яа-яЁё-]+)\s+и\s+([А-Яа-яЁё-]+)[.]?$", span.text, re.I)
             if states:
                 subject, first, second = (value.strip(" .—-") for value in states.groups())
-                facts = (("HAS_STATE", "STATE", first), ("HAS_STATE", "STATE", second))
+                # ponytail: nominal adjective clauses only; action objects are not object states.
+                morph = _morph_analyzer()
+                if all(morph.parse(value)[0].tag.POS in {"ADJF", "ADJS", "PRTF", "PRTS"} for value in (first, second)) and not any(morph.parse(word)[0].tag.POS in {"VERB", "INFN", "GRND"} for word in re.findall(r"[А-Яа-яЁё-]+", subject)):
+                    facts = (("HAS_STATE", "STATE", first), ("HAS_STATE", "STATE", second))
         if not facts: continue
         for predicate, role, value in facts:
             recovered.append(CandidateFact(
@@ -710,7 +799,7 @@ def _stable_fact_candidates(text: str) -> list[CandidateFact]:
             subject, location = located.groups()
             operands = [item.strip().removeprefix("в ").removeprefix("на ") for item in re.split(r"\s+или\s+", location, flags=re.I)]
             add(span, "LOCATED_AT", (("SUBJECT", subject), ("LOCATION", f"OR({', '.join(operands)})" if len(operands) > 1 else operands[0])))
-        belongs = re.match(r"(.+?)\s+принадлежит\s+(.+?)(?:\s+и\s+используется\b|$)", value, re.I)
+        belongs = re.match(r"(.+?)\s+принадлежит\s+(.+?)(?=\s+и\s+(?:используется|содержит|включает|имеет|находится)\b|$)", value, re.I)
         if belongs: add(span, "HAS", (("SUBJECT", belongs.group(2)), ("OBJECT", belongs.group(1))))
         owner = re.match(r"Владельцем\s+(.+?)\s+является\s+(.+)$", value, re.I)
         if owner: add(span, "HAS", (("SUBJECT", owner.group(2)), ("OBJECT", owner.group(1))))
@@ -721,6 +810,14 @@ def _stable_fact_candidates(text: str) -> list[CandidateFact]:
         purpose = re.match(r"(.+?)(?:\s+принадлежит\s+.+?)?\s+(?:и\s+)?(?:используется|предназначен\w*)\s+для\s+(.+)$", value, re.I)
         if purpose: add(span, "PURPOSE", (("SUBJECT", purpose.group(1)), ("PURPOSE", purpose.group(2))))
     return recovered
+
+
+def _is_nominal_classification(subject: str, category: str) -> bool:
+    """A clock/value or a finite event clause cannot be a taxonomic class."""
+    if re.fullmatch(r"[\d\s:.,/%+−-]+", subject.strip()) or re.match(r"^[+−-]?\d", category.strip()):
+        return False
+    return not any(_morph_analyzer().parse(word)[0].tag.POS in {"VERB", "INFN", "PRTS"}
+                   for word in re.findall(r"[а-яё]+", category.casefold()))
 
 
 def _declarative_recovery_candidates(text: str) -> list[CandidateFact]:
@@ -740,6 +837,12 @@ def _declarative_recovery_candidates(text: str) -> list[CandidateFact]:
         dash = re.search(r"\s[—-]\s", span.text)
         definition = re.match(r"(.+?)\s+[—-]\s+(.+?)(?:,\s+котор\w*\b|[.]?$)", span.text, re.I) if dash and "," not in span.text[:dash.start()] else None
         if definition:
+            subject, value = (part.strip(" .") for part in definition.groups())
+            # A labelled scalar is a property, not IS-A. A rejected alternative stays in the source quote.
+            scalar = re.split(r",\s+а\s+не\s+", value, maxsplit=1, flags=re.I)[0]
+            if re.fullmatch(r"(?:[01]?\d|2[0-3]):[0-5]\d|[+−-]?\d+(?:[.,]\d+)?\s*(?:%|°[CС]|бар|МПа|мм|см|кг|минут[аы]?|секунд[аы]?)", scalar, re.I) and not re.fullmatch(r"[\d\s:.,/%+−-]+", subject) and not re.search(r"\b(?:не|если|возможно|предположительно)\b", subject, re.I):
+                add(span, "HAS_STATE", (("SUBJECT", subject), ("STATE", scalar)))
+        if definition and _is_nominal_classification(definition.group(1), definition.group(2)):
             last_subject = definition.group(1).strip(" .")
             add(span, "IS-A", (("SUBJECT", last_subject), ("OBJECT", definition.group(2).strip(" ."))))
         if last_subject:
@@ -767,10 +870,56 @@ def _declarative_recovery_candidates(text: str) -> list[CandidateFact]:
     return recovered
 
 
+# ponytail: explicit event/time nouns only; dates/durations stay with the model until parsed unambiguously.
+_EVENT_DEADLINE = r"до\s+(?:(?:начала|завершения|окончания|получения|подтверждения|восстановления|прибытия|возвращения|устранения)\s+[^,.;]+|(?:следующ\w+|ближайш\w+|очередн\w+)\s+(?:окна|сеанса|смены|этапа|проверки|запуска|утра|вечера|дня|ночи)\b[^,.;]*)"
+
+
 def _temporal_state_candidates(text: str) -> list[CandidateFact]:
     recovered = []
     for span in segment_text(text):
-        match = re.match(r"(.+?)\s+оста\w*\s+(.+?)\s+(до\s+.+?)[.]?$", span.text, re.I)
+        completed = re.fullmatch(r"В\s+((?:[01]?\d|2[0-3]):[0-5]\d)\s+([^,;.!?]+)[.]?", span.text, re.I)
+        if completed:
+            clock, clause = completed.groups()
+            clause = clause.strip()
+            verb = re.match(r"[А-Яа-яЁё-]+\b", clause)
+            parsed_verb = _morph_analyzer().parse(verb.group())[0] if verb else None
+            event = clause[verb.end():].strip() if verb else ""
+            finite = _finite_action(clause)
+            if (parsed_verb and finite and finite.start() == 0
+                    and parsed_verb.tag.tense == "past"
+                    and parsed_verb.normal_form in {"завершиться", "закончиться"}
+                    and event and not _finite_action(event)
+                    and any(_morph_analyzer().parse(word)[0].tag.POS == "NOUN" for word in re.findall(r"[А-Яа-яЁё-]+", event))
+                    and len(re.findall(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b", span.text)) == 1
+                    and not re.search(r"\b(?:не|ни|если|должн\w*|планир\w*|предположительно|вероятно|возможно|якобы)\b", span.text, re.I)):
+                recovered.append(CandidateFact(
+                    predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value=event),
+                                                     CandidateBinding(role_id="STATE", value=verb.group()),
+                                                     CandidateBinding(role_id="TIME", value=clock)),
+                    source_start=span.start, source_end=span.end, exact_text=span.text, confidence=.9,
+                    model_id="deterministic-temporal-completion", span_uid=span.uid, sentence_index=span.index,
+                    context_before=span.context_before, context_after=span.context_after, group_uid=span.uid,
+                ))
+        stamped = re.match(r"^((?:[01]?\d|2[0-3]):[0-5]\d)\s*[-–—]\s*(.+?)\s+был[аои]?\s+(временно\s+)?([а-яё-]+)\b", span.text, re.I)
+        if stamped:
+            clock, subject, modifier, state = stamped.groups()
+            tail = span.text[stamped.end():]
+            if ((_TRANSIENT_STATE.fullmatch(state) or any(parse.tag.POS == "PRTS" and parse.normal_form == "снять" for parse in _morph_analyzer().parse(state)))
+                    and not re.search(r"\b(?:не|должен|должна|должно|должны|предположительно|вероятно|возможно)\b", span.text, re.I)
+                    and re.fullmatch(r"(?:\s+для\s+[а-яё\s-]+)?[.]?", tail, re.I)
+                    and not _finite_action(tail)
+                    and len(re.findall(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b", span.text)) == 1
+                    and any(_morph_analyzer().parse(word)[0].tag.POS == "NOUN" or any(char.isdigit() for char in word)
+                            for word in re.findall(r"[\w-]+", subject))):
+                recovered.append(CandidateFact(
+                    predicate="HAS_STATE", bindings=(CandidateBinding(role_id="SUBJECT", value=subject),
+                                                     CandidateBinding(role_id="STATE", value=(modifier or "") + state),
+                                                     CandidateBinding(role_id="TIME", value=clock)),
+                    source_start=span.start, source_end=span.end, exact_text=span.text, confidence=.9,
+                    model_id="deterministic-temporal-state", span_uid=span.uid, sentence_index=span.index,
+                    context_before=span.context_before, context_after=span.context_after, group_uid=span.uid,
+                ))
+        match = re.fullmatch(rf"(.+?)\s+оста(?:лся|лась|лось|лись|ётся|ется|ются|вался|валась|валось|вались)\s+(.+?)\s+({_EVENT_DEADLINE})[.]?", span.text, re.I)
         if not match: continue
         subject, state, boundary = (value.strip(" .") for value in match.groups())
         recovered.append(CandidateFact(
@@ -804,6 +953,16 @@ def _expand_atomic_candidate(candidate: CandidateFact) -> list[CandidateFact]:
                 expanded.extend(_expand_atomic_candidate(candidate.model_copy(update={"bindings": tuple(bindings)})))
             return expanded
     return [candidate]
+
+
+def _explicit_event_bindings(bindings: list[CandidateBinding], subject: str, obj: str) -> list[CandidateBinding]:
+    """Repair reversed/missing event roles without discarding anchored roles and terms."""
+    result = [binding for binding in bindings if binding.role_id not in {"SUBJECT", "OBJECT"}]
+    for role, segment in (("SUBJECT", subject), ("OBJECT", obj)):
+        existing = next((binding for binding in bindings if binding.role_id == role), None)
+        result.append(existing if existing and norm(existing.value or "") and norm(existing.value) in norm(segment)
+                      else CandidateBinding(role_id=role, value=segment, observed=segment))
+    return result
 
 
 def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple[list[CandidateFact], list[dict]]:
@@ -853,6 +1012,10 @@ def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple
                         unresolved = True
                 normalized_bindings.append(CandidateBinding(role_id=role, value=value, observed=observed, term=binding.term))
                 seen_roles.add(role)
+            if predicate == "IS-A":
+                values = {binding.role_id: binding.value for binding in normalized_bindings}
+                if not _is_nominal_classification(values.get("SUBJECT", ""), values.get("OBJECT", "")):
+                    raise ValueError("invalid_classification|a time, numeric value or event clause is not a taxonomic class")
             used_for = re.search(r"\b(?:используется|предназначен\w*)\s+для\s+(.+)$", span.text if span else raw.exact_text, re.I)
             if predicate in {"USES_TOOL", "RUN", "ACTION", "PURPOSE"} and used_for:
                 subject = next((binding for binding in normalized_bindings if binding.role_id == "SUBJECT"), None)
@@ -881,10 +1044,14 @@ def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple
                     seen_roles = {"SUBJECT", "OBJECT"}
                 else:
                     subject = next((binding for binding in normalized_bindings if binding.role_id == "SUBJECT"), None)
-                    action = _FINITE_ACTION.search(raw.exact_text)
+                    action = _finite_action(raw.exact_text)
                     if not subject or not action: raise ValueError("invalid_action|ACTION requires an explicit finite action")
                     optional = [binding for binding in normalized_bindings if binding.role_id not in {"SUBJECT", "OBJECT"}]
                     action_value = action.group(0).strip(" .")
+                    model_action = next((binding.value for binding in normalized_bindings if binding.role_id == "OBJECT"), "")
+                    model_verb = _finite_action(model_action)
+                    if model_action and model_verb and model_verb.start() == 0 and norm(model_action) in norm(raw.exact_text):
+                        action_value = model_action
                     normalized_bindings = [subject, CandidateBinding(role_id="OBJECT", value=action_value, observed=action_value), *optional]
                     seen_roles = {binding.role_id for binding in normalized_bindings}
             if predicate == "HAS":
@@ -892,30 +1059,47 @@ def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple
                 if responsibility:
                     normalized_bindings = [CandidateBinding(role_id="SUBJECT", value=responsibility.group(2).strip()), CandidateBinding(role_id="OBJECT", value=responsibility.group(1).strip())]
                     seen_roles = {"SUBJECT", "OBJECT"}
-                described_object = re.search(r"\bимеет\s+(.+?)(?:\s+и\s+(?:находится|является|оста[её]тся)\b|[.,;]|$)", raw.exact_text, re.I)
-                obj = next((binding for binding in normalized_bindings if binding.role_id == "OBJECT"), None)
-                if described_object and obj:
-                    value = described_object.group(1).strip()
-                    if norm(obj.value) in norm(value) and norm(obj.value) != norm(value):
-                        normalized_bindings = [binding.model_copy(update={"value": value, "observed": value, "term": None}) if binding is obj else binding for binding in normalized_bindings]
+                # Keep the model's grounded object boundary: a sentence may enumerate several properties.
             if predicate == "CAUSE":
-                if not _CAUSE_MARKER.search(raw.exact_text):
+                if re.search(r"\b(?:если|возможно|вероятно|предположительно)\b", raw.exact_text, re.I):
+                    raise ValueError("unasserted_cause|a conditional or uncertain cause is not an asserted event")
+                passive_cause = _passive_cause(raw.exact_text)
+                if (not _CAUSE_MARKER.search(raw.exact_text) and not passive_cause) or re.search(rf"\bне\s+(?:вызва\w*|прив[её]л\w*|из-за|обуслов\w*|{_EFFECT_VERB_PATTERN})\b", raw.exact_text, re.I):
                     raise ValueError("invalid_cause|CAUSE requires an explicit causal construction")
+                if re.search(r"\bвызван[аоы]?\b", raw.exact_text, re.I) and passive_cause is None:
+                    raise ValueError("invalid_cause|passive cause must be an explicit positive clause")
+                if passive_cause:
+                    normalized_bindings = _explicit_event_bindings(normalized_bindings, *passive_cause)
+                    seen_roles = {binding.role_id for binding in normalized_bindings}
                 explicit_cause = re.match(r"(.+?)\s+(?:вызвал\w*|прив[её]л\w*\s+к)\s+(.+?)[.]?$", raw.exact_text, re.I)
                 if explicit_cause:
                     cause, effect = (value.strip(" .") for value in explicit_cause.groups())
-                    normalized_bindings = [CandidateBinding(role_id="SUBJECT", value=cause, observed=cause), CandidateBinding(role_id="OBJECT", value=effect, observed=effect)]
-                    seen_roles = {"SUBJECT", "OBJECT"}
-            if predicate == "HAS_STATE" and re.search(r"\bимеет\b.+\bи\s+находится\b", raw.exact_text, re.I) and last_by_role.get("SUBJECT"):
-                normalized_bindings = [binding.model_copy(update={"value": last_by_role["SUBJECT"], "term": None}) if binding.role_id == "SUBJECT" else binding for binding in normalized_bindings]
+                    spatial = re.search(r"\s+((?:внутри|снаружи)\s+[^,.;]+|(?:на|у)\s+(?:входе|выходе)\s+[^,.;]+)$", effect, re.I)
+                    location = next((binding for binding in normalized_bindings if binding.role_id == "LOCATION"), None)
+                    if spatial and (location is None or norm(location.value or "") == norm(spatial.group(1))):
+                        if location is None:
+                            normalized_bindings.append(CandidateBinding(role_id="LOCATION", value=spatial.group(1), observed=spatial.group(1)))
+                        effect = effect[:spatial.start()].strip()
+                    normalized_bindings = _explicit_event_bindings(normalized_bindings, cause, effect)
+                    seen_roles = {binding.role_id for binding in normalized_bindings}
+            if predicate == "HAS_STATE":
+                explicit_owner = re.match(r"(.+?)\s+имеет\s+(.+?)[.]?$", raw.exact_text, re.I)
+                subject = next((binding for binding in normalized_bindings if binding.role_id == "SUBJECT"), None)
+                state = next((binding for binding in normalized_bindings if binding.role_id == "STATE"), None)
+                if explicit_owner and subject and state and norm(subject.value) == norm(state.value) and norm(state.value) in norm(explicit_owner.group(2)):
+                    normalized_bindings = [CandidateBinding(role_id="SUBJECT", value=explicit_owner.group(1), observed=explicit_owner.group(1)) if binding is subject else binding for binding in normalized_bindings]
+            if predicate == "HAS_STATE" and re.search(r"\bимеет\b.+\bи\s+находится\b", raw.exact_text, re.I):
+                explicit_owner = re.match(r"(.+?)\s+имеет\b", raw.exact_text, re.I)
+                if explicit_owner:
+                    normalized_bindings = [CandidateBinding(role_id="SUBJECT", value=explicit_owner.group(1), observed=explicit_owner.group(1)) if binding.role_id == "SUBJECT" else binding for binding in normalized_bindings]
             if predicate == "HAS_STATE" and re.match(r"\s*(?:находится|оста[её]тся)\b", raw.exact_text, re.I) and last_by_role.get("SUBJECT"):
                 normalized_bindings = [binding.model_copy(update={"value": last_by_role["SUBJECT"], "term": None}) if binding.role_id == "SUBJECT" else binding for binding in normalized_bindings]
             if predicate == "FOLLOW" and re.match(r"\s*после\b", raw.exact_text, re.I):
                 explicit_events = _split_explicit_follow(raw.exact_text)
                 if explicit_events:
                     earlier, later = explicit_events
-                    normalized_bindings = [CandidateBinding(role_id="SUBJECT", value=earlier, observed=earlier), CandidateBinding(role_id="OBJECT", value=later, observed=later)]
-                    seen_roles = {"SUBJECT", "OBJECT"}
+                    normalized_bindings = _explicit_event_bindings(normalized_bindings, earlier, later)
+                    seen_roles = {binding.role_id for binding in normalized_bindings}
                 else:
                     raise ValueError("implicit_follow|FOLLOW requires two explicitly named events")
             elif predicate == "FOLLOW":
@@ -930,11 +1114,16 @@ def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple
                         subject, obj = obj.model_copy(update={"role_id": "SUBJECT"}), subject.model_copy(update={"role_id": "OBJECT"})
                     normalized_bindings = [binding for binding in normalized_bindings if binding.role_id not in {"SUBJECT", "OBJECT"}]
                     normalized_bindings.extend((subject, obj))
-            if "TIME" in roles:
-                time_match = re.search(r"\bдо\s+[^,.;]+(?=[.;]?$)", raw.exact_text, re.I)
+            if "TIME" in roles and "TIME" not in seen_roles:
+                time_match = re.search(rf"\b{_EVENT_DEADLINE}(?=[.;]?$)", raw.exact_text, re.I)
+                if time_match is None and predicate == "ACTION":
+                    # Only an unambiguous clock in this action's own phrase; never borrow a nearby event's time.
+                    action = next((binding.value for binding in normalized_bindings if binding.role_id == "OBJECT"), "")
+                    clocks = re.findall(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b", raw.exact_text)
+                    if len(clocks) == 1:
+                        time_match = re.search(r"\bв\s+(?:[01]?\d|2[0-3]):[0-5]\d\b", action, re.I)
                 if time_match:
                     value = time_match.group(0).strip()
-                    normalized_bindings = [binding for binding in normalized_bindings if binding.role_id != "TIME"]
                     normalized_bindings.append(CandidateBinding(role_id="TIME", value=value, observed=value))
                     seen_roles.add("TIME")
             missing = set(TEMPLATE_REQUIRED[predicate]) - seen_roles
@@ -953,6 +1142,8 @@ def canonicalize_candidates(text: str, candidates: list[CandidateFact]) -> tuple
                 raise ValueError("self_relation|SUBJECT and OBJECT must be distinct")
             if predicate == "OBSERVED" and not _OBSERVATION.search(raw.exact_text):
                 raise ValueError("invalid_observation|OBSERVED requires an explicit observer and observation act")
+            if predicate in {"USES_TOOL", "ACTION"} and re.search(r"\bне\s+(?:использова\w*|примени\w*)\b", raw.exact_text, re.I):
+                raise ValueError("negated_action|a negated tool use cannot be a positive action")
             if predicate == "RUN":
                 manner = next(binding.value for binding in normalized_bindings if binding.role_id == "HOW-TO")
                 if not _grounded_value(manner, raw.exact_text):
@@ -1014,20 +1205,64 @@ def configured_provider(model_override: str | None = None) -> tuple[Provider, di
         provider = RuleBasedProvider()
         return provider, {"configured": mode, "active": "rule", "model_id": provider.model_id, "fallback": False}
     response_format = PARSER_MODEL_PRESETS.get(model_override, os.getenv("AH_LLM_RESPONSE_FORMAT", "json_schema").strip().lower())
-    provider = OpenAICompatibleProvider(base_url or "https://api.openai.com/v1", model, api_key, float(os.getenv("AH_LLM_TIMEOUT_SECONDS", "45")), response_format)
+    provider = OpenAICompatibleProvider(base_url or "https://api.openai.com/v1", model, api_key, float(os.getenv("AH_LLM_TIMEOUT_SECONDS", "45")), response_format, os.getenv("AH_LLM_PERCEPTION_FORMAT", "ir"))
     return provider, {"configured": "ui_override" if model_override else mode, "active": "openai_compatible", "model_id": provider.model_id, "fallback": False}
+
+
+def _resolve_temporal_subjects(text: str, candidates: list[CandidateFact]) -> list[CandidateFact]:
+    """Conservative paragraph-local discourse inference, recorded as anchored coreference."""
+    spans = segment_text(text)
+    result = []
+    identifier = r"[A-ZА-ЯЁ][A-ZА-ЯЁ0-9]*-\d[\w-]*"
+    for candidate in candidates:
+        result.append(candidate)
+        if candidate.predicate != "HAS_STATE": continue
+        reference = re.match(r"(.+?)\s+оста(?:лся|лась|лось|лись|ётся|ется|ются|вался|валась|валось|вались)\b", candidate.exact_text, re.I)
+        if not reference or any(char.isdigit() for char in reference[1]): continue
+        words = reference[1].split()
+        if len(words) > 2 or (len(words) == 2 and norm(words[0]) not in {"этот", "эта", "это", "данный", "данная", "данное", "основной", "основная", "основное"}): continue
+        head = norm(words[-1])
+        paragraph_start = text.rfind("\n\n", 0, candidate.source_start) + 2
+        paragraph_start = max(0, paragraph_start if paragraph_start > 1 else 0)
+        earlier = text[paragraph_start:candidate.source_start]
+        # ponytail: explicit numbered introductions and one referent only; a discourse parser can expand coverage later.
+        ids = {norm(m[1]) for m in re.finditer(rf"\b{re.escape(head)}\s+({identifier})\b", earlier, re.I)}
+        if len(ids) != 1 or re.search(rf"\b(?:друг\w*|втор\w*|резервн\w*|кажд\w*|люб\w*|несколько)\s+{re.escape(head)}\b", earlier, re.I): continue
+        anchors = []
+        for span in spans:
+            if span.start < paragraph_start or span.end > candidate.source_start: continue
+            intro = re.match(rf"((?:[А-Яа-яЁё]+\s+){{1,3}}({identifier}))\s+(?:находится|расположен\w*|размещ[её]н\w*|установлен\w*|имеет)\b", span.text)
+            if intro and norm(intro[1].split()[0]) in {"если", "каждый", "любой", "всякий", "не", "ни"}: continue
+            if intro and norm(intro[1].split()[-2]) == head and norm(intro[2]) in ids:
+                anchors.append((span, intro))
+        if not anchors: continue
+        span, intro = anchors[0]
+        subject = next((binding for binding in candidate.bindings if binding.role_id == "SUBJECT"), None)
+        if subject is None or any(char.isdigit() for char in subject.value or ""): continue
+        if subject.term and subject.term.operator != "ATOM": continue
+        anchor_id, reference_id = f"docref_{span.start}", f"docref_{candidate.source_start}"
+        if {anchor_id, reference_id} & {m.mention_id for m in candidate.mentions}: continue
+        anchor = CandidateMention(mention_id=anchor_id, observed_text=intro[1], source_start=span.start, source_end=span.start + len(intro[1]))
+        mention = CandidateMention(mention_id=reference_id, observed_text=reference[1], source_start=candidate.source_start, source_end=candidate.source_start + len(reference[1]), coref_to=anchor_id)
+        binding = subject.model_copy(update={"value": anchor.observed_text, "observed": mention.observed_text, "term": CandidateTerm(mention_ids=(reference_id,))})
+        result[-1] = candidate.model_copy(update={"bindings": tuple(binding if item is subject else item for item in candidate.bindings), "mentions": (*candidate.mentions, anchor, mention)})
+    return result
 
 
 def extract_candidates(text: str, provider: Provider | None = None, model_override: str | None = None) -> tuple[list[CandidateFact], dict]:
     if provider is not None:
         raw = provider.extract(text)
         candidates, rejected = canonicalize_candidates(text, raw)
-        candidates, semantic_duplicates = _collapse_semantic_duplicates(candidates)
+        scoped, scope_rejected = canonicalize_candidates(text, [candidate for candidate, _, _ in _named_scope_declarations(text)])
+        signatures = {_candidate_signature(candidate) for candidate in candidates}
+        candidates.extend(candidate for candidate in scoped if _candidate_signature(candidate) not in signatures)
+        rejected.extend(scope_rejected)
+        candidates, semantic_duplicates = _collapse_semantic_duplicates(_resolve_temporal_subjects(text, candidates))
         rejected.extend(semantic_duplicates)
         candidates = route_candidates(candidates)
         return candidates, {"configured": "explicit", "active": provider.__class__.__name__, "model_id": getattr(provider, "model_id", provider.__class__.__name__), "fallback": False, "warnings": getattr(provider, "last_warnings", []), "rejection_log": rejected, "coverage_warnings": _coverage_warnings(text, candidates), "prompt_version": PROMPT_VERSION, "cached": False}
     selected, meta = configured_provider(model_override) if model_override else configured_provider()
-    cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}".encode()).hexdigest()
+    cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:{getattr(selected, 'perception_format', 'ir')}".encode()).hexdigest()
     cached = _CANDIDATE_CACHE.get(cache_key)
     if cached is not None:
         candidates = list(cached[0])
@@ -1038,7 +1273,7 @@ def extract_candidates(text: str, provider: Provider | None = None, model_overri
         if meta["configured"] != "auto": raise
         selected = RuleBasedProvider(); raw = selected.extract(text)
         meta.update({"active": "rule", "model_id": selected.model_id, "fallback": True, "warning": str(exc)})
-        cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}".encode()).hexdigest()
+        cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:ir".encode()).hexdigest()
     candidates, rejected = canonicalize_candidates(text, raw)
     uncovered = {item["group_uid"] for item in _coverage_warnings(text, candidates)}
     if not isinstance(selected, RuleBasedProvider):
@@ -1078,7 +1313,11 @@ def extract_candidates(text: str, provider: Provider | None = None, model_overri
         represented_temporal_groups = {candidate.group_uid or candidate.span_uid for candidate in candidates if candidate.predicate == "HAS_STATE" and any(binding.role_id == "TIME" for binding in candidate.bindings)}
         candidates.extend(candidate for candidate in recovered_temporal if (candidate.group_uid or candidate.span_uid) not in represented_temporal_groups)
         rejected.extend(temporal_rejected)
-    candidates, semantic_duplicates = _collapse_semantic_duplicates(candidates)
+    recovered_scopes, scope_rejected = canonicalize_candidates(text, [candidate for candidate, _, _ in _named_scope_declarations(text)])
+    signatures = {_candidate_signature(candidate) for candidate in candidates}
+    candidates.extend(candidate for candidate in recovered_scopes if _candidate_signature(candidate) not in signatures)
+    rejected.extend(scope_rejected)
+    candidates, semantic_duplicates = _collapse_semantic_duplicates(_resolve_temporal_subjects(text, candidates))
     rejected.extend(semantic_duplicates)
     candidates = route_candidates(candidates)
     if len(_CANDIDATE_CACHE) >= 128: _CANDIDATE_CACHE.pop(next(iter(_CANDIDATE_CACHE)))
@@ -1143,6 +1382,7 @@ class Compiler:
             self.memory.add_element("C", MemoryElement(uid=s_reference.reference_uid, payload=s_reference))
             self.memory.add_element("C", MemoryElement(uid=m_reference.reference_uid, payload=m_reference))
             self.memory.add_link(AssociativeLink(uid=uid("l"), type_id="GROUNDS", weight=1, source_ref=s_reference, target_ref=m_reference))
+            self.memory.add_link(AssociativeLink(uid=uid("l"), type_id="EVOKES", weight=1, source_ref=m_reference, target_ref=s_reference))
         return symbol_uid
 
     def _reference_label(self, reference: Reference) -> str:
@@ -1204,6 +1444,52 @@ class Compiler:
             return bool(role_value(earlier, "OBJECT") and role_value(earlier, "OBJECT") == role_value(later, "SUBJECT"))
         return False
 
+    def _sync_scope_links(self, text: str, document_uid: str) -> bool:
+        """Link an event to one explicit scope declaration in its named source section."""
+        old = {link_uid for link_uid, link in self.memory.links.items()
+               if link.type_id == "IN_SCOPE" and link_uid.startswith("l_scope_")
+               and (node := self.memory.get_hypernode(link.source_ref.target_uid))
+               and any(ev.document_uid == document_uid for ev in node.evidence)}
+        if old:
+            links = {uid_: link for uid_, link in self.memory.links.items() if uid_ not in old}
+            self.memory._commit(dict(self.memory.symbols), {name: dict(items) for name, items in self.memory.sections.items()}, links, dict(self.memory.templates))
+        changed = bool(old)
+        declarations = _named_scope_declarations(text)
+        regions = {(start, end) for _, start, end in declarations}
+        for start, end in regions:
+            stated = [candidate for candidate, left, right in declarations if (left, right) == (start, end)]
+            if len(stated) != 1: continue  # Competing scope declarations make the section ambiguous.
+            assertion = stated[0]
+            scope_nodes = [node for node in self.memory.find_hypernodes("tpl_in_scope")
+                           if any(ev.document_uid == document_uid and ev.content_hash == hashlib.sha256(text.encode()).hexdigest()
+                                  and ev.start_offset == assertion.source_start
+                                  and ev.end_offset == assertion.source_end for ev in node.evidence)]
+            if len(scope_nodes) != 1: continue
+            scope = scope_nodes[0]
+            for section in ("H",):
+                for element in self.memory.sections[section].values():
+                    if not isinstance(element.payload, Hypernode): continue
+                    event = element.payload
+                    ev = event.evidence[0] if event.evidence else None
+                    if not ev or ev.document_uid != document_uid or ev.content_hash != hashlib.sha256(text.encode()).hexdigest() or not assertion.source_end < ev.start_offset < end: continue
+                    if event.template_ref.target_uid not in {"tpl_has_state", "tpl_action", "tpl_observed"}: continue
+                    if not any(binding.role_id == "TIME" for binding in event.role_bindings): continue
+                    if re.search(r"[«»\"]|\b(?:ранее|прежде|историческ\w*|стар\w*|прежн\w*|прошл\w*)\b", ev.exact_text, re.I): continue
+                    if text[:ev.start_offset].count("«") > text[:ev.start_offset].count("»"): continue
+                    scope_value = next(self.memory.label(binding.target_ref.target_uid) for binding in scope.role_bindings if binding.role_id == "OBJECT")
+                    scope_nouns = {_lemma(word) for word in re.findall(r"[а-яё]+", norm(scope_value)) if _morph_analyzer().parse(word)[0].tag.POS == "NOUN"}
+                    event_nouns = {_lemma(word) for word in re.findall(r"[а-яё]+", norm(ev.exact_text)) if _morph_analyzer().parse(word)[0].tag.POS == "NOUN"}
+                    scope_ids = {word.casefold().replace("-", "") for word in re.findall(r"[\w-]+", scope_value) if any(c.isalpha() for c in word) and any(c.isdigit() for c in word)}
+                    event_ids = {word.casefold().replace("-", "") for word in re.findall(r"[\w-]+", ev.exact_text) if any(c.isalpha() for c in word) and any(c.isdigit() for c in word)}
+                    if scope_nouns & event_nouns and event_ids - scope_ids: continue
+                    self.memory.add_link(AssociativeLink(
+                        uid=uid("l_scope"), type_id="IN_SCOPE", weight=1,
+                        source_ref=ElementReference(reference_uid=uid("er"), target_uid=event.uid),
+                        target_ref=ElementReference(reference_uid=uid("er"), target_uid=scope.uid),
+                    ))
+                    changed = True
+        return changed
+
     def _compile_one(self, candidate: CandidateFact, text: str, document_uid: str, parser_run_uid: str) -> str:
         self.ensure_templates()
         c = candidate
@@ -1211,6 +1497,11 @@ class Compiler:
             raise ValueError("source_span_mismatch|source span does not match original text")
         roles = TEMPLATE_ROLES.get(c.predicate)
         if roles is None: raise ValueError(f"unknown_template|unknown template: {c.predicate}")
+        if c.predicate == "IN_SCOPE" and not any(
+            c.source_start == expected.source_start and c.source_end == expected.source_end
+            and _candidate_signature(c) == _candidate_signature(expected)
+            for expected, _, _ in _named_scope_declarations(text)
+        ): raise ValueError("unsupported_scope|scope assertion must match a named source section")
         target_section = c.section_hint or "C"
         signature = _candidate_signature(c, include_section=True)
         for existing in self.memory.find_hypernodes(f"tpl_{c.predicate.lower()}"):
@@ -1229,22 +1520,43 @@ class Compiler:
             content_hash=hashlib.sha256(text.encode()).hexdigest(), parser_run_uid=parser_run_uid,
             model_id=c.model_id, parser_confidence=c.confidence,
         )
+        evidence = [ev]
+        for binding in c.bindings:
+            for mention_id in binding.term.mention_ids if binding.term else ():
+                visited = set()
+                while mention_id:
+                    if mention_id in visited or mention_id not in mentions: raise ValueError("invalid_coreference|missing or cyclic mention")
+                    visited.add(mention_id)
+                    mention = mentions[mention_id]
+                    if mention.source_end > len(text) or text[mention.source_start:mention.source_end] != mention.observed_text: raise ValueError("mention_span_mismatch|coreference is not source anchored")
+                    if mention.coref_to:
+                        target = mentions.get(mention.coref_to)
+                        if target is None or target.source_end > mention.source_start: raise ValueError("invalid_coreference|antecedent must precede reference")
+                        support = _span_for_range(segment_text(text), target.source_start, target.source_end)
+                        if support and not any(item.start_offset == support.start and item.end_offset == support.end for item in evidence):
+                            evidence.append(ev.model_copy(update={"chunk_uid": support.uid, "start_offset": support.start, "end_offset": support.end, "exact_text": support.text}))
+                    mention_id = mention.coref_to
         activation_weight = float(os.getenv("AH_INGESTION_INITIAL_WEIGHT", "1.0"))
         if not 0 <= activation_weight <= 1: raise ValueError("invalid_activation_weight|AH_INGESTION_INITIAL_WEIGHT must be in [0,1]")
         template_uid = f"tpl_{c.predicate.lower()}"
         hypernode = Hypernode(
             uid=uid("h"), weight=activation_weight,
             template_ref=ElementReference(reference_uid=uid("er"), target_uid=template_uid),
-            role_bindings=tuple(bindings), evidence=(ev,), created_tick=self.memory.current_tick,
+            role_bindings=tuple(bindings), evidence=tuple(evidence), created_tick=self.memory.current_tick,
             origin="ingestion",
         )
         self.memory.add_element(target_section, MemoryElement(uid=hypernode.uid, payload=hypernode))
+        # Retrieval associations activate a stored fact; they do not infer its truth from an actant.
+        actants = {binding.target_ref.target_uid: binding.target_ref for binding in bindings}
+        for reference in actants.values():
+            self.memory.add_link(AssociativeLink(uid=uid("l"), type_id="RECALLS", weight=activation_weight / len(actants), source_ref=reference, target_ref=ElementReference(reference_uid=uid("er"), target_uid=hypernode.uid)))
         by_role = {binding.role_id: binding.target_ref for binding in bindings}
         if c.predicate in {"CAUSE", "FOLLOW", "IS-A"}:
             self.memory.add_link(AssociativeLink(uid=uid("l"), type_id=c.predicate, weight=activation_weight, source_ref=by_role["SUBJECT"], target_ref=by_role["OBJECT"]))
         if target_section == "H": self._attach_history_fact(hypernode.uid, document_uid)
         return hypernode.uid
 
+    @memory_locked
     def compile(self, candidates: list[CandidateFact], text: str, document_uid: str, parser_run_uid: str | None = None) -> tuple[list[str], list[dict]]:
         accepted, rejected = [], []
         parser_run_uid = parser_run_uid or uid("run")
@@ -1257,7 +1569,9 @@ class Compiler:
             except Exception as exc:
                 code, _, message = str(exc).partition("|")
                 rejected.append({"candidate": _candidate_log(candidate), "reason": code, "message": message or code})
-        if accepted:
+        scoped_changed = Compiler(working)._sync_scope_links(text, document_uid)
+        if accepted or scoped_changed:
+            working.validate()
             self.memory._commit(dict(working.symbols), {section: dict(values) for section, values in working.sections.items()}, dict(working.links), dict(working.templates))
         return accepted, rejected
 

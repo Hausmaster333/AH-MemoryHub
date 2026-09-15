@@ -9,6 +9,10 @@
       "warnings": [
         "fact 5: quote replaced by declared source span",
         "fact 6: quote replaced by declared source span",
+        "fact 13: quote replaced by declared source span",
+        "fact 2: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
+        "fact 9 rejected: term references unknown mention",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": []
@@ -19,9 +23,33 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
+        "fact 1 rejected: term references unknown mention",
+        "fact 5 rejected: term references unknown mention",
+        "fact 6 rejected: term references unknown mention",
+        "fact 1: repaired multi-operand scalar term",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 4: repaired multi-operand scalar term",
+        "fact 6: repaired multi-operand scalar term",
         "document parsed in 2 overlapping chunks"
       ],
-      "coverage_warnings": []
+      "coverage_warnings": [
+        {
+          "group_uid": "span_bb3c07e64880fafc",
+          "source_start": 0,
+          "source_end": 69,
+          "exact_text": "Распределительный центр «Полярис» является узлом холодовой логистики.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        },
+        {
+          "group_uid": "span_9e2504b2bfa7c7b1",
+          "source_start": 236,
+          "source_end": 314,
+          "exact_text": "Датчик ТМ-8 имеет синий индикатор и рабочий порог минус восемнадцать градусов.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
     },
     "data-center-meridian": {
       "active": "openai_compatible",
@@ -29,15 +57,14 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 6 rejected: term references unknown mention",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": [
         {
-          "group_uid": "span_6fff838f2470c143",
-          "source_start": 358,
-          "source_end": 437,
-          "exact_text": "Потеря связи запустила миграцию виртуальных машин и уведомление дежурной смены.",
+          "group_uid": "span_10d59a1e6c336e6c",
+          "source_start": 0,
+          "source_end": 72,
+          "exact_text": "Дата-центр «Меридиан» относится к региональным вычислительным площадкам.",
           "reason": "uncovered_source_span",
           "message": "parser returned no reviewable fact for this source span"
         }
@@ -49,9 +76,9 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 5: quote replaced by declared source span",
-        "mention 7 rejected: mention is not an exact substring of the source",
-        "fact 4 rejected: term references unknown mention",
+        "fact 11: quote replaced by declared source span",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 5: repaired multi-operand scalar term",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": []
@@ -62,7 +89,12 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
+        "fact 5: quote replaced by declared source span",
         "fact 7: quote replaced by declared source span",
+        "fact 2: quote replaced by declared source span",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 7: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": []
@@ -73,8 +105,8 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 6: quote replaced by declared source span",
-        "fact 9: quote replaced by declared source span",
+        "fact 10: quote replaced by declared source span",
+        "fact 1: repaired multi-operand scalar term",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": []
@@ -85,7 +117,8 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 2: quote replaced by declared source span",
+        "fact 10: quote replaced by declared source span",
+        "fact 4: repaired multi-operand scalar term",
         "fact 6: quote replaced by declared source span",
         "document parsed in 2 overlapping chunks"
       ],
@@ -97,9 +130,31 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
+        "fact 1 rejected: term references unknown mention",
+        "fact 5: quote replaced by declared source span",
+        "fact 7 rejected: term references unknown mention",
+        "fact 2: repaired multi-operand scalar term",
+        "fact 3: quote replaced by declared source span",
         "document parsed in 2 overlapping chunks"
       ],
-      "coverage_warnings": []
+      "coverage_warnings": [
+        {
+          "group_uid": "span_82df205394c3fd17",
+          "source_start": 0,
+          "source_end": 67,
+          "exact_text": "Платформа «Пеликан» является автономной океанографической станцией.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        },
+        {
+          "group_uid": "span_a9f22b927cba3642",
+          "source_start": 412,
+          "source_end": 472,
+          "exact_text": "Искажение показаний активировало повторный цикл отбора проб.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
     },
     "printing-house-atlas": {
       "active": "openai_compatible",
@@ -107,12 +162,10 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 7: quote replaced by declared source span",
-        "fact 10: quote replaced by declared source span",
-        "fact 3: repaired multi-operand scalar term",
-        "fact 4: repaired multi-operand scalar term",
-        "fact 5: repaired multi-operand scalar term",
-        "fact 9: repaired multi-operand scalar term",
+        "mention 15 rejected: mention is not an exact substring of the source",
+        "fact 2: quote replaced by declared source span",
+        "fact 6: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
         "document parsed in 2 overlapping chunks"
       ],
       "coverage_warnings": []
@@ -123,72 +176,170 @@
       "prompt_version": "perception-ir-v3.23",
       "cached": false,
       "warnings": [
-        "fact 9: quote replaced by declared source span",
-        "fact 1: repaired multi-operand scalar term",
-        "fact 2: repaired multi-operand scalar term",
+        "fact 2: quote replaced by declared source span",
+        "fact 3: repaired multi-operand scalar term",
+        "fact 6: quote replaced by declared source span",
+        "fact 8: quote replaced by declared source span",
         "document parsed in 2 overlapping chunks"
       ],
-      "coverage_warnings": []
+      "coverage_warnings": [
+        {
+          "group_uid": "span_f207174b4e76b06c",
+          "source_start": 344,
+          "source_end": 408,
+          "exact_text": "Мерцание активировало техническую паузу и уведомление режиссёра.",
+          "reason": "uncovered_source_span",
+          "message": "parser returned no reviewable fact for this source span"
+        }
+      ]
     }
   },
   "M1": {
     "LOCATION": {
-      "precision": 0.8695652173913043,
-      "recall": 0.8333333333333334,
-      "f1": 0.851063829787234,
-      "tp": 20,
+      "precision": 0.4090909090909091,
+      "recall": 0.375,
+      "f1": 0.3913043478260869,
+      "tp": 9,
       "gold": 24,
-      "predicted": 23
-    },
-    "OBJECT": {
-      "precision": 0.6268656716417911,
-      "recall": 0.9130434782608695,
-      "f1": 0.7433628318584071,
-      "tp": 42,
-      "gold": 46,
-      "predicted": 67
-    },
-    "STATE": {
-      "precision": 0.7727272727272727,
-      "recall": 0.5666666666666667,
-      "f1": 0.6538461538461539,
-      "tp": 17,
-      "gold": 30,
       "predicted": 22
     },
-    "SUBJECT": {
-      "precision": 0.7264957264957265,
-      "recall": 0.8018867924528302,
-      "f1": 0.7623318385650224,
-      "tp": 85,
-      "gold": 106,
-      "predicted": 117
+    "OBJECT": {
+      "precision": 0.59375,
+      "recall": 0.8260869565217391,
+      "f1": 0.6909090909090908,
+      "tp": 38,
+      "gold": 46,
+      "predicted": 64
     },
-    "TIME": {
-      "precision": 0.7692307692307693,
-      "recall": 0.9090909090909091,
-      "f1": 0.8333333333333333,
-      "tp": 10,
-      "gold": 11,
-      "predicted": 13
-    },
-    "TOOL": {
-      "precision": 0.9473684210526315,
-      "recall": 0.9,
-      "f1": 0.9230769230769231,
-      "tp": 18,
-      "gold": 20,
+    "STATE": {
+      "precision": 0.7894736842105263,
+      "recall": 0.5,
+      "f1": 0.6122448979591837,
+      "tp": 15,
+      "gold": 30,
       "predicted": 19
     },
-    "weighted_f1": 6.272709580890504,
-    "micro": {
-      "precision": 0.735632183908046,
-      "recall": 0.810126582278481,
-      "f1": 0.7710843373493976,
-      "tp": 192,
-      "gold": 237,
-      "predicted": 261
+    "SUBJECT": {
+      "precision": 0.6396396396396397,
+      "recall": 0.6698113207547169,
+      "f1": 0.6543778801843319,
+      "tp": 71,
+      "gold": 106,
+      "predicted": 111
     },
+    "TIME": {
+      "precision": 0.8333333333333334,
+      "recall": 0.9090909090909091,
+      "f1": 0.8695652173913043,
+      "tp": 10,
+      "gold": 11,
+      "predicted": 12
+    },
+    "TOOL": {
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1": 0.9189189189189189,
+      "tp": 17,
+      "gold": 20,
+      "predicted": 17
+    },
+    "weighted_f1": 5.482607324282339,
+    "normalized_weighted_f1": 0.6853259155352924,
+    "required_roles_weighted_f1": 3.0818782900129325,
+    "normalized_required_roles_weighted_f1": 0.6163756580025865,
+    "micro": {
+      "precision": 0.6530612244897959,
+      "recall": 0.6751054852320675,
+      "f1": 0.6639004149377593,
+      "tp": 160,
+      "gold": 237,
+      "predicted": 245
+    },
+    "documents": {
+      "wind-farm-borey": {
+        "precision": 0.6666666666666666,
+        "recall": 0.7407407407407407,
+        "f1": 0.7017543859649122,
+        "tp": 20,
+        "gold": 27,
+        "predicted": 30
+      },
+      "cold-chain-polaris": {
+        "precision": 0.7222222222222222,
+        "recall": 0.5652173913043478,
+        "f1": 0.6341463414634146,
+        "tp": 13,
+        "gold": 23,
+        "predicted": 18
+      },
+      "data-center-meridian": {
+        "precision": 0.6,
+        "recall": 0.5454545454545454,
+        "f1": 0.5714285714285713,
+        "tp": 12,
+        "gold": 22,
+        "predicted": 20
+      },
+      "greenhouse-lotus": {
+        "precision": 0.6333333333333333,
+        "recall": 0.76,
+        "f1": 0.6909090909090909,
+        "tp": 19,
+        "gold": 25,
+        "predicted": 30
+      },
+      "rail-terminal-vega": {
+        "precision": 0.8,
+        "recall": 0.8333333333333334,
+        "f1": 0.816326530612245,
+        "tp": 20,
+        "gold": 24,
+        "predicted": 25
+      },
+      "museum-orion": {
+        "precision": 0.4583333333333333,
+        "recall": 0.4782608695652174,
+        "f1": 0.4680851063829787,
+        "tp": 11,
+        "gold": 23,
+        "predicted": 24
+      },
+      "water-plant-river": {
+        "precision": 0.782608695652174,
+        "recall": 0.782608695652174,
+        "f1": 0.782608695652174,
+        "tp": 18,
+        "gold": 23,
+        "predicted": 23
+      },
+      "ocean-lab-pelican": {
+        "precision": 0.5862068965517241,
+        "recall": 0.7083333333333334,
+        "f1": 0.6415094339622641,
+        "tp": 17,
+        "gold": 24,
+        "predicted": 29
+      },
+      "printing-house-atlas": {
+        "precision": 0.7083333333333334,
+        "recall": 0.7083333333333334,
+        "f1": 0.7083333333333334,
+        "tp": 17,
+        "gold": 24,
+        "predicted": 24
+      },
+      "concert-hall-resonance": {
+        "precision": 0.5909090909090909,
+        "recall": 0.5909090909090909,
+        "f1": 0.5909090909090909,
+        "tp": 13,
+        "gold": 22,
+        "predicted": 22
+      }
+    },
+    "document_macro_f1": 0.6606010580618075,
+    "document_min_f1": 0.4680851063829787,
+    "document_max_f1": 0.816326530612245,
     "benchmark": {
       "schema": "ah-memoryhub-gold-v3",
       "documents": 10,
@@ -199,6 +350,14 @@
     "errors": [
       {
         "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "северный гребень"
+      },
+      {
+        "type": "false_negative",
         "document_id": "cold-chain-polaris",
         "sentence_index": 4,
         "predicate": "CAUSE",
@@ -207,11 +366,67 @@
       },
       {
         "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "машинный зал Б"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервная зона миграции"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "южный павильон"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "изолированный карантинный блок"
+      },
+      {
+        "type": "false_negative",
         "document_id": "greenhouse-lotus",
         "sentence_index": 4,
         "predicate": "CAUSE",
         "role": "LOCATION",
         "value": "в центральной грядке"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "третий путь"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервная маневровая ветка"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "второй подземный уровень"
       },
       {
         "type": "false_negative",
@@ -224,10 +439,74 @@
       {
         "type": "false_negative",
         "document_id": "water-plant-river",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервная линия очистки"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "water-plant-river",
         "sentence_index": 4,
         "predicate": "CAUSE",
         "role": "LOCATION",
         "value": "на входе модуля"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "основной цех"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервная зона упаковки"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "северном гребне"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "машинном зале Б"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервной зоне миграции"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "южном павильоне"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "изолированном карантинном блоке"
       },
       {
         "type": "false_positive",
@@ -235,15 +514,39 @@
         "sentence_index": 4,
         "predicate": "LOCATED_AT",
         "role": "LOCATION",
-        "value": "центральная грядка"
+        "value": "центральной грядке"
       },
       {
         "type": "false_positive",
-        "document_id": "water-plant-river",
+        "document_id": "rail-terminal-vega",
         "sentence_index": 1,
         "predicate": "LOCATED_AT",
         "role": "LOCATION",
-        "value": "восточном корпусе"
+        "value": "третьего пути"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервной маневровой ветке"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "втором подземном уровне"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "витрина ВТ-7"
       },
       {
         "type": "false_positive",
@@ -254,20 +557,52 @@
         "value": "резервной линии очистки"
       },
       {
-        "type": "false_negative",
-        "document_id": "greenhouse-lotus",
-        "sentence_index": 2,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "коллекция орхидей"
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "основном цехе"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
+        "sentence_index": 1,
+        "predicate": "LOCATED_AT",
+        "role": "LOCATION",
+        "value": "резервной зоне упаковки"
       },
       {
         "type": "false_negative",
-        "document_id": "greenhouse-lotus",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "узел холодовой логистики"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
         "sentence_index": 2,
         "predicate": "HAS",
         "role": "OBJECT",
-        "value": "автоматическая система полива"
+        "value": "камера КХ-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "три стеллажа с контейнерами вакцин"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "региональная вычислительная площадка"
       },
       {
         "type": "false_negative",
@@ -276,6 +611,22 @@
         "predicate": "IS-A",
         "role": "OBJECT",
         "value": "часть городского музея"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "автономная океанографическая станция"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "городской концертный зал"
       },
       {
         "type": "false_negative",
@@ -288,6 +639,14 @@
       {
         "type": "false_positive",
         "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "OBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "OBJECT",
@@ -296,34 +655,10 @@
       {
         "type": "false_positive",
         "document_id": "wind-farm-borey",
-        "sentence_index": 2,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "Турбина"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "синий индикатор и рабочий порог минус восемнадцать градусов"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "рабочий порог −18 °C"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
         "sentence_index": 4,
         "predicate": "ACTION",
         "role": "OBJECT",
-        "value": "вызвало рост температуры внутри камеры"
+        "value": "вызвало рост вибрации редуктора"
       },
       {
         "type": "false_positive",
@@ -339,7 +674,15 @@
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "OBJECT",
-        "value": "сетевой интерфейс"
+        "value": "два сетевых интерфейса и активный профиль высокой доступности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовал консоль управления и аппаратный токен"
       },
       {
         "type": "false_positive",
@@ -360,10 +703,18 @@
       {
         "type": "false_positive",
         "document_id": "greenhouse-lotus",
-        "sentence_index": 3,
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовала ручной вентиль и переносной влагомер"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 2,
         "predicate": "HAS",
         "role": "OBJECT",
-        "value": "высокая точность измерения влажности"
+        "value": "Секция"
       },
       {
         "type": "false_positive",
@@ -379,15 +730,7 @@
         "sentence_index": 0,
         "predicate": "HAS",
         "role": "OBJECT",
-        "value": "фондохранилище Орион"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "museum-orion",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "бронзовая рама"
+        "value": "Фондохранилище «Орион»"
       },
       {
         "type": "false_positive",
@@ -400,18 +743,18 @@
       {
         "type": "false_positive",
         "document_id": "museum-orion",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовала подъёмную платформу и защитный чехол"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
         "sentence_index": 2,
         "predicate": "HAS",
         "role": "OBJECT",
         "value": "Зал"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "OBJECT",
-        "value": "белый корпус и рабочий диапазон до шести бар"
       },
       {
         "type": "false_positive",
@@ -424,18 +767,18 @@
       {
         "type": "false_positive",
         "document_id": "ocean-lab-pelican",
-        "sentence_index": 4,
-        "predicate": "ACTION",
+        "sentence_index": 3,
+        "predicate": "HAS",
         "role": "OBJECT",
-        "value": "вызвало искажение показаний солёности"
+        "value": "титановый корпус и калибровочный профиль глубоководного режима"
       },
       {
         "type": "false_positive",
         "document_id": "ocean-lab-pelican",
-        "sentence_index": 7,
-        "predicate": "ACTION",
+        "sentence_index": 9,
+        "predicate": "FOLLOW",
         "role": "OBJECT",
-        "value": "использовал зажим и комплект стерильных соединителей"
+        "value": "возвращения платформы в порт"
       },
       {
         "type": "false_positive",
@@ -464,6 +807,14 @@
       {
         "type": "false_positive",
         "document_id": "concert-hall-resonance",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "OBJECT",
+        "value": "городским концертным залом"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
         "sentence_index": 2,
         "predicate": "ACTION",
         "role": "OBJECT",
@@ -476,6 +827,14 @@
         "predicate": "HAS",
         "role": "OBJECT",
         "value": "сенсорный экран и резервный канал связи"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "OBJECT",
+        "value": "использовал диагностический планшет и изолированный кабель"
       },
       {
         "type": "false_positive",
@@ -519,11 +878,11 @@
       },
       {
         "type": "false_negative",
-        "document_id": "greenhouse-lotus",
+        "document_id": "data-center-meridian",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "STATE",
-        "value": "зелёный корпус"
+        "value": "активный профиль высокой доступности"
       },
       {
         "type": "false_negative",
@@ -531,7 +890,7 @@
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "STATE",
-        "value": "высокая точность измерения влажности"
+        "value": "зелёный корпус"
       },
       {
         "type": "false_negative",
@@ -556,6 +915,22 @@
         "predicate": "HAS_STATE",
         "role": "STATE",
         "value": "рабочий диапазон до шести бар"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "титановый корпус"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "STATE",
+        "value": "калибровочный профиль глубоководного режима"
       },
       {
         "type": "false_negative",
@@ -607,14 +982,6 @@
       },
       {
         "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 3,
-        "predicate": "HAS_STATE",
-        "role": "STATE",
-        "value": "датчик ДМ-5"
-      },
-      {
-        "type": "false_positive",
         "document_id": "ocean-lab-pelican",
         "sentence_index": 2,
         "predicate": "HAS_STATE",
@@ -632,10 +999,50 @@
       {
         "type": "false_negative",
         "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "турбина"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "wind-farm-borey",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
         "value": "Датчик ВБ-2"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "SUBJECT",
+        "value": "Распределительный центр «Полярис»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "cold-chain-polaris",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "камера КХ-9"
       },
       {
         "type": "false_negative",
@@ -656,6 +1063,14 @@
       {
         "type": "false_negative",
         "document_id": "data-center-meridian",
+        "sentence_index": 0,
+        "predicate": "IS-A",
+        "role": "SUBJECT",
+        "value": "Дата-центр «Меридиан»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "data-center-meridian",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
@@ -663,43 +1078,35 @@
       },
       {
         "type": "false_negative",
-        "document_id": "greenhouse-lotus",
-        "sentence_index": 2,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "секция ОР-5"
-      },
-      {
-        "type": "false_negative",
-        "document_id": "greenhouse-lotus",
-        "sentence_index": 2,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "секция ОР-5"
-      },
-      {
-        "type": "false_negative",
-        "document_id": "greenhouse-lotus",
+        "document_id": "data-center-meridian",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
-        "value": "Датчик ВЛ-3"
+        "value": "Сервер АР-4"
       },
       {
         "type": "false_negative",
-        "document_id": "greenhouse-lotus",
-        "sentence_index": 3,
-        "predicate": "HAS_STATE",
-        "role": "SUBJECT",
-        "value": "Датчик ВЛ-3"
-      },
-      {
-        "type": "false_negative",
-        "document_id": "greenhouse-lotus",
+        "document_id": "data-center-meridian",
         "sentence_index": 7,
         "predicate": "USES_TOOL",
         "role": "SUBJECT",
-        "value": "ботаник Соколова"
+        "value": "администратор Лебедев"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Датчик ВЛ-3"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "секция ОР-5"
       },
       {
         "type": "false_negative",
@@ -708,6 +1115,14 @@
         "predicate": "USES_TOOL",
         "role": "SUBJECT",
         "value": "техник"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "стрелочный пост СП-6"
       },
       {
         "type": "false_negative",
@@ -720,6 +1135,14 @@
       {
         "type": "false_negative",
         "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "музей «Сфера»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
@@ -735,6 +1158,22 @@
       },
       {
         "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "хранитель Белова"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "museum-orion",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "хранитель Белова"
+      },
+      {
+        "type": "false_negative",
         "document_id": "water-plant-river",
         "sentence_index": 3,
         "predicate": "HAS_STATE",
@@ -743,11 +1182,43 @@
       },
       {
         "type": "false_negative",
+        "document_id": "water-plant-river",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "фильтровальный модуль ФМ-10"
+      },
+      {
+        "type": "false_negative",
         "document_id": "ocean-lab-pelican",
-        "sentence_index": 7,
-        "predicate": "USES_TOOL",
+        "sentence_index": 0,
+        "predicate": "IS-A",
         "role": "SUBJECT",
-        "value": "исследователь Нгуен"
+        "value": "Платформа «Пеликан»"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 3,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
+      },
+      {
+        "type": "false_negative",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "Анализатор АС-9"
       },
       {
         "type": "false_negative",
@@ -768,10 +1239,10 @@
       {
         "type": "false_negative",
         "document_id": "printing-house-atlas",
-        "sentence_index": 7,
-        "predicate": "USES_TOOL",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
         "role": "SUBJECT",
-        "value": "мастер Романова"
+        "value": "Линия ПЛ-22"
       },
       {
         "type": "false_negative",
@@ -798,12 +1269,52 @@
         "value": "Контроллер КС-6"
       },
       {
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "инженер Васильев"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "центральная турбина ВЭУ-14"
+      },
+      {
         "type": "false_positive",
         "document_id": "wind-farm-borey",
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "SUBJECT",
         "value": "датчик ВБ-2"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "wind-farm-borey",
+        "sentence_index": 4,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "усиление ветра"
       },
       {
         "type": "false_positive",
@@ -816,30 +1327,6 @@
       {
         "type": "false_positive",
         "document_id": "cold-chain-polaris",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "датчик ТМ-8"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "датчик ТМ-8"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
-        "sentence_index": 4,
-        "predicate": "ACTION",
-        "role": "SUBJECT",
-        "value": "повреждение уплотнителя"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
         "sentence_index": 7,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
@@ -852,14 +1339,6 @@
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
         "value": "Для переноса диспетчер использовал электрическую"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "cold-chain-polaris",
-        "sentence_index": 2,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "оператору «ФростЛог» и содержит три стеллажа с контейнерами вакцин"
       },
       {
         "type": "false_positive",
@@ -867,7 +1346,15 @@
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "SUBJECT",
-        "value": "сервер АР-4"
+        "value": "Сервер АР-4"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "data-center-meridian",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "администратор Лебедев"
       },
       {
         "type": "false_positive",
@@ -883,15 +1370,7 @@
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "SUBJECT",
-        "value": "Датчик ВЛ-3"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "greenhouse-lotus",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "Датчик ВЛ-3"
+        "value": "датчик ВЛ-3"
       },
       {
         "type": "false_positive",
@@ -900,6 +1379,38 @@
         "predicate": "LOCATED_AT",
         "role": "SUBJECT",
         "value": "снижение влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "ботаник Соколова"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "секция"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "greenhouse-lotus",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "университету «Гелиос» и содержит коллекцию орхидей и автоматическую систему полива"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "rail-terminal-vega",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "стрелочному посту"
       },
       {
         "type": "false_positive",
@@ -915,7 +1426,15 @@
         "sentence_index": 0,
         "predicate": "HAS",
         "role": "SUBJECT",
-        "value": "городской музей"
+        "value": "городского музея"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 2,
+        "predicate": "HAS",
+        "role": "SUBJECT",
+        "value": "музею «Сфера»"
       },
       {
         "type": "false_positive",
@@ -928,10 +1447,26 @@
       {
         "type": "false_positive",
         "document_id": "museum-orion",
-        "sentence_index": 3,
-        "predicate": "HAS",
+        "sentence_index": 4,
+        "predicate": "LOCATED_AT",
         "role": "SUBJECT",
-        "value": "витрина ВТ-7"
+        "value": "рост влажности"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "хранитель Белова"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "museum-orion",
+        "sentence_index": 7,
+        "predicate": "USES_TOOL",
+        "role": "SUBJECT",
+        "value": "Для переноса хранитель"
       },
       {
         "type": "false_positive",
@@ -944,26 +1479,10 @@
       {
         "type": "false_positive",
         "document_id": "water-plant-river",
-        "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "SUBJECT",
-        "value": "датчик ДМ-5"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 3,
+        "sentence_index": 9,
         "predicate": "HAS_STATE",
         "role": "SUBJECT",
-        "value": "корпус"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 1,
-        "predicate": "LOCATED_AT",
-        "role": "SUBJECT",
-        "value": "Фильтровальный модуль ФМ-10"
+        "value": "модуль"
       },
       {
         "type": "false_positive",
@@ -976,18 +1495,26 @@
       {
         "type": "false_positive",
         "document_id": "ocean-lab-pelican",
-        "sentence_index": 4,
-        "predicate": "ACTION",
+        "sentence_index": 3,
+        "predicate": "HAS",
         "role": "SUBJECT",
-        "value": "попадание пузырьков воздуха"
+        "value": "анализатор солёности"
       },
       {
         "type": "false_positive",
         "document_id": "ocean-lab-pelican",
-        "sentence_index": 7,
-        "predicate": "ACTION",
+        "sentence_index": 9,
+        "predicate": "FOLLOW",
         "role": "SUBJECT",
-        "value": "исследователь Нгуен"
+        "value": "режиме проверки"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "анализатор"
       },
       {
         "type": "false_positive",
@@ -1024,6 +1551,14 @@
       {
         "type": "false_positive",
         "document_id": "printing-house-atlas",
+        "sentence_index": 9,
+        "predicate": "HAS_STATE",
+        "role": "SUBJECT",
+        "value": "линия"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "printing-house-atlas",
         "sentence_index": 2,
         "predicate": "HAS",
         "role": "SUBJECT",
@@ -1035,7 +1570,7 @@
         "sentence_index": 2,
         "predicate": "ACTION",
         "role": "SUBJECT",
-        "value": "Пульт ЗП-8"
+        "value": "пульт ЗП-8"
       },
       {
         "type": "false_positive",
@@ -1043,7 +1578,15 @@
         "sentence_index": 3,
         "predicate": "HAS",
         "role": "SUBJECT",
-        "value": "Контроллер КС-6"
+        "value": "контроллер КС-6"
+      },
+      {
+        "type": "false_positive",
+        "document_id": "concert-hall-resonance",
+        "sentence_index": 7,
+        "predicate": "ACTION",
+        "role": "SUBJECT",
+        "value": "инженер Васильев"
       },
       {
         "type": "false_positive",
@@ -1065,1546 +1608,45 @@
         "type": "false_positive",
         "document_id": "water-plant-river",
         "sentence_index": 3,
-        "predicate": "HAS",
-        "role": "TIME",
-        "value": "до шести бар"
-      },
-      {
-        "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 3,
         "predicate": "HAS_STATE",
         "role": "TIME",
         "value": "до шести бар"
       },
       {
         "type": "false_positive",
-        "document_id": "water-plant-river",
-        "sentence_index": 3,
-        "predicate": "HAS_STATE",
+        "document_id": "ocean-lab-pelican",
+        "sentence_index": 9,
+        "predicate": "FOLLOW",
         "role": "TIME",
-        "value": "до шести бар"
+        "value": "до возвращения платформы в порт"
       },
       {
         "type": "false_negative",
-        "document_id": "greenhouse-lotus",
+        "document_id": "data-center-meridian",
         "sentence_index": 7,
         "predicate": "USES_TOOL",
         "role": "TOOL",
-        "value": "переносной влагомер"
+        "value": "консоль управления"
       },
       {
         "type": "false_negative",
-        "document_id": "ocean-lab-pelican",
+        "document_id": "museum-orion",
         "sentence_index": 7,
         "predicate": "USES_TOOL",
         "role": "TOOL",
-        "value": "комплект стерильных соединителей"
+        "value": "защитный чехол"
       },
       {
-        "type": "false_positive",
-        "document_id": "ocean-lab-pelican",
+        "type": "false_negative",
+        "document_id": "concert-hall-resonance",
         "sentence_index": 7,
-        "predicate": "ACTION",
+        "predicate": "USES_TOOL",
         "role": "TOOL",
-        "value": "комплект стерильных соединителей"
+        "value": "изолированный кабель"
       }
-    ],
-    "required_roles_weighted_f1": 3.862453170634093,
-    "documents": {
-      "wind-farm-borey": {
-        "precision": 0.8571428571428571,
-        "recall": 0.8888888888888888,
-        "f1": 0.8727272727272727,
-        "tp": 24,
-        "gold": 27,
-        "predicted": 28
-      },
-      "cold-chain-polaris": {
-        "precision": 0.6,
-        "recall": 0.782608695652174,
-        "f1": 0.6792452830188679,
-        "tp": 18,
-        "gold": 23,
-        "predicted": 30
-      },
-      "data-center-meridian": {
-        "precision": 0.8333333333333334,
-        "recall": 0.9090909090909091,
-        "f1": 0.8695652173913043,
-        "tp": 20,
-        "gold": 22,
-        "predicted": 24
-      },
-      "greenhouse-lotus": {
-        "precision": 0.7,
-        "recall": 0.56,
-        "f1": 0.6222222222222222,
-        "tp": 14,
-        "gold": 25,
-        "predicted": 20
-      },
-      "rail-terminal-vega": {
-        "precision": 0.92,
-        "recall": 0.9583333333333334,
-        "f1": 0.9387755102040817,
-        "tp": 23,
-        "gold": 24,
-        "predicted": 25
-      },
-      "museum-orion": {
-        "precision": 0.6666666666666666,
-        "recall": 0.6956521739130435,
-        "f1": 0.6808510638297872,
-        "tp": 16,
-        "gold": 23,
-        "predicted": 24
-      },
-      "water-plant-river": {
-        "precision": 0.625,
-        "recall": 0.8695652173913043,
-        "f1": 0.7272727272727273,
-        "tp": 20,
-        "gold": 23,
-        "predicted": 32
-      },
-      "ocean-lab-pelican": {
-        "precision": 0.6666666666666666,
-        "recall": 0.9166666666666666,
-        "f1": 0.7719298245614035,
-        "tp": 22,
-        "gold": 24,
-        "predicted": 33
-      },
-      "printing-house-atlas": {
-        "precision": 0.8260869565217391,
-        "recall": 0.7916666666666666,
-        "f1": 0.8085106382978724,
-        "tp": 19,
-        "gold": 24,
-        "predicted": 23
-      },
-      "concert-hall-resonance": {
-        "precision": 0.7272727272727273,
-        "recall": 0.7272727272727273,
-        "f1": 0.7272727272727273,
-        "tp": 16,
-        "gold": 22,
-        "predicted": 22
-      }
-    },
-    "document_macro_f1": 0.7698372486798266,
-    "document_min_f1": 0.6222222222222222,
-    "document_max_f1": 0.9387755102040817,
-    "normalized_weighted_f1": 0.784088697611313,
-    "normalized_required_roles_weighted_f1": 0.7724906341268186
+    ]
   },
   "M2": {
-    "benchmark": "m2-end-to-end-v1",
-    "pipeline": "rule-parser -> admission -> AH hypernodes -> /api/v1/queries logic -> ignition -> local evidence answer",
-    "total": 20,
-    "passed": 20,
-    "trace_pass_rate": 1.0,
-    "explain_score": 0.5333333333333333,
-    "max_depth": 6,
-    "cases": [
-      {
-        "id": "server-1",
-        "depth": 1,
-        "question": "Какова первопричина события «отключение сервера»?",
-        "expected_answer": "короткое замыкание",
-        "actual_answer": "Первопричина события «отключение сервера» — Короткое замыкание.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_01419345e3c14e00",
-          "s_e03811ba03f845f4",
-          "s_78a5230b708a4a1f"
-        ],
-        "minimal_path": [
-          "h_00f9c5fa6e6b439a",
-          "h_01419345e3c14e00",
-          "h_1610a9034a7d4834",
-          "h_3aa3d23ca4994ebc",
-          "h_3fceae06a77344e5",
-          "h_d544d7615eed48b9",
-          "l_09f8d1734e0949c4",
-          "l_16816c56eef54723",
-          "l_2c795b39cc284bc6",
-          "l_36e2c9f7a5eb4740",
-          "l_43f8f21f63c04fdf",
-          "l_51f8ab11c69a402e",
-          "l_5c0348f4cc934543",
-          "l_6580afaa12de4eb0",
-          "l_6baca02cb9b34a22",
-          "l_8716f36f66f04239",
-          "l_9e8976d8754f4d5d",
-          "l_a0748cd7ea4b4ea4",
-          "l_a462e02c24f94aca",
-          "l_a928f26409b741d0",
-          "l_b974feb5e6e64a13",
-          "l_bb05ecac65bd4476",
-          "l_d16b4187e1844a77",
-          "l_e8cd585df7e442ba",
-          "m_1bec866b2233498c",
-          "m_29bcd0cfad0a4e14",
-          "m_9201c324177b4fc8",
-          "m_a4cb1e0c865d4edd",
-          "m_b9ca4ebb1f734d3c",
-          "m_d925bc4aca0b4c02",
-          "m_fadbcd9a1ce7456b",
-          "s_123b9a9ae0744df3",
-          "s_48a0d72372ff4fd1",
-          "s_62fb53ac0ee1497e",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "s_e03811ba03f845f4",
-          "s_f9a97b55ef4541a5"
-        ],
-        "evidence_count": 1,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "server-2",
-        "depth": 2,
-        "question": "Какова первопричина события «остановка обработки»?",
-        "expected_answer": "короткое замыкание",
-        "actual_answer": "Первопричина события «остановка обработки» — Короткое замыкание.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_d544d7615eed48b9",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "h_01419345e3c14e00",
-          "s_e03811ba03f845f4"
-        ],
-        "minimal_path": [
-          "h_00f9c5fa6e6b439a",
-          "h_01419345e3c14e00",
-          "h_1610a9034a7d4834",
-          "h_3aa3d23ca4994ebc",
-          "h_3fceae06a77344e5",
-          "h_d544d7615eed48b9",
-          "l_09f8d1734e0949c4",
-          "l_16816c56eef54723",
-          "l_2c795b39cc284bc6",
-          "l_36e2c9f7a5eb4740",
-          "l_43f8f21f63c04fdf",
-          "l_51f8ab11c69a402e",
-          "l_5c0348f4cc934543",
-          "l_6580afaa12de4eb0",
-          "l_6baca02cb9b34a22",
-          "l_8716f36f66f04239",
-          "l_9e8976d8754f4d5d",
-          "l_a0748cd7ea4b4ea4",
-          "l_a462e02c24f94aca",
-          "l_a928f26409b741d0",
-          "l_b974feb5e6e64a13",
-          "l_bb05ecac65bd4476",
-          "l_d16b4187e1844a77",
-          "l_e8cd585df7e442ba",
-          "m_1bec866b2233498c",
-          "m_29bcd0cfad0a4e14",
-          "m_9201c324177b4fc8",
-          "m_a4cb1e0c865d4edd",
-          "m_b9ca4ebb1f734d3c",
-          "m_d925bc4aca0b4c02",
-          "m_fadbcd9a1ce7456b",
-          "s_123b9a9ae0744df3",
-          "s_48a0d72372ff4fd1",
-          "s_62fb53ac0ee1497e",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "s_e03811ba03f845f4",
-          "s_f9a97b55ef4541a5"
-        ],
-        "evidence_count": 2,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "server-3",
-        "depth": 3,
-        "question": "Какова первопричина события «задержка отчёта»?",
-        "expected_answer": "короткое замыкание",
-        "actual_answer": "Первопричина события «задержка отчёта» — Короткое замыкание.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_3aa3d23ca4994ebc",
-          "s_be3117764f134757",
-          "s_48a0d72372ff4fd1",
-          "h_d544d7615eed48b9",
-          "s_78a5230b708a4a1f",
-          "h_01419345e3c14e00",
-          "s_e03811ba03f845f4"
-        ],
-        "minimal_path": [
-          "h_00f9c5fa6e6b439a",
-          "h_01419345e3c14e00",
-          "h_1610a9034a7d4834",
-          "h_3aa3d23ca4994ebc",
-          "h_3fceae06a77344e5",
-          "h_d544d7615eed48b9",
-          "l_09f8d1734e0949c4",
-          "l_16816c56eef54723",
-          "l_2c795b39cc284bc6",
-          "l_36e2c9f7a5eb4740",
-          "l_43f8f21f63c04fdf",
-          "l_51f8ab11c69a402e",
-          "l_5c0348f4cc934543",
-          "l_6580afaa12de4eb0",
-          "l_6baca02cb9b34a22",
-          "l_8716f36f66f04239",
-          "l_9e8976d8754f4d5d",
-          "l_a0748cd7ea4b4ea4",
-          "l_a462e02c24f94aca",
-          "l_a928f26409b741d0",
-          "l_b974feb5e6e64a13",
-          "l_bb05ecac65bd4476",
-          "l_d16b4187e1844a77",
-          "l_e8cd585df7e442ba",
-          "m_1bec866b2233498c",
-          "m_29bcd0cfad0a4e14",
-          "m_9201c324177b4fc8",
-          "m_a4cb1e0c865d4edd",
-          "m_b9ca4ebb1f734d3c",
-          "m_d925bc4aca0b4c02",
-          "m_fadbcd9a1ce7456b",
-          "s_123b9a9ae0744df3",
-          "s_48a0d72372ff4fd1",
-          "s_62fb53ac0ee1497e",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "s_e03811ba03f845f4",
-          "s_f9a97b55ef4541a5"
-        ],
-        "evidence_count": 3,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "server-4",
-        "depth": 4,
-        "question": "Какова первопричина события «нарушение регламента»?",
-        "expected_answer": "короткое замыкание",
-        "actual_answer": "Первопричина события «нарушение регламента» — Короткое замыкание.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_1610a9034a7d4834",
-          "s_48a0d72372ff4fd1",
-          "s_123b9a9ae0744df3",
-          "h_3aa3d23ca4994ebc",
-          "s_be3117764f134757",
-          "h_d544d7615eed48b9",
-          "s_78a5230b708a4a1f",
-          "h_01419345e3c14e00",
-          "s_e03811ba03f845f4"
-        ],
-        "minimal_path": [
-          "h_00f9c5fa6e6b439a",
-          "h_01419345e3c14e00",
-          "h_1610a9034a7d4834",
-          "h_3aa3d23ca4994ebc",
-          "h_3fceae06a77344e5",
-          "h_d544d7615eed48b9",
-          "l_09f8d1734e0949c4",
-          "l_16816c56eef54723",
-          "l_2c795b39cc284bc6",
-          "l_36e2c9f7a5eb4740",
-          "l_43f8f21f63c04fdf",
-          "l_51f8ab11c69a402e",
-          "l_5c0348f4cc934543",
-          "l_6580afaa12de4eb0",
-          "l_6baca02cb9b34a22",
-          "l_8716f36f66f04239",
-          "l_9e8976d8754f4d5d",
-          "l_a0748cd7ea4b4ea4",
-          "l_a462e02c24f94aca",
-          "l_a928f26409b741d0",
-          "l_b974feb5e6e64a13",
-          "l_bb05ecac65bd4476",
-          "l_d16b4187e1844a77",
-          "l_e8cd585df7e442ba",
-          "m_1bec866b2233498c",
-          "m_29bcd0cfad0a4e14",
-          "m_9201c324177b4fc8",
-          "m_a4cb1e0c865d4edd",
-          "m_b9ca4ebb1f734d3c",
-          "m_d925bc4aca0b4c02",
-          "m_fadbcd9a1ce7456b",
-          "s_123b9a9ae0744df3",
-          "s_48a0d72372ff4fd1",
-          "s_62fb53ac0ee1497e",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "s_e03811ba03f845f4",
-          "s_f9a97b55ef4541a5"
-        ],
-        "evidence_count": 4,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "server-6",
-        "depth": 6,
-        "question": "Какова первопричина события «ручная проверка»?",
-        "expected_answer": "короткое замыкание",
-        "actual_answer": "Первопричина события «ручная проверка» — Короткое замыкание.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_3fceae06a77344e5",
-          "s_62fb53ac0ee1497e",
-          "s_f9a97b55ef4541a5",
-          "h_00f9c5fa6e6b439a",
-          "s_123b9a9ae0744df3",
-          "h_1610a9034a7d4834",
-          "s_48a0d72372ff4fd1",
-          "h_3aa3d23ca4994ebc",
-          "s_be3117764f134757",
-          "h_d544d7615eed48b9",
-          "s_78a5230b708a4a1f",
-          "h_01419345e3c14e00",
-          "s_e03811ba03f845f4"
-        ],
-        "minimal_path": [
-          "h_00f9c5fa6e6b439a",
-          "h_01419345e3c14e00",
-          "h_1610a9034a7d4834",
-          "h_3aa3d23ca4994ebc",
-          "h_3fceae06a77344e5",
-          "h_d544d7615eed48b9",
-          "l_09f8d1734e0949c4",
-          "l_16816c56eef54723",
-          "l_2c795b39cc284bc6",
-          "l_36e2c9f7a5eb4740",
-          "l_43f8f21f63c04fdf",
-          "l_51f8ab11c69a402e",
-          "l_5c0348f4cc934543",
-          "l_6580afaa12de4eb0",
-          "l_6baca02cb9b34a22",
-          "l_8716f36f66f04239",
-          "l_9e8976d8754f4d5d",
-          "l_a0748cd7ea4b4ea4",
-          "l_a462e02c24f94aca",
-          "l_a928f26409b741d0",
-          "l_b974feb5e6e64a13",
-          "l_bb05ecac65bd4476",
-          "l_d16b4187e1844a77",
-          "l_e8cd585df7e442ba",
-          "m_1bec866b2233498c",
-          "m_29bcd0cfad0a4e14",
-          "m_9201c324177b4fc8",
-          "m_a4cb1e0c865d4edd",
-          "m_b9ca4ebb1f734d3c",
-          "m_d925bc4aca0b4c02",
-          "m_fadbcd9a1ce7456b",
-          "s_123b9a9ae0744df3",
-          "s_48a0d72372ff4fd1",
-          "s_62fb53ac0ee1497e",
-          "s_78a5230b708a4a1f",
-          "s_be3117764f134757",
-          "s_e03811ba03f845f4",
-          "s_f9a97b55ef4541a5"
-        ],
-        "evidence_count": 6,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "water-1",
-        "depth": 1,
-        "question": "Какова первопричина события «падение расхода воды»?",
-        "expected_answer": "засор фильтра",
-        "actual_answer": "Первопричина события «падение расхода воды» — Засор фильтра.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_0f49a5d2576e4916",
-          "s_d62a73bd2d304940",
-          "s_84c0c7972de34d87"
-        ],
-        "minimal_path": [
-          "h_0f49a5d2576e4916",
-          "h_5b2a48ec49f64952",
-          "h_5ba0ab3815ab45a4",
-          "h_95c82d97e69a44d4",
-          "h_c708aec3d8a24fe9",
-          "h_e2034249a1d9484f",
-          "l_00848c35828742f3",
-          "l_06d7c1bcce434c7d",
-          "l_21c4feedd6614541",
-          "l_295f2a9e4b5c4930",
-          "l_2d21e6d3bf424722",
-          "l_2fe739db18c546cb",
-          "l_33ddd1648c88443d",
-          "l_3534914579f94fe4",
-          "l_48271ffb8bcd47ad",
-          "l_51ef76d5e9bf4cb4",
-          "l_6113a53630af44a0",
-          "l_84bbcc11a564412c",
-          "l_952efcee886546cb",
-          "l_c5a4448f32ce4b8d",
-          "l_c63ee96bcaa748f6",
-          "l_d4a5f07fa5f14c92",
-          "l_e63466d537414368",
-          "l_fbc8a8c010024857",
-          "m_302b515541ed4224",
-          "m_31e30e2e205242c0",
-          "m_44a807f15f9f43f8",
-          "m_5cf09310d35945d3",
-          "m_8dced26350734448",
-          "m_f13d6f626f7846fd",
-          "m_fdb5017b98164e1d",
-          "s_3fa88927adbd4da6",
-          "s_6d018cf84f254eb8",
-          "s_71c87ab01e1e49ee",
-          "s_84c0c7972de34d87",
-          "s_b37210cb96a14379",
-          "s_d62a73bd2d304940",
-          "s_e0e9e9a1c55f4f62"
-        ],
-        "evidence_count": 1,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "water-2",
-        "depth": 2,
-        "question": "Какова первопричина события «перегрев насоса»?",
-        "expected_answer": "засор фильтра",
-        "actual_answer": "Первопричина события «перегрев насоса» — Засор фильтра.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_95c82d97e69a44d4",
-          "s_84c0c7972de34d87",
-          "s_6d018cf84f254eb8",
-          "h_0f49a5d2576e4916",
-          "s_d62a73bd2d304940"
-        ],
-        "minimal_path": [
-          "h_0f49a5d2576e4916",
-          "h_5b2a48ec49f64952",
-          "h_5ba0ab3815ab45a4",
-          "h_95c82d97e69a44d4",
-          "h_c708aec3d8a24fe9",
-          "h_e2034249a1d9484f",
-          "l_00848c35828742f3",
-          "l_06d7c1bcce434c7d",
-          "l_21c4feedd6614541",
-          "l_295f2a9e4b5c4930",
-          "l_2d21e6d3bf424722",
-          "l_2fe739db18c546cb",
-          "l_33ddd1648c88443d",
-          "l_3534914579f94fe4",
-          "l_48271ffb8bcd47ad",
-          "l_51ef76d5e9bf4cb4",
-          "l_6113a53630af44a0",
-          "l_84bbcc11a564412c",
-          "l_952efcee886546cb",
-          "l_c5a4448f32ce4b8d",
-          "l_c63ee96bcaa748f6",
-          "l_d4a5f07fa5f14c92",
-          "l_e63466d537414368",
-          "l_fbc8a8c010024857",
-          "m_302b515541ed4224",
-          "m_31e30e2e205242c0",
-          "m_44a807f15f9f43f8",
-          "m_5cf09310d35945d3",
-          "m_8dced26350734448",
-          "m_f13d6f626f7846fd",
-          "m_fdb5017b98164e1d",
-          "s_3fa88927adbd4da6",
-          "s_6d018cf84f254eb8",
-          "s_71c87ab01e1e49ee",
-          "s_84c0c7972de34d87",
-          "s_b37210cb96a14379",
-          "s_d62a73bd2d304940",
-          "s_e0e9e9a1c55f4f62"
-        ],
-        "evidence_count": 2,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "water-3",
-        "depth": 3,
-        "question": "Какова первопричина события «аварийный сигнал»?",
-        "expected_answer": "засор фильтра",
-        "actual_answer": "Первопричина события «аварийный сигнал» — Засор фильтра.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_5b2a48ec49f64952",
-          "s_6d018cf84f254eb8",
-          "s_e0e9e9a1c55f4f62",
-          "h_95c82d97e69a44d4",
-          "s_84c0c7972de34d87",
-          "h_0f49a5d2576e4916",
-          "s_d62a73bd2d304940"
-        ],
-        "minimal_path": [
-          "h_0f49a5d2576e4916",
-          "h_5b2a48ec49f64952",
-          "h_5ba0ab3815ab45a4",
-          "h_95c82d97e69a44d4",
-          "h_c708aec3d8a24fe9",
-          "h_e2034249a1d9484f",
-          "l_00848c35828742f3",
-          "l_06d7c1bcce434c7d",
-          "l_21c4feedd6614541",
-          "l_295f2a9e4b5c4930",
-          "l_2d21e6d3bf424722",
-          "l_2fe739db18c546cb",
-          "l_33ddd1648c88443d",
-          "l_3534914579f94fe4",
-          "l_48271ffb8bcd47ad",
-          "l_51ef76d5e9bf4cb4",
-          "l_6113a53630af44a0",
-          "l_84bbcc11a564412c",
-          "l_952efcee886546cb",
-          "l_c5a4448f32ce4b8d",
-          "l_c63ee96bcaa748f6",
-          "l_d4a5f07fa5f14c92",
-          "l_e63466d537414368",
-          "l_fbc8a8c010024857",
-          "m_302b515541ed4224",
-          "m_31e30e2e205242c0",
-          "m_44a807f15f9f43f8",
-          "m_5cf09310d35945d3",
-          "m_8dced26350734448",
-          "m_f13d6f626f7846fd",
-          "m_fdb5017b98164e1d",
-          "s_3fa88927adbd4da6",
-          "s_6d018cf84f254eb8",
-          "s_71c87ab01e1e49ee",
-          "s_84c0c7972de34d87",
-          "s_b37210cb96a14379",
-          "s_d62a73bd2d304940",
-          "s_e0e9e9a1c55f4f62"
-        ],
-        "evidence_count": 3,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "water-4",
-        "depth": 4,
-        "question": "Какова первопричина события «остановка линии»?",
-        "expected_answer": "засор фильтра",
-        "actual_answer": "Первопричина события «остановка линии» — Засор фильтра.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_5ba0ab3815ab45a4",
-          "s_e0e9e9a1c55f4f62",
-          "s_3fa88927adbd4da6",
-          "h_5b2a48ec49f64952",
-          "s_6d018cf84f254eb8",
-          "h_95c82d97e69a44d4",
-          "s_84c0c7972de34d87",
-          "h_0f49a5d2576e4916",
-          "s_d62a73bd2d304940"
-        ],
-        "minimal_path": [
-          "h_0f49a5d2576e4916",
-          "h_5b2a48ec49f64952",
-          "h_5ba0ab3815ab45a4",
-          "h_95c82d97e69a44d4",
-          "h_c708aec3d8a24fe9",
-          "h_e2034249a1d9484f",
-          "l_00848c35828742f3",
-          "l_06d7c1bcce434c7d",
-          "l_21c4feedd6614541",
-          "l_295f2a9e4b5c4930",
-          "l_2d21e6d3bf424722",
-          "l_2fe739db18c546cb",
-          "l_33ddd1648c88443d",
-          "l_3534914579f94fe4",
-          "l_48271ffb8bcd47ad",
-          "l_51ef76d5e9bf4cb4",
-          "l_6113a53630af44a0",
-          "l_84bbcc11a564412c",
-          "l_952efcee886546cb",
-          "l_c5a4448f32ce4b8d",
-          "l_c63ee96bcaa748f6",
-          "l_d4a5f07fa5f14c92",
-          "l_e63466d537414368",
-          "l_fbc8a8c010024857",
-          "m_302b515541ed4224",
-          "m_31e30e2e205242c0",
-          "m_44a807f15f9f43f8",
-          "m_5cf09310d35945d3",
-          "m_8dced26350734448",
-          "m_f13d6f626f7846fd",
-          "m_fdb5017b98164e1d",
-          "s_3fa88927adbd4da6",
-          "s_6d018cf84f254eb8",
-          "s_71c87ab01e1e49ee",
-          "s_84c0c7972de34d87",
-          "s_b37210cb96a14379",
-          "s_d62a73bd2d304940",
-          "s_e0e9e9a1c55f4f62"
-        ],
-        "evidence_count": 4,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "water-6",
-        "depth": 6,
-        "question": "Какова первопричина события «восстановление подачи»?",
-        "expected_answer": "засор фильтра",
-        "actual_answer": "Первопричина события «восстановление подачи» — Засор фильтра.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_c708aec3d8a24fe9",
-          "s_b37210cb96a14379",
-          "s_71c87ab01e1e49ee",
-          "h_e2034249a1d9484f",
-          "s_3fa88927adbd4da6",
-          "h_5ba0ab3815ab45a4",
-          "s_e0e9e9a1c55f4f62",
-          "h_5b2a48ec49f64952",
-          "s_6d018cf84f254eb8",
-          "h_95c82d97e69a44d4",
-          "s_84c0c7972de34d87",
-          "h_0f49a5d2576e4916",
-          "s_d62a73bd2d304940"
-        ],
-        "minimal_path": [
-          "h_0f49a5d2576e4916",
-          "h_5b2a48ec49f64952",
-          "h_5ba0ab3815ab45a4",
-          "h_95c82d97e69a44d4",
-          "h_c708aec3d8a24fe9",
-          "h_e2034249a1d9484f",
-          "l_00848c35828742f3",
-          "l_06d7c1bcce434c7d",
-          "l_21c4feedd6614541",
-          "l_295f2a9e4b5c4930",
-          "l_2d21e6d3bf424722",
-          "l_2fe739db18c546cb",
-          "l_33ddd1648c88443d",
-          "l_3534914579f94fe4",
-          "l_48271ffb8bcd47ad",
-          "l_51ef76d5e9bf4cb4",
-          "l_6113a53630af44a0",
-          "l_84bbcc11a564412c",
-          "l_952efcee886546cb",
-          "l_c5a4448f32ce4b8d",
-          "l_c63ee96bcaa748f6",
-          "l_d4a5f07fa5f14c92",
-          "l_e63466d537414368",
-          "l_fbc8a8c010024857",
-          "m_302b515541ed4224",
-          "m_31e30e2e205242c0",
-          "m_44a807f15f9f43f8",
-          "m_5cf09310d35945d3",
-          "m_8dced26350734448",
-          "m_f13d6f626f7846fd",
-          "m_fdb5017b98164e1d",
-          "s_3fa88927adbd4da6",
-          "s_6d018cf84f254eb8",
-          "s_71c87ab01e1e49ee",
-          "s_84c0c7972de34d87",
-          "s_b37210cb96a14379",
-          "s_d62a73bd2d304940",
-          "s_e0e9e9a1c55f4f62"
-        ],
-        "evidence_count": 6,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "warehouse-1",
-        "depth": 1,
-        "question": "Какова первопричина события «потеря связи со сканером»?",
-        "expected_answer": "обрыв кабеля",
-        "actual_answer": "Первопричина события «потеря связи со сканером» — Обрыв кабеля.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_ddefdddee4d84b45",
-          "s_868547a51e3a4c41",
-          "s_f6686550f20f473c"
-        ],
-        "minimal_path": [
-          "h_1e67041d24a34af5",
-          "h_4a33733b439f4706",
-          "h_bd8800c175b8423c",
-          "h_d4dc69d43a9e4c12",
-          "h_ddefdddee4d84b45",
-          "h_eb02c58cbdbc4e28",
-          "l_06a4782a80c74bb9",
-          "l_2b202abb6db24b63",
-          "l_41b6828eb0ad4005",
-          "l_5347ddfed71b4031",
-          "l_5fb67607fd7e4c7f",
-          "l_60370184079d4fe2",
-          "l_6569f3e5e1fd41cb",
-          "l_70b3cacb98f2483e",
-          "l_8220874fa5404193",
-          "l_8f22267be6fd4aa4",
-          "l_9ceb0cd76e08488c",
-          "l_ab9382be757b4064",
-          "l_b81a045f7e774971",
-          "l_c261cbc70ca849bc",
-          "l_c99375aebfe34c33",
-          "l_d39c15ff6bc54f60",
-          "l_e00e70433c054245",
-          "l_e7fdfd41aca74bc0",
-          "m_1832474450224eb6",
-          "m_24faf829074646e8",
-          "m_2a9d866478a5402e",
-          "m_45e700ba8fb745ad",
-          "m_4862994be47c445f",
-          "m_6afb23773b2d4f33",
-          "m_b2724addb04946a6",
-          "s_3e7cc42e4918402e",
-          "s_554d97e66b8f45ef",
-          "s_5a333563eac14c58",
-          "s_7514cc7ac98e4d13",
-          "s_868547a51e3a4c41",
-          "s_e722f245b41e4006",
-          "s_f6686550f20f473c"
-        ],
-        "evidence_count": 1,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "warehouse-2",
-        "depth": 2,
-        "question": "Какова первопричина события «ошибка учёта палеты»?",
-        "expected_answer": "обрыв кабеля",
-        "actual_answer": "Первопричина события «ошибка учёта палеты» — Обрыв кабеля.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_eb02c58cbdbc4e28",
-          "s_f6686550f20f473c",
-          "s_5a333563eac14c58",
-          "h_ddefdddee4d84b45",
-          "s_868547a51e3a4c41"
-        ],
-        "minimal_path": [
-          "h_1e67041d24a34af5",
-          "h_4a33733b439f4706",
-          "h_bd8800c175b8423c",
-          "h_d4dc69d43a9e4c12",
-          "h_ddefdddee4d84b45",
-          "h_eb02c58cbdbc4e28",
-          "l_06a4782a80c74bb9",
-          "l_2b202abb6db24b63",
-          "l_41b6828eb0ad4005",
-          "l_5347ddfed71b4031",
-          "l_5fb67607fd7e4c7f",
-          "l_60370184079d4fe2",
-          "l_6569f3e5e1fd41cb",
-          "l_70b3cacb98f2483e",
-          "l_8220874fa5404193",
-          "l_8f22267be6fd4aa4",
-          "l_9ceb0cd76e08488c",
-          "l_ab9382be757b4064",
-          "l_b81a045f7e774971",
-          "l_c261cbc70ca849bc",
-          "l_c99375aebfe34c33",
-          "l_d39c15ff6bc54f60",
-          "l_e00e70433c054245",
-          "l_e7fdfd41aca74bc0",
-          "m_1832474450224eb6",
-          "m_24faf829074646e8",
-          "m_2a9d866478a5402e",
-          "m_45e700ba8fb745ad",
-          "m_4862994be47c445f",
-          "m_6afb23773b2d4f33",
-          "m_b2724addb04946a6",
-          "s_3e7cc42e4918402e",
-          "s_554d97e66b8f45ef",
-          "s_5a333563eac14c58",
-          "s_7514cc7ac98e4d13",
-          "s_868547a51e3a4c41",
-          "s_e722f245b41e4006",
-          "s_f6686550f20f473c"
-        ],
-        "evidence_count": 2,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "warehouse-3",
-        "depth": 3,
-        "question": "Какова первопричина события «блокировка конвейера»?",
-        "expected_answer": "обрыв кабеля",
-        "actual_answer": "Первопричина события «блокировка конвейера» — Обрыв кабеля.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_bd8800c175b8423c",
-          "s_5a333563eac14c58",
-          "s_3e7cc42e4918402e",
-          "h_eb02c58cbdbc4e28",
-          "s_f6686550f20f473c",
-          "h_ddefdddee4d84b45",
-          "s_868547a51e3a4c41"
-        ],
-        "minimal_path": [
-          "h_1e67041d24a34af5",
-          "h_4a33733b439f4706",
-          "h_bd8800c175b8423c",
-          "h_d4dc69d43a9e4c12",
-          "h_ddefdddee4d84b45",
-          "h_eb02c58cbdbc4e28",
-          "l_06a4782a80c74bb9",
-          "l_2b202abb6db24b63",
-          "l_41b6828eb0ad4005",
-          "l_5347ddfed71b4031",
-          "l_5fb67607fd7e4c7f",
-          "l_60370184079d4fe2",
-          "l_6569f3e5e1fd41cb",
-          "l_70b3cacb98f2483e",
-          "l_8220874fa5404193",
-          "l_8f22267be6fd4aa4",
-          "l_9ceb0cd76e08488c",
-          "l_ab9382be757b4064",
-          "l_b81a045f7e774971",
-          "l_c261cbc70ca849bc",
-          "l_c99375aebfe34c33",
-          "l_d39c15ff6bc54f60",
-          "l_e00e70433c054245",
-          "l_e7fdfd41aca74bc0",
-          "m_1832474450224eb6",
-          "m_24faf829074646e8",
-          "m_2a9d866478a5402e",
-          "m_45e700ba8fb745ad",
-          "m_4862994be47c445f",
-          "m_6afb23773b2d4f33",
-          "m_b2724addb04946a6",
-          "s_3e7cc42e4918402e",
-          "s_554d97e66b8f45ef",
-          "s_5a333563eac14c58",
-          "s_7514cc7ac98e4d13",
-          "s_868547a51e3a4c41",
-          "s_e722f245b41e4006",
-          "s_f6686550f20f473c"
-        ],
-        "evidence_count": 3,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "warehouse-4",
-        "depth": 4,
-        "question": "Какова первопричина события «задержка отгрузки»?",
-        "expected_answer": "обрыв кабеля",
-        "actual_answer": "Первопричина события «задержка отгрузки» — Обрыв кабеля.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_4a33733b439f4706",
-          "s_3e7cc42e4918402e",
-          "s_e722f245b41e4006",
-          "h_bd8800c175b8423c",
-          "s_5a333563eac14c58",
-          "h_eb02c58cbdbc4e28",
-          "s_f6686550f20f473c",
-          "h_ddefdddee4d84b45",
-          "s_868547a51e3a4c41"
-        ],
-        "minimal_path": [
-          "h_1e67041d24a34af5",
-          "h_4a33733b439f4706",
-          "h_bd8800c175b8423c",
-          "h_d4dc69d43a9e4c12",
-          "h_ddefdddee4d84b45",
-          "h_eb02c58cbdbc4e28",
-          "l_06a4782a80c74bb9",
-          "l_2b202abb6db24b63",
-          "l_41b6828eb0ad4005",
-          "l_5347ddfed71b4031",
-          "l_5fb67607fd7e4c7f",
-          "l_60370184079d4fe2",
-          "l_6569f3e5e1fd41cb",
-          "l_70b3cacb98f2483e",
-          "l_8220874fa5404193",
-          "l_8f22267be6fd4aa4",
-          "l_9ceb0cd76e08488c",
-          "l_ab9382be757b4064",
-          "l_b81a045f7e774971",
-          "l_c261cbc70ca849bc",
-          "l_c99375aebfe34c33",
-          "l_d39c15ff6bc54f60",
-          "l_e00e70433c054245",
-          "l_e7fdfd41aca74bc0",
-          "m_1832474450224eb6",
-          "m_24faf829074646e8",
-          "m_2a9d866478a5402e",
-          "m_45e700ba8fb745ad",
-          "m_4862994be47c445f",
-          "m_6afb23773b2d4f33",
-          "m_b2724addb04946a6",
-          "s_3e7cc42e4918402e",
-          "s_554d97e66b8f45ef",
-          "s_5a333563eac14c58",
-          "s_7514cc7ac98e4d13",
-          "s_868547a51e3a4c41",
-          "s_e722f245b41e4006",
-          "s_f6686550f20f473c"
-        ],
-        "evidence_count": 4,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "warehouse-6",
-        "depth": 6,
-        "question": "Какова первопричина события «возобновление сортировки»?",
-        "expected_answer": "обрыв кабеля",
-        "actual_answer": "Первопричина события «возобновление сортировки» — Обрыв кабеля.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_1e67041d24a34af5",
-          "s_7514cc7ac98e4d13",
-          "s_554d97e66b8f45ef",
-          "h_d4dc69d43a9e4c12",
-          "s_e722f245b41e4006",
-          "h_4a33733b439f4706",
-          "s_3e7cc42e4918402e",
-          "h_bd8800c175b8423c",
-          "s_5a333563eac14c58",
-          "h_eb02c58cbdbc4e28",
-          "s_f6686550f20f473c",
-          "h_ddefdddee4d84b45",
-          "s_868547a51e3a4c41"
-        ],
-        "minimal_path": [
-          "h_1e67041d24a34af5",
-          "h_4a33733b439f4706",
-          "h_bd8800c175b8423c",
-          "h_d4dc69d43a9e4c12",
-          "h_ddefdddee4d84b45",
-          "h_eb02c58cbdbc4e28",
-          "l_06a4782a80c74bb9",
-          "l_2b202abb6db24b63",
-          "l_41b6828eb0ad4005",
-          "l_5347ddfed71b4031",
-          "l_5fb67607fd7e4c7f",
-          "l_60370184079d4fe2",
-          "l_6569f3e5e1fd41cb",
-          "l_70b3cacb98f2483e",
-          "l_8220874fa5404193",
-          "l_8f22267be6fd4aa4",
-          "l_9ceb0cd76e08488c",
-          "l_ab9382be757b4064",
-          "l_b81a045f7e774971",
-          "l_c261cbc70ca849bc",
-          "l_c99375aebfe34c33",
-          "l_d39c15ff6bc54f60",
-          "l_e00e70433c054245",
-          "l_e7fdfd41aca74bc0",
-          "m_1832474450224eb6",
-          "m_24faf829074646e8",
-          "m_2a9d866478a5402e",
-          "m_45e700ba8fb745ad",
-          "m_4862994be47c445f",
-          "m_6afb23773b2d4f33",
-          "m_b2724addb04946a6",
-          "s_3e7cc42e4918402e",
-          "s_554d97e66b8f45ef",
-          "s_5a333563eac14c58",
-          "s_7514cc7ac98e4d13",
-          "s_868547a51e3a4c41",
-          "s_e722f245b41e4006",
-          "s_f6686550f20f473c"
-        ],
-        "evidence_count": 6,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "greenhouse-1",
-        "depth": 1,
-        "question": "Какова первопричина события «рост температуры»?",
-        "expected_answer": "отказ вентилятора",
-        "actual_answer": "Первопричина события «рост температуры» — Отказ вентилятора.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_0a5c8881eba344fc",
-          "s_e7960e573e694dfe",
-          "s_d65c1dac89f0468c"
-        ],
-        "minimal_path": [
-          "h_0a5c8881eba344fc",
-          "h_0e2369d047d34ca2",
-          "h_2759f67a281e4a16",
-          "h_57dc6d3f3ae44d46",
-          "h_8a0f830ee9704aa3",
-          "h_a12abd86aa4b4e38",
-          "l_2371e93db77d4637",
-          "l_357e78a0a8154031",
-          "l_49dfb7876c0c4e5f",
-          "l_567d83b859244a32",
-          "l_57fc4573f1bb47bd",
-          "l_68a5b35ca91f445e",
-          "l_730aede077294779",
-          "l_7bac2458e99a4e89",
-          "l_83d14714af8d4cb4",
-          "l_b81f02c8b2a04366",
-          "l_baf107d617ae44aa",
-          "l_c4b3433463ef4571",
-          "l_c6ce40574f3a431f",
-          "l_c8ac80ea31e64500",
-          "l_c92b46ae481b4eee",
-          "l_ce238b64b70d411b",
-          "l_eea32a236d8946cf",
-          "l_f99c337dc92c421a",
-          "m_5d099a12191d475b",
-          "m_6a63719177e14d0b",
-          "m_76332e24c6f74da7",
-          "m_7dbf5cdd5a744ff0",
-          "m_b6fa49d5830f4148",
-          "m_d57f006e5c8c4cca",
-          "m_e7407ff809ac4a06",
-          "s_04fa5faf690c4041",
-          "s_a501b8bc51c549df",
-          "s_b8c5dee65e39438e",
-          "s_d65c1dac89f0468c",
-          "s_e0f1ff8b589343d0",
-          "s_e7960e573e694dfe",
-          "s_f7d10fa3b2e346b4"
-        ],
-        "evidence_count": 1,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "greenhouse-2",
-        "depth": 2,
-        "question": "Какова первопричина события «увядание растений»?",
-        "expected_answer": "отказ вентилятора",
-        "actual_answer": "Первопричина события «увядание растений» — Отказ вентилятора.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_8a0f830ee9704aa3",
-          "s_d65c1dac89f0468c",
-          "s_a501b8bc51c549df",
-          "h_0a5c8881eba344fc",
-          "s_e7960e573e694dfe"
-        ],
-        "minimal_path": [
-          "h_0a5c8881eba344fc",
-          "h_0e2369d047d34ca2",
-          "h_2759f67a281e4a16",
-          "h_57dc6d3f3ae44d46",
-          "h_8a0f830ee9704aa3",
-          "h_a12abd86aa4b4e38",
-          "l_2371e93db77d4637",
-          "l_357e78a0a8154031",
-          "l_49dfb7876c0c4e5f",
-          "l_567d83b859244a32",
-          "l_57fc4573f1bb47bd",
-          "l_68a5b35ca91f445e",
-          "l_730aede077294779",
-          "l_7bac2458e99a4e89",
-          "l_83d14714af8d4cb4",
-          "l_b81f02c8b2a04366",
-          "l_baf107d617ae44aa",
-          "l_c4b3433463ef4571",
-          "l_c6ce40574f3a431f",
-          "l_c8ac80ea31e64500",
-          "l_c92b46ae481b4eee",
-          "l_ce238b64b70d411b",
-          "l_eea32a236d8946cf",
-          "l_f99c337dc92c421a",
-          "m_5d099a12191d475b",
-          "m_6a63719177e14d0b",
-          "m_76332e24c6f74da7",
-          "m_7dbf5cdd5a744ff0",
-          "m_b6fa49d5830f4148",
-          "m_d57f006e5c8c4cca",
-          "m_e7407ff809ac4a06",
-          "s_04fa5faf690c4041",
-          "s_a501b8bc51c549df",
-          "s_b8c5dee65e39438e",
-          "s_d65c1dac89f0468c",
-          "s_e0f1ff8b589343d0",
-          "s_e7960e573e694dfe",
-          "s_f7d10fa3b2e346b4"
-        ],
-        "evidence_count": 2,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "greenhouse-3",
-        "depth": 3,
-        "question": "Какова первопричина события «срабатывание тревоги»?",
-        "expected_answer": "отказ вентилятора",
-        "actual_answer": "Первопричина события «срабатывание тревоги» — Отказ вентилятора.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_0e2369d047d34ca2",
-          "s_a501b8bc51c549df",
-          "s_04fa5faf690c4041",
-          "h_8a0f830ee9704aa3",
-          "s_d65c1dac89f0468c",
-          "h_0a5c8881eba344fc",
-          "s_e7960e573e694dfe"
-        ],
-        "minimal_path": [
-          "h_0a5c8881eba344fc",
-          "h_0e2369d047d34ca2",
-          "h_2759f67a281e4a16",
-          "h_57dc6d3f3ae44d46",
-          "h_8a0f830ee9704aa3",
-          "h_a12abd86aa4b4e38",
-          "l_2371e93db77d4637",
-          "l_357e78a0a8154031",
-          "l_49dfb7876c0c4e5f",
-          "l_567d83b859244a32",
-          "l_57fc4573f1bb47bd",
-          "l_68a5b35ca91f445e",
-          "l_730aede077294779",
-          "l_7bac2458e99a4e89",
-          "l_83d14714af8d4cb4",
-          "l_b81f02c8b2a04366",
-          "l_baf107d617ae44aa",
-          "l_c4b3433463ef4571",
-          "l_c6ce40574f3a431f",
-          "l_c8ac80ea31e64500",
-          "l_c92b46ae481b4eee",
-          "l_ce238b64b70d411b",
-          "l_eea32a236d8946cf",
-          "l_f99c337dc92c421a",
-          "m_5d099a12191d475b",
-          "m_6a63719177e14d0b",
-          "m_76332e24c6f74da7",
-          "m_7dbf5cdd5a744ff0",
-          "m_b6fa49d5830f4148",
-          "m_d57f006e5c8c4cca",
-          "m_e7407ff809ac4a06",
-          "s_04fa5faf690c4041",
-          "s_a501b8bc51c549df",
-          "s_b8c5dee65e39438e",
-          "s_d65c1dac89f0468c",
-          "s_e0f1ff8b589343d0",
-          "s_e7960e573e694dfe",
-          "s_f7d10fa3b2e346b4"
-        ],
-        "evidence_count": 3,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "greenhouse-4",
-        "depth": 4,
-        "question": "Какова первопричина события «запуск резервного контура»?",
-        "expected_answer": "отказ вентилятора",
-        "actual_answer": "Первопричина события «запуск резервного контура» — Отказ вентилятора.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_a12abd86aa4b4e38",
-          "s_04fa5faf690c4041",
-          "s_f7d10fa3b2e346b4",
-          "h_0e2369d047d34ca2",
-          "s_a501b8bc51c549df",
-          "h_8a0f830ee9704aa3",
-          "s_d65c1dac89f0468c",
-          "h_0a5c8881eba344fc",
-          "s_e7960e573e694dfe"
-        ],
-        "minimal_path": [
-          "h_0a5c8881eba344fc",
-          "h_0e2369d047d34ca2",
-          "h_2759f67a281e4a16",
-          "h_57dc6d3f3ae44d46",
-          "h_8a0f830ee9704aa3",
-          "h_a12abd86aa4b4e38",
-          "l_2371e93db77d4637",
-          "l_357e78a0a8154031",
-          "l_49dfb7876c0c4e5f",
-          "l_567d83b859244a32",
-          "l_57fc4573f1bb47bd",
-          "l_68a5b35ca91f445e",
-          "l_730aede077294779",
-          "l_7bac2458e99a4e89",
-          "l_83d14714af8d4cb4",
-          "l_b81f02c8b2a04366",
-          "l_baf107d617ae44aa",
-          "l_c4b3433463ef4571",
-          "l_c6ce40574f3a431f",
-          "l_c8ac80ea31e64500",
-          "l_c92b46ae481b4eee",
-          "l_ce238b64b70d411b",
-          "l_eea32a236d8946cf",
-          "l_f99c337dc92c421a",
-          "m_5d099a12191d475b",
-          "m_6a63719177e14d0b",
-          "m_76332e24c6f74da7",
-          "m_7dbf5cdd5a744ff0",
-          "m_b6fa49d5830f4148",
-          "m_d57f006e5c8c4cca",
-          "m_e7407ff809ac4a06",
-          "s_04fa5faf690c4041",
-          "s_a501b8bc51c549df",
-          "s_b8c5dee65e39438e",
-          "s_d65c1dac89f0468c",
-          "s_e0f1ff8b589343d0",
-          "s_e7960e573e694dfe",
-          "s_f7d10fa3b2e346b4"
-        ],
-        "evidence_count": 4,
-        "admitted_hypernodes": 6
-      },
-      {
-        "id": "greenhouse-6",
-        "depth": 6,
-        "question": "Какова первопричина события «возврат в штатный режим»?",
-        "expected_answer": "отказ вентилятора",
-        "actual_answer": "Первопричина события «возврат в штатный режим» — Отказ вентилятора.",
-        "answer_correct": true,
-        "trace_complete": true,
-        "answer_path": [
-          "h_2759f67a281e4a16",
-          "s_e0f1ff8b589343d0",
-          "s_b8c5dee65e39438e",
-          "h_57dc6d3f3ae44d46",
-          "s_f7d10fa3b2e346b4",
-          "h_a12abd86aa4b4e38",
-          "s_04fa5faf690c4041",
-          "h_0e2369d047d34ca2",
-          "s_a501b8bc51c549df",
-          "h_8a0f830ee9704aa3",
-          "s_d65c1dac89f0468c",
-          "h_0a5c8881eba344fc",
-          "s_e7960e573e694dfe"
-        ],
-        "minimal_path": [
-          "h_0a5c8881eba344fc",
-          "h_0e2369d047d34ca2",
-          "h_2759f67a281e4a16",
-          "h_57dc6d3f3ae44d46",
-          "h_8a0f830ee9704aa3",
-          "h_a12abd86aa4b4e38",
-          "l_2371e93db77d4637",
-          "l_357e78a0a8154031",
-          "l_49dfb7876c0c4e5f",
-          "l_567d83b859244a32",
-          "l_57fc4573f1bb47bd",
-          "l_68a5b35ca91f445e",
-          "l_730aede077294779",
-          "l_7bac2458e99a4e89",
-          "l_83d14714af8d4cb4",
-          "l_b81f02c8b2a04366",
-          "l_baf107d617ae44aa",
-          "l_c4b3433463ef4571",
-          "l_c6ce40574f3a431f",
-          "l_c8ac80ea31e64500",
-          "l_c92b46ae481b4eee",
-          "l_ce238b64b70d411b",
-          "l_eea32a236d8946cf",
-          "l_f99c337dc92c421a",
-          "m_5d099a12191d475b",
-          "m_6a63719177e14d0b",
-          "m_76332e24c6f74da7",
-          "m_7dbf5cdd5a744ff0",
-          "m_b6fa49d5830f4148",
-          "m_d57f006e5c8c4cca",
-          "m_e7407ff809ac4a06",
-          "s_04fa5faf690c4041",
-          "s_a501b8bc51c549df",
-          "s_b8c5dee65e39438e",
-          "s_d65c1dac89f0468c",
-          "s_e0f1ff8b589343d0",
-          "s_e7960e573e694dfe",
-          "s_f7d10fa3b2e346b4"
-        ],
-        "evidence_count": 6,
-        "admitted_hypernodes": 6
-      }
-    ]
-  },
-  "M3": {
-    "case_count": 10,
-    "topologies": [
-      "chain",
-      "star"
-    ],
-    "protected_before_grace": true,
-    "ticks": 50,
-    "orphan_nodes_before_gc": 4100,
-    "orphan_nodes_after_gc": 0,
-    "deleted": 4100,
-    "gc_efficiency": 1.0,
-    "mean_gc_efficiency": 1.0,
-    "min_gc_efficiency": 1.0,
-    "live_nodes_before": 830,
-    "live_nodes_after": 830,
-    "false_deletions": 0,
-    "total_examined_nodes": 4930,
-    "elapsed_ms": 1040.016,
-    "official_200_cases": [
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 200,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 200,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 40,
-        "live_nodes_after": 40,
-        "false_deletions": 0,
-        "elapsed_ms": 10.561
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 200,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 200,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 40,
-        "live_nodes_after": 40,
-        "false_deletions": 0,
-        "elapsed_ms": 22.165
-      }
-    ],
-    "zero_weight_conformance": {
-      "deletable_uids": [
-        "m3_zero_hypernode"
-      ],
-      "passed": true
-    },
-    "cases": [
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 100,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 100,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 25,
-        "live_nodes_after": 25,
-        "false_deletions": 0,
-        "elapsed_ms": 4.244
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 100,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 100,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 25,
-        "live_nodes_after": 25,
-        "false_deletions": 0,
-        "elapsed_ms": 7.223
-      },
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 200,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 200,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 40,
-        "live_nodes_after": 40,
-        "false_deletions": 0,
-        "elapsed_ms": 10.561
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 200,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 200,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 40,
-        "live_nodes_after": 40,
-        "false_deletions": 0,
-        "elapsed_ms": 22.165
-      },
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 250,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 250,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 50,
-        "live_nodes_after": 50,
-        "false_deletions": 0,
-        "elapsed_ms": 16.201
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 250,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 250,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 50,
-        "live_nodes_after": 50,
-        "false_deletions": 0,
-        "elapsed_ms": 33.834
-      },
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 500,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 500,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 100,
-        "live_nodes_after": 100,
-        "false_deletions": 0,
-        "elapsed_ms": 56.654
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 500,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 500,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 100,
-        "live_nodes_after": 100,
-        "false_deletions": 0,
-        "elapsed_ms": 127.093
-      },
-      {
-        "topology": "star",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 1000,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 1000,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 200,
-        "live_nodes_after": 200,
-        "false_deletions": 0,
-        "elapsed_ms": 228.541
-      },
-      {
-        "topology": "chain",
-        "protected_before_grace": true,
-        "ticks": 50,
-        "orphan_nodes_before_gc": 1000,
-        "orphan_nodes_after_gc": 0,
-        "deleted": 1000,
-        "gc_efficiency": 1.0,
-        "live_nodes_before": 200,
-        "live_nodes_after": 200,
-        "false_deletions": 0,
-        "elapsed_ms": 533.5
-      }
-    ]
-  },
-  "M2_engine_smoke": {
     "correct": true,
     "passed": 100,
     "total": 100,
@@ -4467,10 +3509,204 @@
       }
     ]
   },
-  "metric_semantics": {
-    "M1": "Primary values are literal unnormalized sums from the hackathon formula; normalized values are diagnostics.",
-    "M2": "20 end-to-end causal questions through admission, AH hypernodes, query logic, ignition and evidence answer.",
-    "M2_engine_smoke": "The former 100-chain result is retained only as an engine stress/smoke test.",
-    "M3": "Includes the exact 200-orphan case and the zero-incident-weight orphan condition."
+  "M3": {
+    "case_count": 10,
+    "topologies": [
+      "chain",
+      "star"
+    ],
+    "protected_before_grace": true,
+    "ticks": 50,
+    "orphan_nodes_before_gc": 4100,
+    "orphan_nodes_after_gc": 0,
+    "deleted": 4100,
+    "gc_efficiency": 1.0,
+    "mean_gc_efficiency": 1.0,
+    "min_gc_efficiency": 1.0,
+    "live_nodes_before": 830,
+    "live_nodes_after": 830,
+    "false_deletions": 0,
+    "total_examined_nodes": 4930,
+    "elapsed_ms": 626.162,
+    "official_200_cases": [
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 6.17
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 20.698
+      }
+    ],
+    "zero_weight_conformance": {
+      "deletable_uids": [
+        "m3_zero_hypernode"
+      ],
+      "passed": true
+    },
+    "cases": [
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 100,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 100,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 25,
+        "live_nodes_after": 25,
+        "false_deletions": 0,
+        "elapsed_ms": 3.096
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 100,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 100,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 25,
+        "live_nodes_after": 25,
+        "false_deletions": 0,
+        "elapsed_ms": 7.3
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 6.17
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 200,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 200,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 40,
+        "live_nodes_after": 40,
+        "false_deletions": 0,
+        "elapsed_ms": 20.698
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 250,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 250,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 50,
+        "live_nodes_after": 50,
+        "false_deletions": 0,
+        "elapsed_ms": 8.311
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 250,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 250,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 50,
+        "live_nodes_after": 50,
+        "false_deletions": 0,
+        "elapsed_ms": 28.616
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 500,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 500,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 100,
+        "live_nodes_after": 100,
+        "false_deletions": 0,
+        "elapsed_ms": 28.1
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 500,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 500,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 100,
+        "live_nodes_after": 100,
+        "false_deletions": 0,
+        "elapsed_ms": 96.887
+      },
+      {
+        "topology": "star",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 1000,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 1000,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 200,
+        "live_nodes_after": 200,
+        "false_deletions": 0,
+        "elapsed_ms": 67.378
+      },
+      {
+        "topology": "chain",
+        "protected_before_grace": true,
+        "ticks": 50,
+        "orphan_nodes_before_gc": 1000,
+        "orphan_nodes_after_gc": 0,
+        "deleted": 1000,
+        "gc_efficiency": 1.0,
+        "live_nodes_before": 200,
+        "live_nodes_after": 200,
+        "false_deletions": 0,
+        "elapsed_ms": 359.606
+      }
+    ]
+  },
+  "run_metadata": {
+    "code_files": [
+      {
+        "sha256": "e8a7244b66bb777ced5c688dc4c034fa58a6b7cd950ed68ffa250c3c9bf93c00",
+        "path": "backend/app/ingestion.py"
+      },
+      {
+        "sha256": "28d714444e1fa74b15b43faece8a76fedc64123b77b532c06d7d2069229f344d",
+        "path": "backend/app/evaluation.py"
+      }
+    ],
+    "fresh": true,
+    "scope": "DeepSeek Nitro plus existing deterministic recovery; 10 documents"
   }
 }

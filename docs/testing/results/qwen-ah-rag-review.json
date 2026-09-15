@@ -1,0 +1,509 @@
+{
+  "scope": "Assistant semantic review of all 70 raw answers against questions and source quotes; post-hoc diagnostic, not independent official M4/M5 adjudication. Correct cause need not repeat an unasked timestamp. Inline citation validity is evaluated separately.",
+  "run_sha256": "a472761b5194b5c88f75b7ef87be25bda6a50e9f1388f12be32c39b22fd87ffc",
+  "cases": [
+    {
+      "id": "wind-farm-borey-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "wind-farm-borey-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "wind-farm-borey-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "wind-farm-borey-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "cold-chain-polaris-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "cold-chain-polaris-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "data-center-meridian-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "data-center-meridian-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "data-center-meridian-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "data-center-meridian-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "greenhouse-lotus-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "greenhouse-lotus-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "greenhouse-lotus-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "rail-terminal-vega-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "rail-terminal-vega-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "museum-orion-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "museum-orion-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "museum-orion-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "museum-orion-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "museum-orion-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "museum-orion-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "water-plant-river-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "water-plant-river-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "water-plant-river-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "water-plant-river-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "water-plant-river-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "water-plant-river-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "ocean-lab-pelican-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "ocean-lab-pelican-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "missed_answer",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "ocean-lab-pelican-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "unsupported_claim",
+      "note": "Position of the knife is not an instrument; the answer added it to the tools.",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "printing-house-atlas-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-cause",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-tool",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "concert-hall-resonance-time",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_answer",
+      "note": "",
+      "citation_format_valid": false
+    },
+    {
+      "id": "unknown-0",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-0",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-1",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-1",
+      "arm": "rag",
+      "raw_semantic_verdict": "unsupported_claim",
+      "note": "Question asks about ВЭУ-999; retrieved source describes ВЭУ-14.",
+      "citation_format_valid": false
+    },
+    {
+      "id": "unknown-2",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-2",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-3",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-3",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-4",
+      "arm": "ah",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    },
+    {
+      "id": "unknown-4",
+      "arm": "rag",
+      "raw_semantic_verdict": "correct_refusal",
+      "note": "",
+      "citation_format_valid": true
+    }
+  ],
+  "summary": {
+    "ah": {
+      "correct_answer": 27,
+      "missed_answer": 3,
+      "correct_refusal": 5
+    },
+    "rag": {
+      "correct_answer": 16,
+      "missed_answer": 13,
+      "unsupported_claim": 2,
+      "correct_refusal": 4
+    }
+  }
+}

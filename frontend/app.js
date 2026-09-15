@@ -760,8 +760,8 @@ async function runEvaluation() {
     const metrics = result.metrics;
     $("#conformance-score").textContent = result.fixtures.rabbit.conformant ? `${result.fixtures.rabbit.accepted}/${result.fixtures.rabbit.facts}` : "FAIL";
     const values = [
-      [percent(metrics.M1.weighted_f1), "weighted F1"],
-      [percent(metrics.M2.explain_score), metrics.M2.trace_complete ? "trace complete" : "trace incomplete"],
+      [percent(metrics.M1.normalized_required_roles_weighted_f1 ?? metrics.M1.normalized_weighted_f1), "M1 · SUBJECT / OBJECT / LOCATION"],
+      [percent(metrics.M2.explain_score), metrics.M2.trace_pass_rate != null ? `trace pass ${percent(metrics.M2.trace_pass_rate)}` : (metrics.M2.trace_complete ? "trace complete" : "trace incomplete")],
       [percent(metrics.M3.gc_efficiency), `${metrics.M3.deleted} deleted`],
       [metrics.M4.status, "external LLM"],
       [metrics.M5.status, "SLM / frontier"],

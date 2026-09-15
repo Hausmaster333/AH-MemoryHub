@@ -1,0 +1,393 @@
+{
+  "version": 3,
+  "scope": "First 12 questions now regression; new questions frozen before extraction of their documents. Not official M4/M5.",
+  "source_sha256": {
+    "battery-monitoring": "96fcd08618e1bfa7e3877b69f8c0a1e750a980b8c133187e90157360dfc8b718",
+    "boiler-schedule": "5afb50ccf866290446a32ff59f1ac8cd57c19bf35ca8716d808cf998f2f88b21",
+    "cold-transfer": "7ebe49d59f440cb50a375a830ab49c2d81b845d8c9b8f7cbd4c276259d7ec03c",
+    "cooling-ambiguity": "379f0cf346ca18af176013c9551912dcebebd100681619b4e14f3935604863a9",
+    "dispatch-summary": "86f6998c1c61a9b518edcaf8ef51e6919ee67be5217b0b6cb406a176111f7326",
+    "food-cleaning": "bd8524310ae45b87fabd4c546ab478e01c09b80b6e63bff6c95aa938fcaba310",
+    "greenhouse-passport": "0f3f3ad4fa28dab3e051ce575b5fdf408fe4fcf37311066c33766add2b70648d",
+    "harbor-handover": "88671523b418dafbb4632226cc57ac48d22b8a2006bf8b03ff0f880128096990",
+    "irrigation-comparison": "2e38ad0c0f737472e4b32230a71772c3a831bc81140903c1104c2ec40daa0ff0",
+    "lab-calibration": "e07cda6dac91ba4abe67a218d6819b043f1df011a93cc36a71cdc90d0f66e1fe",
+    "lift-inspection": "8d081ad69e24a6c90cd2bbd6d22eee26c7f8d25341b41354ec2074418114f41a",
+    "museum-protocol": "052dd79be147ab43c8a2ec04cf6b142e5055d9dff141522348209ed54b792465",
+    "optics-quality": "a8fee79591cc9c9a7dc868912f08992043cb0e41f50970cacc58d86af0e3e1ee",
+    "packaging-microstop": "9812d1fa0c0110d87432d8f5bc61597e614dd4ac838f19f6c2cec442919c6236",
+    "printing-workorder": "ae88237e127c671e288aa0c6fcfece6c3a662af2070460e913ad1f7f3529289f",
+    "pump-ownership": "8713ef6bd99d10bbaa4f91a2f41559aa6ded8b18daa6781cab379d648d694539",
+    "rail-investigation": "4c8db5b02e1312b4bc0c8488da512bc5ac0740645d26839c7921a236fccbd285",
+    "robot-safety": "f1e57ee748d02e4b5076da0e79eebda93be6a1a0a94f4b3e41f8bc7b969b131d",
+    "server-dialogue": "b655c1707d0562d2a55f4515e7d9a16acaafc3ad9d9f87eea16e28058dfdc545",
+    "sorting-causality": "44f1079006ec6681856ed817b91b764668dd1a4e73e46e7a9e0836cb9785cbb8",
+    "stage-alarm": "c3447fd9c3420da6c0ab536e1db67efc29459e8a0a0e5a5e7849eea3f38c2379",
+    "telecom-inventory": "5e5e00abfec9728009acd94baf75dc8075df5c070eb39ba0497df1a3033d484c",
+    "textile-shift": "3def77c80f8c27a67beef772ce66ee844178ba5055f5b64e7615a58a04f7005e",
+    "tram-maintenance": "c8041be3d535028593689094b1282839252ecb95be06495cefd7b161c7e24e0e",
+    "ventilation-complaint": "6b14e0bc2ed9095499ebc513ef6f18ab69125de9bb3c76658d5696ca0884e13d",
+    "warehouse-version": "c107522592e1a685784abed2c509fd3722ad20f0c2e428566c3fbd2b7c116968",
+    "water-night": "2441950871a98996fcdf182d7e356b3f136b117012a1bc69e5862bc14283fcbf",
+    "water-reserve": "9fabf53fdd3e5db5dd954a0a48e5332595240441974f806996b12b4b443772fb",
+    "water-sampling": "e32d158d1a51155dc0efdc5dfe550a78c2fbd6db93b3625cce2ff515ae3713e8",
+    "weather-station": "fb361019b7f7a62b1bb51ec8109840bf213395ef4c69f7ec676c101f0a7c1a3f"
+  },
+  "cases": [
+    {
+      "id": "water-night-0",
+      "document_id": "water-night",
+      "question": "Каким прибором Смирнов повторил измерения в 23:49?",
+      "quotes": [
+        "В 23:49 Смирнов повторил измерения контрольным манометром КМ-4."
+      ],
+      "answer_contains": [
+        "КМ-4"
+      ]
+    },
+    {
+      "id": "water-night-1",
+      "document_id": "water-night",
+      "question": "Какой насос является резервным на водозаборе «Берег»?",
+      "quotes": [
+        "Насос НБ-31 является основным, насос НБ-32 — резервным."
+      ],
+      "answer_contains": [
+        "НБ-32"
+      ]
+    },
+    {
+      "id": "water-night-2",
+      "document_id": "water-night",
+      "question": "Во сколько КМ-4 вернули в шкаф приборов?",
+      "quotes": [
+        "КМ-4 вернули в шкаф приборов в 04:40."
+      ],
+      "answer_contains": [
+        "04:40"
+      ]
+    },
+    {
+      "id": "water-night-3",
+      "document_id": "water-night",
+      "question": "Какой внутренний элемент ФБ-6 стал установленной причиной роста перепада в смене Б-17?",
+      "answer": null
+    },
+    {
+      "id": "cold-transfer-0",
+      "document_id": "cold-transfer",
+      "question": "Какой датчик установлен в камере КС-41?",
+      "quotes": [
+        "Датчик ТС-8 установлен в КС-41, датчик ТС-9 — в КС-42."
+      ],
+      "answer_contains": [
+        "ТС-8"
+      ]
+    },
+    {
+      "id": "cold-transfer-1",
+      "document_id": "cold-transfer",
+      "question": "На сколько показание ТС-8 отличалось от контрольного термометра?",
+      "quotes": [
+        "Разница между ТС-8 и контрольным термометром составила плюс два градуса."
+      ],
+      "answer_contains": [
+        "плюс два градуса"
+      ]
+    },
+    {
+      "id": "cold-transfer-2",
+      "document_id": "cold-transfer",
+      "question": "Когда завершилась сверка грузовых записей в смене С-28?",
+      "quotes": [
+        "В 00:10 завершилась сверка грузовых записей."
+      ],
+      "answer_contains": [
+        "00:10"
+      ]
+    },
+    {
+      "id": "cold-transfer-3",
+      "document_id": "cold-transfer",
+      "question": "В какое время служба приборов назначила будущий ремонт ТС-8?",
+      "answer": null
+    },
+    {
+      "id": "rail-investigation-0",
+      "document_id": "rail-investigation",
+      "question": "Какой привод входит в узел СЛ-11?",
+      "quotes": [
+        "В состав узла входит электромеханический привод ПЛ-7, а контроль положения поступает в модуль МЛ-3."
+      ],
+      "answer_contains": [
+        "ПЛ-7"
+      ]
+    },
+    {
+      "id": "rail-investigation-1",
+      "document_id": "rail-investigation",
+      "question": "Когда повторная команда перевода завершилась подтверждением от МЛ-3?",
+      "quotes": [
+        "Повторная команда перевода завершилась подтверждением от МЛ-3 в 09:20."
+      ],
+      "answer_contains": [
+        "09:20"
+      ]
+    },
+    {
+      "id": "rail-investigation-2",
+      "document_id": "rail-investigation",
+      "question": "Когда зарегистрировали решение о возвращении узла в режим упражнения?",
+      "quotes": [
+        "Решение о возвращении узла в предусмотренный упражнением режим было зарегистрировано в 09:45."
+      ],
+      "answer_contains": [
+        "09:45"
+      ]
+    },
+    {
+      "id": "rail-investigation-3",
+      "document_id": "rail-investigation",
+      "question": "Какая модель дополнительного обогревателя была установлена в эпизоде Л-12?",
+      "answer": null
+    },
+    {
+      "id": "telecom-inventory-new",
+      "document_id": "telecom-inventory",
+      "question": "Какая версия прошивки установлена на МВ-18 после обновления 18 октября?",
+      "quotes": [
+        "Маршрутизатор успешно обновлен до версии 6.1.3."
+      ],
+      "answer_contains": [
+        "6.1.3"
+      ]
+    },
+    {
+      "id": "telecom-inventory-unknown",
+      "document_id": "telecom-inventory",
+      "question": "Какой серийный номер контрольного прибора использовали при измерении задержки МВ-18?",
+      "answer": null
+    },
+    {
+      "id": "irrigation-comparison-new",
+      "document_id": "irrigation-comparison",
+      "question": "Почему после обслуживания ЛИ-10 не работало предупреждение о перепаде давления?",
+      "quotes": [
+        "Выяснилось, что режим предупреждения остался отключённым в настройках после обслуживания."
+      ],
+      "answer_contains": [
+        "режим предупреждения остался отключённым"
+      ]
+    },
+    {
+      "id": "irrigation-comparison-unknown",
+      "document_id": "irrigation-comparison",
+      "question": "Каков был расход ЛИ-11 до начала измерений 15 июня?",
+      "answer": null
+    },
+    {
+      "id": "packaging-microstop-new",
+      "document_id": "packaging-microstop",
+      "question": "Какую частоту ДК-22 записали после повторного считывания в 00:57?",
+      "quotes": [
+        "После повторного считывания ДК-22 записано 90% контрольной частоты."
+      ],
+      "answer_contains": [
+        "90%"
+      ]
+    },
+    {
+      "id": "packaging-microstop-unknown",
+      "document_id": "packaging-microstop",
+      "question": "Какой точный механический дефект ЗК-21 установили после трёх остановок?",
+      "answer": null
+    },
+    {
+      "id": "tram-maintenance-new",
+      "document_id": "tram-maintenance",
+      "question": "Когда закрыли предыдущий наряд в ведомости депо «Луч»?",
+      "quotes": [
+        "Срок закрытия предыдущего наряда — 19 марта."
+      ],
+      "answer_contains": [
+        "19 марта"
+      ]
+    },
+    {
+      "id": "tram-maintenance-unknown",
+      "document_id": "tram-maintenance",
+      "question": "Какая деталь подшипникового узла ПЛ-25 признана источником масляного следа?",
+      "answer": null
+    },
+    {
+      "id": "weather-station-new",
+      "document_id": "weather-station",
+      "question": "Когда датчик ДС-62 фактически сняли для анализа?",
+      "quotes": [
+        "13:00 - Датчик ДС-62 был временно снят для дальнейшего анализа и ремонта."
+      ],
+      "answer_contains": [
+        "13:00"
+      ]
+    },
+    {
+      "id": "weather-station-unknown",
+      "document_id": "weather-station",
+      "question": "Когда фактически включили ДС-62 после снятия 15 октября?",
+      "answer": null
+    },
+    {
+      "id": "water-sampling-new",
+      "document_id": "water-sampling",
+      "question": "Под каким номером запуска сохранили неподтверждённый результат второго контейнера?",
+      "quotes": [
+        "Сырой выход анализатора по второму контейнеру сохранён отдельно под номером запуска АП8-022; он не присвоен пробе ПП-32 до подтверждения идентичности."
+      ],
+      "answer_contains": [
+        "АП8-022"
+      ]
+    },
+    {
+      "id": "water-sampling-unknown",
+      "document_id": "water-sampling",
+      "question": "Какое численное значение окончательного анализа ПП-32 получили 3 апреля?",
+      "answer": null
+    },
+    {
+      "id": "warehouse-version-new",
+      "document_id": "warehouse-version",
+      "question": "Какие ворота не испытывались в описанном эпизоде склада Вектор?",
+      "quotes": [
+        "Отдельные ворота ВВ-70 существуют на площадке Б, но в описанном эпизоде не испытывались."
+      ],
+      "answer_contains": [
+        "ВВ-70"
+      ]
+    },
+    {
+      "id": "warehouse-version-unknown",
+      "document_id": "warehouse-version",
+      "question": "Какой компонент ворот ВВ-7 признан единственной причиной отказа?",
+      "answer": null
+    },
+    {
+      "id": "robot-safety-new",
+      "document_id": "robot-safety",
+      "question": "Кто выполнял проверку роботизированной ячейки Шаг?",
+      "quotes": [
+        "Технический оператор, Иван Смирнов, начал проверку системы."
+      ],
+      "answer_contains": [
+        "Иван Смирнов"
+      ]
+    },
+    {
+      "id": "robot-safety-unknown",
+      "document_id": "robot-safety",
+      "question": "Какую модель инструмента Иван Смирнов использовал для удаления частицы с МШ-4?",
+      "answer": null
+    },
+    {
+      "id": "pump-ownership-new",
+      "document_id": "pump-ownership",
+      "question": "Кому принадлежит переносной манометр МР-9?",
+      "quotes": [
+        "Общий переносной манометр МР-9 принадлежит муниципальному оператору."
+      ],
+      "answer_contains": [
+        "муниципальному оператору"
+      ]
+    },
+    {
+      "id": "pump-ownership-unknown",
+      "document_id": "pump-ownership",
+      "question": "Кто является собственником арендованного агрегата НР-32?",
+      "answer": null
+    },
+    {
+      "id": "optics-quality-new",
+      "document_id": "optics-quality",
+      "question": "Сколько первых контрольных изображений КФ-10 после обслуживания проверили на блик?",
+      "quotes": [
+        "В первых 20 контрольных изображениях КФ-10 после обслуживания блик не зарегистрирован."
+      ],
+      "answer_contains": [
+        "20"
+      ]
+    },
+    {
+      "id": "optics-quality-unknown",
+      "document_id": "optics-quality",
+      "question": "Какова исходная частота бликов КФ-11 до обслуживания?",
+      "answer": null
+    },
+    {
+      "id": "textile-shift-new",
+      "document_id": "textile-shift",
+      "question": "Какое время инцидента участка Нить указано в исправленной записи?",
+      "quotes": [
+        "Правильное время инцидента — 14:00, а не 13:00 как было записано в предыдущей версии журнала."
+      ],
+      "answer_contains": [
+        "14:00"
+      ]
+    },
+    {
+      "id": "textile-shift-unknown",
+      "document_id": "textile-shift",
+      "question": "На сколько процентов выросла эффективность охлаждения НН-14 после очистки фильтра?",
+      "answer": null
+    },
+    {
+      "id": "water-reserve-new",
+      "document_id": "water-reserve",
+      "question": "Когда указатель ЕП-1 достиг нулевой отметки при отдельном сливе?",
+      "quotes": [
+        "В 19:48 указатель ЕП-1 достиг нулевой отметки; ЕП-2 в этой проверке не опорожняли."
+      ],
+      "answer_contains": [
+        "19:48"
+      ]
+    },
+    {
+      "id": "water-reserve-unknown",
+      "document_id": "water-reserve",
+      "question": "Какой объём остаточной воды в литрах был в ЕП-1 после достижения нулевой отметки?",
+      "answer": null
+    },
+    {
+      "id": "cooling-ambiguity-new",
+      "document_id": "cooling-ambiguity",
+      "question": "Какой уровень указателя контура Грань записан при повторной ночной проверке 30 января?",
+      "quotes": [
+        "По журналу указателя ночью зарегистрировано 75%, при повторной проверке — 78%."
+      ],
+      "answer_contains": [
+        "78%"
+      ]
+    },
+    {
+      "id": "cooling-ambiguity-unknown",
+      "document_id": "cooling-ambiguity",
+      "question": "Сколько жидкости долили в контур Грань при возвращении показания к 78%?",
+      "answer": null
+    },
+    {
+      "id": "dispatch-summary-new",
+      "document_id": "dispatch-summary",
+      "question": "Какая оператор проводила первичную диагностику узла УТ-42?",
+      "quotes": [
+        "Оператор связи Смирнова А.А. провела первичную диагностику и обнаружила, что в конфигурации интерфейса есть несоответствие карточке настройки."
+      ],
+      "answer_contains": [
+        "Смирнова А.А."
+      ]
+    },
+    {
+      "id": "dispatch-summary-unknown",
+      "document_id": "dispatch-summary",
+      "question": "Кто создал обнаруженный на УТ-43 скрипт?",
+      "answer": null
+    }
+  ]
+}

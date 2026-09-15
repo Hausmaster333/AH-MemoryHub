@@ -156,7 +156,7 @@ class MemoryElement(Frozen):
     uid: str
     payload: Payload
     excitation: float = Field(default=0.0, ge=0, le=1)
-    activation_function: str = "clip_sum"
+    activation_function: Literal["clip_sum", "relu", "sigmoid"] = "clip_sum"
 
     @model_validator(mode="after")
     def payload_identity(self):
@@ -257,11 +257,14 @@ class FactIngestRequest(BaseModel):
 
 
 class IgnitionConfig(Frozen):
+    model_config = ConfigDict(frozen=True, extra="forbid", allow_inf_nan=False)
     initial_life_ticks: int = Field(default=5, ge=0)
     decay_lambda: float = Field(default=0.08, ge=0)
     working_memory_threshold: float = Field(default=0.2, ge=0, le=1)
     hebbian_eta: float = Field(default=0.0, ge=0, le=1)
-    rhythm_hz: float = Field(default=1.0, gt=0)
+    rhythm_hz: float = Field(default=1.0, ge=0, le=1000)
+    tick_seconds: float = Field(default=1.0, gt=0, le=60)
+    rhythm_amplitude: float = Field(default=.001, ge=0, le=1)
     max_ticks: int = Field(default=8, ge=1, le=1000)
     epsilon: float = Field(default=1e-4, gt=0)
 
@@ -269,7 +272,7 @@ class IgnitionConfig(Frozen):
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1)
     max_ticks: int = Field(default=8, ge=1, le=100)
-    profile: Literal["literal_2026", "integrated_v1"] = "integrated_v1"
+    profile: Literal["literal_2026", "integrated_v1", "directed_v1"] = "integrated_v1"
     ignition: IgnitionConfig | None = None
     answer_model: Literal["local", "configured", "stealth/ox-alpha", "~deepseek/deepseek-v4-flash-latest", "deepseek/deepseek-v4-flash-0731:nitro"] = "local"
 
@@ -316,6 +319,7 @@ class TickTrace(Frozen):
     previous_weight: float | None = None
     next_weight: float | None = None
     parent_trace: int | None = None
+    parent_traces: tuple[int, ...] = ()
 
 
 class IgnitionRun(Frozen):
@@ -330,3 +334,5 @@ class IgnitionRun(Frozen):
     minimal_path: tuple[str, ...] = ()
     trace_complete: bool = False
     weight_deltas: dict[str, float] = {}
+    elapsed_ticks: int = 0
+    activated_path: tuple[str, ...] = ()

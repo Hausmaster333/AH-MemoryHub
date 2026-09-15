@@ -349,7 +349,10 @@ def test_independent_three_hop_document_reaches_all_grounded_facts_from_final_ef
     assert result["status"] == "answered" and result["trace_complete"]
     assert result["grounded_fact_count"] >= 3
     assert len([uid_ for uid_ in result["minimal_path"] if uid_.startswith("h_")]) >= 3
-    assert sum(item["impulse_type"] == "role_to_hypernode" for item in result["trace"]) >= 3
+    # New ingestions recall facts through actual directed L, not implicit reverse hypernode flow.
+    import app.main as api
+    recalls = {link.uid for link in api.memory.links.values() if link.type_id == "RECALLS"}
+    assert sum(item["impulse_type"] == "associative" and item["link_or_hypernode_uid"] in recalls for item in result["trace"]) >= 3
 
 def test_m3_fixture_and_n1000_tick_benchmark():
     from app.evaluation import internal_m3
@@ -655,6 +658,8 @@ def test_general_recovery_for_coordinated_state_and_explicit_follow():
         ("HAS_STATE", {"SUBJECT": "Этикетка E-9", "STATE": "повреждённом состоянии"}),
     ]
     simple_states = _coordinated_property_candidates("Датчик двигателя красный и горячий.")
+    assert not _coordinated_property_candidates("Оператор использовал тележку и термочехлы.")
+    assert not _coordinated_property_candidates("Оператор выбрал красный и горячий.")
     assert [{binding.role_id: binding.value for binding in item.bindings} for item in simple_states] == [
         {"SUBJECT": "Датчик двигателя", "STATE": "красный"},
         {"SUBJECT": "Датчик двигателя", "STATE": "горячий"},

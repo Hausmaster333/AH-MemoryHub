@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "scope": "new questions frozen before running extraction on these reviewed texts; source set is partial, not official M4/M5",
+  "source_sha256": {
+    "cold-transfer": "7ebe49d59f440cb50a375a830ab49c2d81b845d8c9b8f7cbd4c276259d7ec03c",
+    "rail-investigation": "4c8db5b02e1312b4bc0c8488da512bc5ac0740645d26839c7921a236fccbd285",
+    "water-night": "2441950871a98996fcdf182d7e356b3f136b117012a1bc69e5862bc14283fcbf"
+  },
+  "cases": [
+    {
+      "id": "water-night-0",
+      "document_id": "water-night",
+      "question": "Каким прибором Смирнов повторил измерения в 23:49?",
+      "quotes": [
+        "В 23:49 Смирнов повторил измерения контрольным манометром КМ-4."
+      ],
+      "answer_contains": [
+        "КМ-4"
+      ]
+    },
+    {
+      "id": "water-night-1",
+      "document_id": "water-night",
+      "question": "Какой насос является резервным на водозаборе «Берег»?",
+      "quotes": [
+        "Насос НБ-31 является основным, насос НБ-32 — резервным."
+      ],
+      "answer_contains": [
+        "НБ-32"
+      ]
+    },
+    {
+      "id": "water-night-2",
+      "document_id": "water-night",
+      "question": "Во сколько КМ-4 вернули в шкаф приборов?",
+      "quotes": [
+        "КМ-4 вернули в шкаф приборов в 04:40."
+      ],
+      "answer_contains": [
+        "04:40"
+      ]
+    },
+    {
+      "id": "water-night-3",
+      "document_id": "water-night",
+      "question": "Какой внутренний элемент ФБ-6 стал установленной причиной роста перепада в смене Б-17?",
+      "answer": null
+    },
+    {
+      "id": "cold-transfer-0",
+      "document_id": "cold-transfer",
+      "question": "Какой датчик установлен в камере КС-41?",
+      "quotes": [
+        "Датчик ТС-8 установлен в КС-41, датчик ТС-9 — в КС-42."
+      ],
+      "answer_contains": [
+        "ТС-8"
+      ]
+    },
+    {
+      "id": "cold-transfer-1",
+      "document_id": "cold-transfer",
+      "question": "На сколько показание ТС-8 отличалось от контрольного термометра?",
+      "quotes": [
+        "Разница между ТС-8 и контрольным термометром составила плюс два градуса."
+      ],
+      "answer_contains": [
+        "плюс два градуса"
+      ]
+    },
+    {
+      "id": "cold-transfer-2",
+      "document_id": "cold-transfer",
+      "question": "Когда завершилась сверка грузовых записей в смене С-28?",
+      "quotes": [
+        "В 00:10 завершилась сверка грузовых записей."
+      ],
+      "answer_contains": [
+        "00:10"
+      ]
+    },
+    {
+      "id": "cold-transfer-3",
+      "document_id": "cold-transfer",
+      "question": "В какое время служба приборов назначила будущий ремонт ТС-8?",
+      "answer": null
+    },
+    {
+      "id": "rail-investigation-0",
+      "document_id": "rail-investigation",
+      "question": "Какой привод входит в узел СЛ-11?",
+      "quotes": [
+        "В состав узла входит электромеханический привод ПЛ-7, а контроль положения поступает в модуль МЛ-3."
+      ],
+      "answer_contains": [
+        "ПЛ-7"
+      ]
+    },
+    {
+      "id": "rail-investigation-1",
+      "document_id": "rail-investigation",
+      "question": "Когда повторная команда перевода завершилась подтверждением от МЛ-3?",
+      "quotes": [
+        "Повторная команда перевода завершилась подтверждением от МЛ-3 в 09:20."
+      ],
+      "answer_contains": [
+        "09:20"
+      ]
+    },
+    {
+      "id": "rail-investigation-2",
+      "document_id": "rail-investigation",
+      "question": "Когда зарегистрировали решение о возвращении узла в режим упражнения?",
+      "quotes": [
+        "Решение о возвращении узла в предусмотренный упражнением режим было зарегистрировано в 09:45."
+      ],
+      "answer_contains": [
+        "09:45"
+      ]
+    },
+    {
+      "id": "rail-investigation-3",
+      "document_id": "rail-investigation",
+      "question": "Какая модель дополнительного обогревателя была установлена в эпизоде Л-12?",
+      "answer": null
+    }
+  ]
+}

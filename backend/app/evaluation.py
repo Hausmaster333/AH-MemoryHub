@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 import re
 import time
+from collections import Counter
 from pathlib import Path
 
-from .core import AHMemory, lexical_key, norm
+from .core import AHMemory, lexical_key, norm, _lemma, _morph_analyzer
 from .conformance import RABBIT_SOURCE, junior_conformance_report
-from .engine import IgnitionEngine, gc_commit, gc_preview
+from .engine import IgnitionEngine, evidence_trace, gc_commit, gc_preview
 from .ingestion import Provider, RuleBasedProvider, extract_candidates, segment_text
 from .models import *
 
@@ -42,8 +43,8 @@ def rabbit_ingestion_v2(provider: Provider | None = None) -> dict:
 def role_metrics(gold: list[dict], predicted: list[dict]) -> dict:
     roles = {"SUBJECT", "OBJECT", "LOCATION"}; result = {}
     for role in roles:
-        g = {(norm(x.get("predicate", "")), norm(x.get("value", ""))) for row in gold for x in row.get("bindings", []) if x.get("role") == role}
-        p = {(norm(x.get("predicate", "")), norm(x.get("value", ""))) for row in predicted for x in row.get("bindings", []) if x.get("role") == role}
+        g = {(norm(row.get("predicate", "")), norm(x.get("value", ""))) for row in gold for x in row.get("bindings", []) if x.get("role") == role}
+        p = {(norm(row.get("predicate", "")), norm(x.get("value", ""))) for row in predicted for x in row.get("bindings", []) if x.get("role") == role}
         tp = len(g & p); precision = tp / len(p) if p else 0.0; recall = tp / len(g) if g else 0.0; f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
         result[role] = {"precision": precision, "recall": recall, "f1": f1, "gold": len(g), "predicted": len(p)}
     literal = 2 * result["SUBJECT"]["f1"] + 2 * result["OBJECT"]["f1"] + result["LOCATION"]["f1"]
@@ -81,7 +82,18 @@ def load_gold(path: Path = GOLD_PATH) -> dict:
 
 def _value_matches(left: str, right: str) -> bool:
     a, b = set(lexical_key(left)), set(lexical_key(right))
-    return bool(a and b) and len(a & b) / min(len(a), len(b)) >= .8
+    identifiers = lambda tokens: {token for token in tokens if any(char.isdigit() for char in token)}
+    return identifiers(a) == identifiers(b) and bool(a and b) and len(a & b) / min(len(a), len(b)) >= .8
+
+
+def value_matches_morph(left: str, right: str) -> bool:
+    def terms(value):
+        tokens = re.findall(r"[\w]+(?:[-‑–][\w]+)*", norm(value))
+        # Gold location values sometimes omit the leading locative preposition.
+        if tokens and tokens[0] in {"в", "во", "на"}: tokens = tokens[1:]
+        return Counter(_lemma(token) for token in tokens)
+    a, b = terms(left), terms(right)
+    return bool(a) and a == b
 
 
 def _sentence_index(text: str, offset: int) -> int:
@@ -96,7 +108,9 @@ def _candidate_values(candidate: CandidateFact, binding: CandidateBinding) -> tu
     return tuple((mentions[item].canonical_label or mentions[item].observed_text) for item in binding.term.mention_ids if item in mentions) if binding.term else ()
 
 
-def corpus_role_metrics(predictions: dict[str, list[CandidateFact]], corpus_path: Path = CORPUS_PATH, gold_path: Path = GOLD_PATH) -> dict:
+def corpus_role_metrics(predictions: dict[str, list[CandidateFact]], corpus_path: Path = CORPUS_PATH, gold_path: Path = GOLD_PATH, matcher: str = "legacy_v1") -> dict:
+    if matcher not in {"legacy_v1", "morph_v1"}: raise ValueError("unknown M1 matcher")
+    matches = value_matches_morph if matcher == "morph_v1" else _value_matches
     corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
     gold = load_gold(gold_path)
     sources = {document["id"]: document["text"] for document in corpus["documents"]}
@@ -124,7 +138,7 @@ def corpus_role_metrics(predictions: dict[str, list[CandidateFact]], corpus_path
     for role in roles:
         remaining = list(actual.get(role, [])); tp = 0
         for document_id, sentence, predicate, value in expected.get(role, []):
-            match = next((i for i, item in enumerate(remaining) if item[:3] == (document_id, sentence, predicate) and _value_matches(value, item[3])), None)
+            match = next((i for i, item in enumerate(remaining) if item[:3] == (document_id, sentence, predicate) and matches(value, item[3])), None)
             if match is not None:
                 tp += 1; remaining.pop(match)
             else:
@@ -161,6 +175,7 @@ def corpus_role_metrics(predictions: dict[str, list[CandidateFact]], corpus_path
     result["document_max_f1"] = max(document_f1)
     result["benchmark"] = {"schema": gold["schema"], "documents": len(gold["documents"]), "source_sentences": sum(len(segment_text(sources[doc["id"]])) for doc in gold["documents"]), "labelled_facts": sum(len(doc["facts"]) for doc in gold["documents"]), "role_assignments": sum(len(values) for doc in gold["documents"] for fact in doc["facts"] for values in fact["bindings"].values())}
     result["errors"] = errors
+    result["matcher"] = matcher
     return result
 
 
@@ -177,16 +192,16 @@ def corpus_m2(gold_path: Path = GOLD_PATH) -> dict:
         for question in chain["questions"]:
             depth = question["depth"]
             run = IgnitionEngine().run(memory.snapshot(), [f"{prefix}_s0"], IgnitionConfig(max_ticks=depth + 4))
-            traced = {item for tick in run.run.ticks for item in (tick.source_uid, tick.target_uid, tick.link_or_hypernode_uid) if item}
             gold_path = {f"{prefix}_s{index}" for index in range(depth + 1)} | {f"{prefix}_l{index}" for index in range(depth)}
             target = f"{prefix}_s{depth}"
+            traced = set(evidence_trace(run.run, (target,), [f"{prefix}_s0"])) if target in run.run.working_memory else set()
             actual_answer = memory.label(target) if target in traced else "insufficient_evidence"
             cases.append({"id": f"{chain['id']}-{depth}", "depth": depth, "question": question["question"], "expected_answer": question["expected_answer"], "actual_answer": actual_answer, "answer_correct": norm(actual_answer) == norm(question["expected_answer"]), "trace_complete": gold_path <= traced, "gold_path": sorted(gold_path)})
     passed = sum(case["answer_correct"] and case["trace_complete"] for case in cases)
     weighted_sum = sum(case["answer_correct"] * (case["depth"] / 6) * case["trace_complete"] for case in cases)
     folds = [cases[index:index + 20] for index in range(0, len(cases), 20)]
     fold_scores = [sum(case["answer_correct"] * (case["depth"] / 6) * case["trace_complete"] for case in fold) / len(fold) for fold in folds]
-    return {"correct": passed == len(cases) and len(cases) >= required_total, "passed": passed, "total": len(cases), "required_total": required_total, "coverage": min(1.0, len(cases) / required_total), "trace_pass_rate": passed / len(cases), "max_depth": max((case["depth"] for case in cases if case["trace_complete"]), default=0), "explain_score": weighted_sum / len(cases), "available_cases_score": weighted_sum / len(cases), "fold_size": 20, "fold_count": len(folds), "fold_scores": fold_scores, "provisional": len(cases) < required_total, "cases": cases}
+    return {"scope": "activation fixture with supplied target; not end-to-end question answering", "trace_method": "seed_dependency_closure", "correct": passed == len(cases) and len(cases) >= required_total, "passed": passed, "total": len(cases), "required_total": required_total, "coverage": min(1.0, len(cases) / required_total), "trace_pass_rate": passed / len(cases), "max_depth": max((case["depth"] for case in cases if case["trace_complete"]), default=0), "explain_score": weighted_sum / len(cases), "available_cases_score": weighted_sum / len(cases), "fold_size": 20, "fold_count": len(folds), "fold_scores": fold_scores, "provisional": len(cases) < required_total, "cases": cases}
 
 
 def internal_m1() -> dict:
