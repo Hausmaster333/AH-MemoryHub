@@ -2,7 +2,7 @@ import json
 import pytest
 from app.core import AHMemory
 from app.dsl import Interpreter
-from app.models import MemoryElement, SecondOrderSymbol, ControlTemplate, SReference, Role, MemoryList, ElementReference, FunctionalSymbol
+from app.models import MemoryElement, SecondOrderSymbol, ControlTemplate, SReference, Role, MemoryList, ElementReference, FunctionalSymbol, Property
 
 
 def test_typed_dsl_mutations_and_atomic_template_updates():
@@ -40,3 +40,20 @@ def test_typed_dsl_mutations_and_atomic_template_updates():
     with pytest.raises(ValueError):
         dsl.mutate('addProperty(data={"name":"x","value":[1,2}, uid=m_test)')
     assert memory.export() == before
+
+
+def test_table3_set_queries_keep_legacy_single_value_forms():
+    memory = AHMemory()
+    dsl = Interpreter(memory)
+    for uid, value in (("s_a", "насос"), ("s_b", "клапан")):
+        dsl.mutate(f'addAbstractSymbol(data={{"uid":"{uid}","sensory_representations":[{{"modality":"text","value":"{value}"}}]}})')
+    assert {row["uid"] for row in dsl.query('findAbstractSymbols(values=["насос","клапан"])')} == {"s_a", "s_b"}
+    assert [row["uid"] for row in dsl.query('findAbstractSymbols(value=насос)')] == ["s_a"]
+    element = MemoryElement(uid="m_a", payload=SecondOrderSymbol(uid="m_a", properties=(
+        Property(name="type", value="pump"), Property(name="pressure", value=4),
+    )))
+    dsl.mutate(f'addElement(section=P,data={json.dumps(element.model_dump(mode="json"))})')
+    assert [row["uid"] for row in dsl.query('findSymbols(properties={"type":"pump","pressure":4})')] == ["m_a"]
+    assert dsl.query('findSymbols(properties={"type":"pump","pressure":5})') == []
+    for invalid in ('findAbstractSymbols(values={"x":1})', 'findSymbols(properties=["x"])'):
+        with pytest.raises(ValueError): dsl.query(invalid)

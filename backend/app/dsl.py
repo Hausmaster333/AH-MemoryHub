@@ -70,6 +70,13 @@ class Interpreter:
 
     def __init__(self, memory: AHMemory): self.memory = memory
 
+    @staticmethod
+    def _json_arg(args: dict[str, str], name: str, expected: type):
+        try: value = json.loads(args[name])
+        except (KeyError, json.JSONDecodeError) as exc: raise DSLParseError(f"{name} must be valid JSON") from exc
+        if not isinstance(value, expected): raise DSLParseError(f"{name} must be {expected.__name__}")
+        return value
+
     @memory_locked
     def query(self, expression: str):
         values = self._query(expression)
@@ -79,7 +86,12 @@ class Interpreter:
         result = None
         for call in parse(expression):
             if call.name == "getAbstractSymbol": result = self.memory.get_abstract_symbol(call.args.get("uid", ""))
-            elif call.name == "findAbstractSymbols": result = self.memory.find_abstract_symbols(call.args.get("value", ""))
+            elif call.name == "findAbstractSymbols":
+                if "values" in call.args:
+                    values = self._json_arg(call.args, "values", list)
+                    if not all(isinstance(value, str) for value in values): raise DSLParseError("values must contain strings")
+                    result = list({symbol.uid: symbol for value in values for symbol in self.memory.find_abstract_symbols(value)}.values())
+                else: result = self.memory.find_abstract_symbols(call.args.get("value", ""))
             elif call.name == "getSReference": result = self.memory.get_s_reference(call.args.get("uid", ""))
             elif call.name == "findSReferences": result = self.memory.find_s_references(call.args.get("target", call.args.get("uid", "")))
             elif call.name == "getMReference": result = self.memory.get_m_reference(call.args.get("uid", ""))
@@ -92,7 +104,15 @@ class Interpreter:
             elif call.name == "getHypernode": result = self.memory.get_hypernode(call.args.get("uid", ""))
             elif call.name == "findLinks": result = self.memory.find_links(call.args.get("uid", ""))
             elif call.name == "getLink": result = self.memory.get_link(call.args.get("uid", ""))
-            elif call.name == "findSymbols": result = self.memory.find_symbols(call.args.get("value", ""))
+            elif call.name == "findSymbols":
+                if "properties" in call.args:
+                    properties = self._json_arg(call.args, "properties", dict)
+                    if not all(isinstance(name, str) for name in properties): raise DSLParseError("property names must be strings")
+                    result = [element.payload for element in self.memory.elements.values()
+                              if isinstance(element.payload, SecondOrderSymbol)
+                              and all(any(prop.name == name and prop.value == value for prop in element.payload.properties)
+                                      for name, value in properties.items())]
+                else: result = self.memory.find_symbols(call.args.get("value", ""))
             elif call.name == "getTemplate": result = self.memory.get_template(call.args.get("uid", ""))
             elif call.name == "intersect":
                 nested = self._query(call.args["expr"])
