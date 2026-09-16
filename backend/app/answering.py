@@ -70,7 +70,7 @@ def select_local_answer(memory: AHMemory, question: str, candidate_uids: tuple[s
     location_subject = re.match(r"^(?:какой|какая|какое|какие)\s+(.+?)\s+(?:установлен[аоы]?|находится|находятся|расположен[аоы]?)\s+(?:в|на|у)\s+", query) if intent == "location" else None
     location_inverse = intent == "location" and (location_subject is not None or re.match(r"^(?:что|кто)\s+(?:находится|находятся|установлен[аоы]?|расположен[аоы]?)\s+(?:в|на|у)\s+", query))
     if location_inverse: focus_role = "LOCATION"
-    target = re.search(r"(?:что вызвал[ао]?|к чему прив[её]л\w*|(?:перво)?причин[аы])\s+(.+?)[?.!]*$", query) if intent in {"cause_reason", "cause_result"} else None
+    target = re.search(r"(?:что вызвал[ао]?|к чему прив[её]л\w*|(?:перво)?причин[аы](?:\s+событи[ея])?)\s+[«\"]?(.+?)[»\"]?[?.!]*$", query) if intent in {"cause_reason", "cause_result"} else None
     if intent == "cause_reason" and target is None:
         target = re.search(r"почему\s+\w+(?:лся|лась|лось|лись)\s+(.+?)[?.!]*$", query)
     # ponytail: explicit causal question forms only; broader questions still use lexical ranking.
