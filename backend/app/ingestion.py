@@ -1249,34 +1249,23 @@ def _resolve_temporal_subjects(text: str, candidates: list[CandidateFact]) -> li
     return result
 
 
-def extract_candidates(text: str, provider: Provider | None = None, model_override: str | None = None) -> tuple[list[CandidateFact], dict]:
-    if provider is not None:
-        raw = provider.extract(text)
-        candidates, rejected = canonicalize_candidates(text, raw)
-        scoped, scope_rejected = canonicalize_candidates(text, [candidate for candidate, _, _ in _named_scope_declarations(text)])
-        signatures = {_candidate_signature(candidate) for candidate in candidates}
-        candidates.extend(candidate for candidate in scoped if _candidate_signature(candidate) not in signatures)
-        rejected.extend(scope_rejected)
-        candidates, semantic_duplicates = _collapse_semantic_duplicates(_resolve_temporal_subjects(text, candidates))
-        rejected.extend(semantic_duplicates)
-        candidates = route_candidates(candidates)
-        return candidates, {"configured": "explicit", "active": provider.__class__.__name__, "model_id": getattr(provider, "model_id", provider.__class__.__name__), "fallback": False, "warnings": getattr(provider, "last_warnings", []), "rejection_log": rejected, "coverage_warnings": _coverage_warnings(text, candidates), "prompt_version": PROMPT_VERSION, "cached": False}
-    selected, meta = configured_provider(model_override) if model_override else configured_provider()
-    cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:{getattr(selected, 'perception_format', 'ir')}".encode()).hexdigest()
-    cached = _CANDIDATE_CACHE.get(cache_key)
+def extract_candidates(text: str, provider: Provider | None = None, model_override: str | None = None, recovery: bool = True) -> tuple[list[CandidateFact], dict]:
+    selected, meta = (provider, {"configured": "explicit", "active": provider.__class__.__name__, "model_id": getattr(provider, "model_id", provider.__class__.__name__), "fallback": False}) if provider is not None else (configured_provider(model_override) if model_override else configured_provider())
+    cache_key = None if provider is not None else hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:{getattr(selected, 'perception_format', 'ir')}:{recovery}".encode()).hexdigest()
+    cached = _CANDIDATE_CACHE.get(cache_key) if cache_key else None
     if cached is not None:
         candidates = list(cached[0])
         return candidates, {**meta, "warnings": [], "rejection_log": list(cached[1]), "coverage_warnings": _coverage_warnings(text, candidates), "prompt_version": PROMPT_VERSION, "cached": True}
     try:
         raw = selected.extract(text)
     except ValueError as exc:
-        if meta["configured"] != "auto": raise
+        if not recovery or meta["configured"] != "auto": raise
         selected = RuleBasedProvider(); raw = selected.extract(text)
         meta.update({"active": "rule", "model_id": selected.model_id, "fallback": True, "warning": str(exc)})
-        cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:ir".encode()).hexdigest()
+        cache_key = hashlib.sha256(f"{hashlib.sha256(text.encode()).hexdigest()}:{selected.model_id}:{PROMPT_VERSION}:ir:{recovery}".encode()).hexdigest()
     candidates, rejected = canonicalize_candidates(text, raw)
     uncovered = {item["group_uid"] for item in _coverage_warnings(text, candidates)}
-    if not isinstance(selected, RuleBasedProvider):
+    if recovery and not isinstance(selected, RuleBasedProvider):
         fallback, fallback_rejected = canonicalize_candidates(text, RuleBasedProvider().extract(text))
         signatures = {_candidate_signature(candidate) for candidate in candidates}
         represented_follow_groups = {candidate.group_uid or candidate.span_uid for candidate in candidates if candidate.predicate == "FOLLOW"}
@@ -1313,15 +1302,17 @@ def extract_candidates(text: str, provider: Provider | None = None, model_overri
         represented_temporal_groups = {candidate.group_uid or candidate.span_uid for candidate in candidates if candidate.predicate == "HAS_STATE" and any(binding.role_id == "TIME" for binding in candidate.bindings)}
         candidates.extend(candidate for candidate in recovered_temporal if (candidate.group_uid or candidate.span_uid) not in represented_temporal_groups)
         rejected.extend(temporal_rejected)
-    recovered_scopes, scope_rejected = canonicalize_candidates(text, [candidate for candidate, _, _ in _named_scope_declarations(text)])
-    signatures = {_candidate_signature(candidate) for candidate in candidates}
-    candidates.extend(candidate for candidate in recovered_scopes if _candidate_signature(candidate) not in signatures)
-    rejected.extend(scope_rejected)
+    if recovery:
+        recovered_scopes, scope_rejected = canonicalize_candidates(text, [candidate for candidate, _, _ in _named_scope_declarations(text)])
+        signatures = {_candidate_signature(candidate) for candidate in candidates}
+        candidates.extend(candidate for candidate in recovered_scopes if _candidate_signature(candidate) not in signatures)
+        rejected.extend(scope_rejected)
     candidates, semantic_duplicates = _collapse_semantic_duplicates(_resolve_temporal_subjects(text, candidates))
     rejected.extend(semantic_duplicates)
     candidates = route_candidates(candidates)
-    if len(_CANDIDATE_CACHE) >= 128: _CANDIDATE_CACHE.pop(next(iter(_CANDIDATE_CACHE)))
-    _CANDIDATE_CACHE[cache_key] = (tuple(candidates), tuple(rejected))
+    if cache_key:
+        if len(_CANDIDATE_CACHE) >= 128: _CANDIDATE_CACHE.pop(next(iter(_CANDIDATE_CACHE)))
+        _CANDIDATE_CACHE[cache_key] = (tuple(candidates), tuple(rejected))
     meta["warnings"] = getattr(selected, "last_warnings", [])
     meta.update({"rejection_log": rejected, "coverage_warnings": _coverage_warnings(text, candidates), "prompt_version": PROMPT_VERSION, "cached": False})
     return candidates, meta

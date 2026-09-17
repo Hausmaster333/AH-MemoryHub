@@ -3377,16 +3377,105 @@
     },
     {
       "type": "frame",
-      "id": "Ifhnh",
+      "id": "RmybP",
       "x": 17333,
       "y": 109.9862800072799,
       "name": "02 · Ingestion Review",
       "clip": true,
       "width": 1440,
       "height": 1024,
-      "fill": "$canvas",
       "layout": "vertical",
       "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "KPyWa",
+      "x": 18853,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "L7ZNe",
+      "x": 20373,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "t3arI",
+      "x": 21893,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "bMW8y",
+      "x": 23413,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "U6wGIV",
+      "x": 24933,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "BEfVr",
+      "x": 26453,
+      "y": 109.9862800072799,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40
+    },
+    {
+      "type": "frame",
+      "id": "Ifhnh",
+      "x": 0,
+      "y": 0,
+      "name": "02 · Ingestion Review",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "layout": "vertical",
       "padding": 40,
       "children": [
         {
@@ -3403,7 +3492,7 @@
               "id": "pLenY",
               "name": "subtitle",
               "fill": "#666666",
-          "content": "02 · INGESTION REVIEW  ·  Validate proposed memory before admission",
+              "content": "Validate proposed memory before admission",
               "fontFamily": "Inter",
               "fontSize": 16,
               "fontWeight": "normal"
@@ -3445,7 +3534,7 @@
           "id": "IqHB9",
           "name": "title",
           "fill": "#111111",
-      "content": "Допуск фактов в память.",
+          "content": "Ingestion Review",
           "fontFamily": "Inter",
           "fontSize": 32,
           "fontWeight": "bold"
@@ -3492,7 +3581,7 @@
                           "id": "mkyUt",
                           "name": "badge-label",
                           "fill": "#666666",
-                  "content": "CAUSE · selected",
+                          "content": "Assertion",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "500"
@@ -3504,7 +3593,7 @@
                       "id": "JIDva",
                       "name": "assertion-text",
                       "fill": "#111111",
-              "content": "Перегрев насоса вызвал остановку агрегата в насосном зале.",
+                      "content": "The compressor has failed to maintain 12 psi in the cooling loop.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 18,
@@ -3538,7 +3627,7 @@
                               "id": "jeLwb",
                               "name": "stat-value",
                               "fill": "#111111",
-                      "content": "Hypernode candidate",
+                              "content": "Assertion",
                               "fontFamily": "Inter",
                               "fontSize": 13,
                               "fontWeight": "600"
@@ -3568,7 +3657,7 @@
                           "id": "oKjGB",
                           "name": "source-value",
                           "fill": "#111111",
-                  "content": "operator-incident.txt · span 0:62",
+                          "content": "logs/2024-08-21/compressor.log:142",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -3583,148 +3672,16 @@
                       "height": "fit_content(0)",
                       "fill": "#fafafa",
                       "cornerRadius": 8,
-                  "layout": "vertical",
-                  "gap": 8,
-                  "padding": 16,
-                  "children": [
-                    {"type":"text","id":"InHT21","content":"Hyperedge template · CAUSE(SUBJECT, OBJECT, LOCATION)","fill":"$ink","fontFamily":"$font-mono","fontSize":11},
-                    {"type":"text","id":"InHR21","content":"RoleBindings · S перегрев насоса · O остановка агрегата · L насосный зал","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 16
+                    }
                   ]
                 }
               ]
-            },
-            {
-              "type":"frame","id":"InC221","name":"candidate-card-2","width":"fill_container","fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":12,"padding":18,
-              "children":[
-                {"type":"text","id":"InB221","content":"FOLLOW · candidate","fill":"$type-c","fontFamily":"$font-mono","fontSize":10,"fontWeight":"650"},
-                {"type":"text","id":"InT221","content":"Остановка агрегата привела к снижению давления.","fill":"$ink","fontFamily":"$font-ui","fontSize":16,"fontWeight":"600"},
-                {"type":"text","id":"InS221","content":"operator-incident.txt · span 63:112 · confidence 0.86","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},
-                {"type":"text","id":"InR221","content":"Hyperedge template · FOLLOW(SUBJECT, OBJECT) · RoleBindings typed","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}
-              ]
-            },
-            {
-              "type":"frame","id":"InC321","name":"candidate-card-3","width":"fill_container","fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":12,"padding":18,
-              "children":[
-                {"type":"text","id":"InB321","content":"USES_TOOL · candidate","fill":"$type-p","fontFamily":"$font-mono","fontSize":10,"fontWeight":"650"},
-                {"type":"text","id":"InT321","content":"После этого оператор применил ручной ключ.","fill":"$ink","fontFamily":"$font-ui","fontSize":16,"fontWeight":"600"},
-                {"type":"text","id":"InS321","content":"operator-incident.txt · span 113:158 · confidence 0.78","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},
-                {"type":"text","id":"InR321","content":"Hyperedge template · USES_TOOL(SUBJECT, TOOL) · RoleBindings typed","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}
-              ]
             }
           ]
-        },
-        {
-          "type":"frame","id":"InRt21","name":"Admission Inspector","width":420,"height":"fill_container","fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":18,"padding":24,
-          "children":[
-            {"type":"text","id":"InRE21","content":"ADMISSION INSPECTOR","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10,"letterSpacing":1},
-            {"type":"text","id":"InRH21","content":"CAUSE · выбранный кандидат","fill":"$ink","fontFamily":"$font-ui","fontSize":22,"fontWeight":"650"},
-            {"type":"text","id":"InRS21","content":"source span 0:62 · confidence 0.92","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},
-            {"type":"frame","id":"InRB21","width":"fill_container","fill":"$canvas","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-sm","layout":"vertical","gap":8,"padding":14,"children":[{"type":"text","id":"InRK21","content":"SOURCE QUOTE","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"InRQ21","content":"«Перегрев насоса вызвал остановку агрегата в насосном зале.»","fill":"$ink","fontFamily":"$font-ui","fontSize":14}]},
-            {"type":"text","id":"InRR21","content":"S  SUBJECT · перегрев насоса\nC  OBJECT · остановка агрегата\nP  LOCATION · насосный зал\nH  SOURCE · operator-incident.txt\nN  TEMPLATE · CAUSE","fill":"$ink","fontFamily":"$font-mono","fontSize":12,"lineHeight":1.8},
-            {"type":"text","id":"InRC21","content":"✓ span совпадает с источником\n✓ шаблон входит в реестр\n✓ RoleBindings типизированы\n✓ UID назначит AH Core","fill":"$ok","fontFamily":"$font-ui","fontSize":13,"lineHeight":1.8},
-            {"type":"frame","id":"InRA21","width":"fill_container","gap":10,"children":[{"type":"frame","id":"InRJ21","width":130,"stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-sm","padding":[12,20],"children":[{"type":"text","id":"InRL21","content":"Reject","fill":"$bad","fontFamily":"$font-ui","fontSize":13,"fontWeight":"650"}]},{"type":"frame","id":"InRD21","width":200,"fill":"$cobalt","cornerRadius":"$r-sm","padding":[12,20],"children":[{"type":"text","id":"InRM21","content":"Admit в AH","fill":"#FFFFFF","fontFamily":"$font-ui","fontSize":13,"fontWeight":"650"}]}]},
-            {"type":"text","id":"InRF21","content":"3 candidates · 1 selected · 0 admitted","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}
-          ]
         }
-      ]
-    }
-  ]
-},
-    {
-      "type": "frame",
-      "id": "EvA310",
-      "x": 18853,
-      "y": 109.9862800072799,
-      "name": "03 · Evaluation",
-      "clip": true,
-      "width": 1440,
-      "height": 1024,
-      "fill": "$canvas",
-      "layout": "vertical",
-      "gap": 28,
-      "padding": 40,
-      "children": [
-        {
-          "type": "frame",
-          "id": "EvHd31",
-          "name": "Evaluation Header",
-          "width": "fill_container",
-          "layout": "horizontal",
-          "justifyContent": "space-between",
-          "alignItems": "end",
-          "children": [
-            {
-              "type": "frame",
-              "id": "EvTt31",
-              "layout": "vertical",
-              "gap": 8,
-              "children": [
-                {"type":"text","id":"EvEy31","content":"03 · EVALUATION","fill":"$ink-2","fontFamily":"$font-mono","fontSize":11,"letterSpacing":1.2},
-                {"type":"text","id":"EvH131","content":"Доказательства для жюри.","fill":"$ink","fontFamily":"$font-ui","fontSize":36,"fontWeight":"650"},
-                {"type":"text","id":"EvSb31","content":"Проверяемый ответ на критерии M1–M5, а не декоративный KPI-дашборд.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":15}
-              ]
-            },
-            {"type":"frame","id":"EvBt31","name":"Recompute","fill":"$cobalt","cornerRadius":"$r-md","padding":[12,18],"children":[{"type":"text","id":"EvBl31","content":"Пересчитать","fill":"#FFFFFF","fontFamily":"$font-ui","fontSize":13,"fontWeight":"650"}]}
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "EvSc31",
-          "name": "M1–M5 Score Strip",
-          "width": "fill_container",
-          "gap": 12,
-          "children": [
-            {"type":"frame","id":"EvM031","width":220,"height":154,"fill":"$surface","stroke":"$ink","strokeWidth":1,"layout":"vertical","gap":8,"padding":20,"children":[{"type":"text","id":"EvML30","content":"CONFORMANCE","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10,"letterSpacing":1},{"type":"text","id":"EvMV30","content":"8 / 8","fill":"$ink","fontFamily":"$font-ui","fontSize":46,"fontWeight":"650"},{"type":"text","id":"EvMN30","content":"rabbit fixture · passed","fill":"$ok","fontFamily":"$font-mono","fontSize":10}]},
-            {"type":"frame","id":"EvM131","width":208,"height":154,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":10,"padding":18,"children":[{"type":"text","id":"EvML31","content":"M1 · EXTRACTION","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvMV31","content":"40%","fill":"$ink","fontFamily":"$font-ui","fontSize":32,"fontWeight":"650"},{"type":"text","id":"EvMN31","content":"weighted role F1","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]},
-            {"type":"frame","id":"EvM231","width":208,"height":154,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":10,"padding":18,"children":[{"type":"text","id":"EvML32","content":"M2 · EXPLAINABILITY","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvMV32","content":"100%","fill":"$ok","fontFamily":"$font-ui","fontSize":32,"fontWeight":"650"},{"type":"text","id":"EvMN32","content":"trace complete · 3 hops","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]},
-            {"type":"frame","id":"EvM331","width":208,"height":154,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":10,"padding":18,"children":[{"type":"text","id":"EvML33","content":"M3 · MEMORY HYGIENE","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvMV33","content":"100%","fill":"$ok","fontFamily":"$font-ui","fontSize":32,"fontWeight":"650"},{"type":"text","id":"EvMN33","content":"GC · 0 false deletions","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]},
-            {"type":"frame","id":"EvM431","width":208,"height":154,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":10,"padding":18,"children":[{"type":"text","id":"EvML34","content":"M4 · ANSWER QUALITY","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvMV34","content":"unavailable","fill":"$warn","fontFamily":"$font-ui","fontSize":22,"fontWeight":"650"},{"type":"text","id":"EvMN34","content":"external LLM not configured","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]},
-            {"type":"frame","id":"EvM531","width":208,"height":154,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","gap":10,"padding":18,"children":[{"type":"text","id":"EvML35","content":"M5 · MODEL PARITY","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvMV35","content":"unavailable","fill":"$warn","fontFamily":"$font-ui","fontSize":22,"fontWeight":"650"},{"type":"text","id":"EvMN35","content":"SLM / frontier pending","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]}
-          ]
-        },
-        {
-          "type":"frame","id":"EvCp31","name":"AH vs RAG Comparison","width":"fill_container","fill":"$surface","stroke":"$hairline","strokeWidth":1,"layout":"vertical","children":[
-            {"type":"frame","id":"EvCH31","width":"fill_container","fill":"$surface-sunken","padding":[14,18],"children":[{"type":"text","id":"EvCT31","content":"CONTROLLED COMPARISON  ·  same corpus  ·  same question","fill":"$ink","fontFamily":"$font-mono","fontSize":11,"fontWeight":"650"}]},
-            {"type":"frame","id":"EvCR31","width":"fill_container","padding":[18,20],"justifyContent":"space-between","children":[{"type":"text","id":"EvC131","content":"Причинный путь","fill":"$ink-2","fontFamily":"$font-ui","fontSize":13},{"type":"text","id":"EvC231","content":"AH MEMORY  ·  explicit / 3 hops","fill":"$ok","fontFamily":"$font-mono","fontSize":12},{"type":"text","id":"EvC331","content":"VANILLA RAG  ·  not guaranteed","fill":"$ink-2","fontFamily":"$font-mono","fontSize":12}]},
-            {"type":"frame","id":"EvCR32","width":"fill_container","stroke":"$hairline","strokeWidth":{"top":1},"padding":[18,20],"justifyContent":"space-between","children":[{"type":"text","id":"EvC132","content":"Provenance","fill":"$ink-2","fontFamily":"$font-ui","fontSize":13},{"type":"text","id":"EvC232","content":"immutable source span + tick trace","fill":"$ok","fontFamily":"$font-mono","fontSize":12},{"type":"text","id":"EvC332","content":"retrieved chunk only","fill":"$ink-2","fontFamily":"$font-mono","fontSize":12}]},
-            {"type":"frame","id":"EvCR33","width":"fill_container","stroke":"$hairline","strokeWidth":{"top":1},"padding":[18,20],"justifyContent":"space-between","children":[{"type":"text","id":"EvC133","content":"Unknown answer","fill":"$ink-2","fontFamily":"$font-ui","fontSize":13},{"type":"text","id":"EvC233","content":"insufficient_evidence","fill":"$ok","fontFamily":"$font-mono","fontSize":12},{"type":"text","id":"EvC333","content":"model-dependent","fill":"$ink-2","fontFamily":"$font-mono","fontSize":12}]}
-          ]
-        },
-        {"type":"frame","id":"EvFt31","width":"fill_container","fill":"$info-bg","cornerRadius":"$r-md","padding":18,"gap":16,"children":[{"type":"text","id":"EvFE31","content":"ENGINE PROFILE","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"EvFP31","content":"integrated_v1","fill":"$ink","fontFamily":"$font-mono","fontSize":11,"fontWeight":"650"},{"type":"text","id":"EvFN31","content":"M4 и M5 честно остаются недоступными до подключения внешнего LLM и SLM ≤ 8B.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":13}]}
-      ]
-    },
-    {
-      "type":"frame","id":"StA410","x":20373,"y":109.9862800072799,"name":"04 · State Matrix","clip":true,"width":1440,"height":1024,"fill":"$canvas","layout":"vertical","gap":24,"padding":40,
-      "children":[
-        {"type":"text","id":"StEy41","content":"04 · AUTHORED PRODUCT STATES","fill":"$ink-2","fontFamily":"$font-mono","fontSize":11,"letterSpacing":1.2},
-        {"type":"text","id":"StH141","content":"Система всегда говорит правду о состоянии.","fill":"$ink","fontFamily":"$font-ui","fontSize":34,"fontWeight":"650"},
-        {"type":"text","id":"StSb41","content":"Стабильная геометрия для empty, loading, insufficient evidence, validation error, backend unavailable и success.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":15},
-        {"type":"frame","id":"StR141","name":"States Row 1","width":"fill_container","gap":16,"children":[
-          {"type":"frame","id":"StC411","width":432,"height":260,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL411","content":"EMPTY","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT411","content":"Нет активного пути","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"text","id":"StB411","content":"Задайте вопрос, чтобы собрать причинную проекцию памяти.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":14},{"type":"frame","id":"StP411","width":"fill_container","height":52,"fill":"$surface-sunken","cornerRadius":"$r-sm"}]},
-          {"type":"frame","id":"StC412","width":432,"height":260,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL412","content":"LOADING","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT412","content":"Building immutable snapshot","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"frame","id":"StP412","width":"fill_container","height":18,"fill":"$skeleton","cornerRadius":"$r-sm"},{"type":"frame","id":"StP413","width":260,"height":18,"fill":"$skeleton","cornerRadius":"$r-sm"}]},
-          {"type":"frame","id":"StC413","width":432,"height":260,"fill":"$warn-bg","stroke":"$warn","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL413","content":"INSUFFICIENT_EVIDENCE","fill":"$warn","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT413","content":"Путь не подтверждён","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"text","id":"StB413","content":"Ответ не дополнен параметрическими знаниями модели.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":14}]}
-        ]},
-        {"type":"frame","id":"StR241","name":"States Row 2","width":"fill_container","gap":16,"children":[
-          {"type":"frame","id":"StC421","width":432,"height":260,"fill":"$bad-bg","stroke":"$bad","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL421","content":"VALIDATION ERROR","fill":"$bad","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT421","content":"Кандидат не принят","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"text","id":"StB421","content":"RoleBindings не соответствуют Control Template.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":14}]},
-          {"type":"frame","id":"StC422","width":432,"height":260,"fill":"$bad-bg","stroke":"$bad","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL422","content":"BACKEND UNAVAILABLE","fill":"$bad","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT422","content":"AH Core не отвечает","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"text","id":"StB422","content":"Данные не потеряны. Повторите запрос после восстановления процесса.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":14}]},
-          {"type":"frame","id":"StC423","width":432,"height":260,"fill":"$ok-bg","stroke":"$ok","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":18,"padding":22,"children":[{"type":"text","id":"StL423","content":"SUCCESS","fill":"$ok","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"StT423","content":"3 факта допущены","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"650"},{"type":"text","id":"StB423","content":"Source Evidence закреплён, UID назначены AH Core.","fill":"$ink-2","fontFamily":"$font-ui","fontSize":14}]}
-        ]}
-      ]
-    },
-    {
-      "type":"frame","id":"CpA510","x":21893,"y":109.9862800072799,"name":"05 · Observatory Compact · 768","clip":true,"width":768,"height":1024,"fill":"$canvas","layout":"vertical","gap":18,"padding":24,
-      "children":[
-        {"type":"frame","id":"CpHd51","width":"fill_container","justifyContent":"space-between","alignItems":"center","children":[{"type":"text","id":"CpBr51","content":"AH MemoryHub","fill":"$ink","fontFamily":"$font-ui","fontSize":16,"fontWeight":"700"},{"type":"text","id":"CpNv51","content":"Обзор     Приём     Оценка     Params","fill":"$ink-2","fontFamily":"$font-ui","fontSize":12}]},
-        {"type":"text","id":"CpEy51","content":"01 · MEMORY OBSERVATORY","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10,"letterSpacing":1},
-        {"type":"frame","id":"CpQr51","width":"fill_container","height":56,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","padding":[6,8,6,16],"justifyContent":"space-between","alignItems":"center","children":[{"type":"text","id":"CpQt51","content":"Почему остановился агрегат?","fill":"$ink","fontFamily":"$font-ui","fontSize":14},{"type":"frame","id":"CpQb51","fill":"$cobalt","cornerRadius":"$r-sm","padding":[11,16],"children":[{"type":"text","id":"CpQl51","content":"Запустить","fill":"#FFFFFF","fontFamily":"$font-ui","fontSize":12,"fontWeight":"650"}]}]},
-        {"type":"frame","id":"CpAn51","width":"fill_container","stroke":"$ink","strokeWidth":{"top":1,"bottom":1},"layout":"vertical","gap":10,"padding":[18,0],"children":[{"type":"text","id":"CpAk51","content":"EVIDENCE-BOUND ANSWER   ·   TRACE COMPLETE","fill":"$ok","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"CpAt51","content":"Подтверждено AH-памятью: перегрев насоса вызвал остановку агрегата.","fill":"$ink","fontFamily":"$font-ui","fontSize":20,"fontWeight":"500"}]},
-        {"type":"frame","id":"CpGp51","name":"Compact Causal Path","width":"fill_container","height":410,"fill":"$surface","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-md","layout":"vertical","gap":14,"padding":18,"children":[
-          {"type":"text","id":"CpGt51","content":"CAUSAL SUBGRAPH  ·  selected path","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},
-          {"type":"frame","id":"CpGr51","width":"fill_container","gap":14,"children":[{"type":"frame","id":"CpN151","width":205,"height":76,"fill":"$surface","stroke":"$type-n","strokeWidth":2,"cornerRadius":"$r-md","layout":"vertical","gap":6,"padding":12,"children":[{"type":"text","id":"CpNL51","content":"N  CAUSE","fill":"$type-n","fontFamily":"$font-mono","fontSize":10,"fontWeight":"700"},{"type":"text","id":"CpNT51","content":"перегрев насоса","fill":"$ink","fontFamily":"$font-ui","fontSize":13}]},{"type":"frame","id":"CpN251","width":205,"height":76,"fill":"$surface","stroke":"$type-s","strokeWidth":2,"cornerRadius":"$r-md","layout":"vertical","gap":6,"padding":12,"children":[{"type":"text","id":"CpNL52","content":"S  SUBJECT","fill":"$type-s","fontFamily":"$font-mono","fontSize":10,"fontWeight":"700"},{"type":"text","id":"CpNT52","content":"перегрев насоса","fill":"$ink","fontFamily":"$font-ui","fontSize":13}]},{"type":"frame","id":"CpN351","width":205,"height":76,"fill":"$surface","stroke":"$type-s","strokeWidth":2,"cornerRadius":"$r-md","layout":"vertical","gap":6,"padding":12,"children":[{"type":"text","id":"CpNL53","content":"S  OBJECT","fill":"$type-s","fontFamily":"$font-mono","fontSize":10,"fontWeight":"700"},{"type":"text","id":"CpNT53","content":"остановка агрегата","fill":"$ink","fontFamily":"$font-ui","fontSize":13}]}]},
-          {"type":"text","id":"CpLk51","content":"CAUSE  ───────────────  activation path  ───────────────  tick 7 / 7","fill":"$cobalt","fontFamily":"$font-mono","fontSize":11},
-          {"type":"frame","id":"CpEv51","width":"fill_container","fill":"$canvas","stroke":"$hairline","strokeWidth":1,"cornerRadius":"$r-sm","layout":"vertical","gap":7,"padding":14,"children":[{"type":"text","id":"CpEk51","content":"SOURCE EVIDENCE","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10},{"type":"text","id":"CpEt51","content":"«Перегрев насоса вызвал остановку агрегата»","fill":"$ink","fontFamily":"$font-ui","fontSize":14},{"type":"text","id":"CpEc51","content":"demo_incidents · span 52:94 · uid h_279093…","fill":"$ink-2","fontFamily":"$font-mono","fontSize":10}]}
-        ]},
-        {"type":"frame","id":"CpTl51","width":"fill_container","layout":"vertical","gap":8,"children":[{"type":"text","id":"CpTk51","content":"IGNITION TRACE   ·   tick 7 / 7","fill":"$ink","fontFamily":"$font-mono","fontSize":10},{"type":"frame","id":"CpTb51","width":"fill_container","height":5,"fill":"$cobalt","cornerRadius":3}]}
       ]
     }
   ],

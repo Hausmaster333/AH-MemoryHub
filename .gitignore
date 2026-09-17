@@ -23,3 +23,5 @@ docs/design/exports/
 docs/design/implementation-*.png
 docs/design/qa-*.png
 docs/design/ah-memoryhub.pen
+docs/
+tmp/
